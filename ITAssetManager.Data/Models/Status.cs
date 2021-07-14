@@ -5,12 +5,12 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Data.Models
 {
-    public class AssetCategory
+    public class Status
     {
         public int Id { get; init; }
 
         [Required]
-        [MaxLength(CategoryNameMaxLength)]
+        [MaxLength(StatusNameMaxLength)]
         public string Name { get; set; }
 
         public bool IsDeleted { get; set; }

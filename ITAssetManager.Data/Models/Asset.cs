@@ -7,16 +7,11 @@ namespace ITAssetManager.Data.Models
 {
     public class Asset
     {
-        [Key]
         public int Id { get; init; }
 
-        [Required]
-        [MaxLength(AssetNameMaxLength)]
-        public string Name { get; set; }
+        public int AssetModelId { get; set; }
 
-        public int AssetCategoryId { get; set; }
-
-        public AssetCategory AssetCategory { get; set; }
+        public AssetModel AssetModel { get; set; }
 
         [Required]
         [MaxLength(SerialNrMaxLength)]
@@ -29,7 +24,7 @@ namespace ITAssetManager.Data.Models
         [Required]
         public string AssetStatusId { get; set; }
 
-        public AssetStatus AssetStatus { get; set; }
+        public Status AssetStatus { get; set; }
 
         [Required]
         public string VendorId { get; set; }

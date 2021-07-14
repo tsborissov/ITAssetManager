@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITAssetManager.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(ItAssetManagerDbContext))]
     [Migration("20210704184141_MoveDataToAnotherProject")]
     partial class MoveDataToAnotherProject
     {
