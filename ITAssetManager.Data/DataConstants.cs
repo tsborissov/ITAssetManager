@@ -13,7 +13,6 @@
         public const int VendorNameMaxLength = 50;
         public const int VendorVatMinLength = 4;
         public const int VendorVatMaxLength = 15;
-        public const int VendorDetailsMinLength = 3;
         public const int VendorDetailsMaxLength = 200;
 
         public const int BrandNameMinLength = 1;

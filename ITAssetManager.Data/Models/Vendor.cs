@@ -18,7 +18,6 @@ namespace ITAssetManager.Data.Models
         [MaxLength(VendorVatMaxLength)]
         public string Vat { get; set; }
 
-        [Required]
         [MaxLength(VendorDetailsMaxLength)]
         public string Details { get; set; }
 
