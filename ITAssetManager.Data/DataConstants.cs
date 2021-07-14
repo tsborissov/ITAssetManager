@@ -28,6 +28,7 @@
         public const int CategoryNameMinLength = 2;
         public const int CategoryNameMaxLength = 20;
 
+        public const int StatusNameMinLength = 1;
         public const int StatusNameMaxLength = 20;
     }
 }
