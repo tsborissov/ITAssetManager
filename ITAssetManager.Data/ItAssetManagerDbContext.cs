@@ -22,5 +22,45 @@ namespace ITAssetManager.Data
         public DbSet<Status> Statuses { get; init; }
 
         public DbSet<Vendor> Vendors { get; init; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder
+                .Entity<Asset>()
+                .HasOne(b => b.AssetModel)
+                .WithMany(b => b.Assets)
+                .HasForeignKey(b => b.AssetModelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Asset>()
+                .HasOne(s => s.Status)
+                .WithMany(s => s.Assets)
+                .HasForeignKey(s => s.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Asset>()
+                .HasOne(v => v.Vendor)
+                .WithMany(v => v.Assets)
+                .HasForeignKey(v => v.VendorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<AssetModel>()
+                .HasOne(b => b.Brand)
+                .WithMany(b => b.AssetModels)
+                .HasForeignKey(b => b.BrandId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<AssetModel>()
+                .HasOne(c => c.Category)
+                .WithMany(c => c.AssetModels)
+                .HasForeignKey(c => c.CategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            base.OnModelCreating(builder);
+        }
     }
 }
