@@ -13,10 +13,6 @@ namespace ITAssetManager.Data.Models
         [MaxLength(BrandNameMaxLength)]
         public string Name { get; set; }
 
-        [Required]
-        [MaxLength(BrandDetailsMaxLength)]
-        public string Details { get; set; }
-
         public ICollection<AssetModel> AssetModels { get; set; } = new HashSet<AssetModel>();
     }
 }

@@ -18,8 +18,6 @@
 
         public const int BrandNameMinLength = 1;
         public const int BrandNameMaxLength = 30;
-        public const int BrandDetailsMinLength = 5;
-        public const int BrandDetailsMaxLength = 200;
 
         public const int SerialNrMinLength = 3;
         public const int SerialNrMaxLength = 30;
