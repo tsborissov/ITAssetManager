@@ -17,8 +17,6 @@ namespace ITAssetManager.Data.Models
         [MaxLength(BrandDetailsMaxLength)]
         public string Details { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public ICollection<AssetModel> AssetModels { get; set; } = new HashSet<AssetModel>();
     }
 }

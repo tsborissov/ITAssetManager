@@ -20,7 +20,7 @@ namespace ITAssetManager.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<ItAssetManagerDbContext>(options => options
+                .AddDbContext<Data.ItAssetManagerDbContext>(options => options
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services
@@ -29,7 +29,7 @@ namespace ITAssetManager.Web
             services
                 .AddDefaultIdentity<IdentityUser>(options => options
                     .SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<ItAssetManagerDbContext>();
+                    .AddEntityFrameworkStores<Data.ItAssetManagerDbContext>();
 
             services.AddControllersWithViews();
         }

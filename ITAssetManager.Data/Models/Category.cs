@@ -13,8 +13,6 @@ namespace ITAssetManager.Data.Models
         [MaxLength(CategoryNameMaxLength)]
         public string Name { get; set; }
 
-        public bool IsDeleted { get; set; }
-
         public ICollection<AssetModel> AssetModels { get; init; } = new HashSet<AssetModel>();
     }
 }

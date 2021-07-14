@@ -21,13 +21,11 @@ namespace ITAssetManager.Data.Models
         [MaxLength(InventoryNrMaxLength)]
         public string InventoryNr { get; set; }
 
-        [Required]
-        public string AssetStatusId { get; set; }
+        public int AssetStatusId { get; set; }
 
         public Status AssetStatus { get; set; }
 
-        [Required]
-        public string VendorId { get; set; }
+        public int VendorId { get; set; }
 
         public Vendor Vendor { get; set; }
 

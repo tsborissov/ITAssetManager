@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using ITAssetManager.Data.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetManager.Data
@@ -10,6 +11,16 @@ namespace ITAssetManager.Data
         {
         }
 
+        public DbSet<Asset> Assets { get; init; }
 
+        public DbSet<AssetModel> AssetModels { get; init; }
+
+        public DbSet<Brand> Brands { get; init; }
+
+        public DbSet<Category> Categories { get; init; }
+
+        public DbSet<Status> Statuses { get; init; }
+
+        public DbSet<Vendor> Vendors { get; init; }
     }
 }

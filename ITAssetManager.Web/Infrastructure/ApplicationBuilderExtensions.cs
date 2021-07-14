@@ -12,7 +12,7 @@ namespace ITAssetManager.Web.Infrastructure
         {
             using var scopedServices = app.ApplicationServices.CreateScope();
 
-            var data = scopedServices.ServiceProvider.GetService<ItAssetManagerDbContext>();
+            var data = scopedServices.ServiceProvider.GetService<Data.ItAssetManagerDbContext>();
 
             data.Database.Migrate();
 
