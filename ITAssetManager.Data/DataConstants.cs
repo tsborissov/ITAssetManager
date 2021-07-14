@@ -9,7 +9,7 @@
         public const int AssetModelDetailsMinLength = 3;
         public const int AssetModelDetailsMaxLength = 200;
 
-        public const int VendorNameMinLength = 5;
+        public const int VendorNameMinLength = 1;
         public const int VendorNameMaxLength = 50;
         public const int VendorVatMinLength = 4;
         public const int VendorVatMaxLength = 15;

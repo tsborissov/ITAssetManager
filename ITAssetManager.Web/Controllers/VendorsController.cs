@@ -45,6 +45,9 @@ namespace ITAssetManager.Web.Controllers
                 Details = vendorModel.Details
             };
 
+            this.data.Vendors.Add(vendor);
+            this.data.SaveChanges();
+
             return RedirectToAction("Index", "Home");
         }
     }

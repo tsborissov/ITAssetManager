@@ -8,14 +8,14 @@ namespace ITAssetManager.Web.Models.Vendors
     {
         [Required]
         [StringLength(VendorNameMaxLength, MinimumLength = VendorNameMinLength)]
-        public string Name { get; set; }
+        public string Name { get; init; }
 
         [Required]
         [Display(Name = "VAT")]
         [StringLength(VendorVatMaxLength, MinimumLength = VendorVatMinLength)]
-        public string Vat { get; set; }
+        public string Vat { get; init; }
 
         [StringLength(VendorDetailsMaxLength)]
-        public string Details { get; set; }
+        public string Details { get; init; }
     }
 }
