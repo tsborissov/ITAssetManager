@@ -1,6 +1,4 @@
-using System;
-
-namespace ITAssetManager.Models
+namespace ITAssetManager.Web.Models
 {
     public class ErrorViewModel
     {

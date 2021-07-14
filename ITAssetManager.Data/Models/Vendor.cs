@@ -8,10 +8,7 @@ namespace ITAssetManager.Data.Models
 {
     public class Vendor
     {
-        [Key]
-        [Required]
-        [MaxLength(IdDefaultLength)]
-        public string Id { get; init; } = Guid.NewGuid().ToString();
+        public int Id { get; init; }
 
         [Required]
         [MaxLength(VendorNameMaxLength)]

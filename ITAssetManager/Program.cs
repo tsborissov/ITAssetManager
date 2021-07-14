@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ITAssetManager
+namespace ITAssetManager.Web
 {
     public class Program
     {

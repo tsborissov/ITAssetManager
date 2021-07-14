@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using static ITAssetManager.Data.DataConstants;
@@ -8,10 +7,7 @@ namespace ITAssetManager.Data.Models
 {
     public class AssetStatus
     {
-        [Key]
-        [Required]
-        [MaxLength(IdDefaultLength)]
-        public string Id { get; init; } = Guid.NewGuid().ToString();
+        public int Id { get; init; }
 
         [Required]
         [MaxLength(StatusNameMaxLength)]
