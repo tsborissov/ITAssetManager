@@ -24,6 +24,8 @@
         public const string InventoryNrRegexPattern = @"[A-Z]{2}[0-9]{6}";
         public const int InvoiceNrMinLength = 3;
         public const int InvoiceNrMaxLength = 15;
+        public const int PriceMinValue = 0;
+        public const int PriceMaxValue = 100000;
 
         public const int CategoryNameMinLength = 2;
         public const int CategoryNameMaxLength = 20;

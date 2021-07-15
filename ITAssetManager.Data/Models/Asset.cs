@@ -39,7 +39,7 @@ namespace ITAssetManager.Data.Models
 
         public DateTime WarranyExpirationDate { get; set; }
 
-        public DateTime DisposalDate { get; set; }
+        public DateTime? DisposalDate { get; set; }
 
         public bool IsDeleted { get; set; }
     }

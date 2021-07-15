@@ -20,6 +20,7 @@ namespace ITAssetManager.Web.Models.AssetModels
         [StringLength(AssetModelNameMaxLength, MinimumLength = AssetModelNameMinLength)]
         public string Name { get; init; }
 
+        [Display(Name = "Category")]
         public int CategoryId { get; init; }
 
         [BindNever]

@@ -4,14 +4,16 @@ using ITAssetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITAssetManager.Data.Migrations
 {
     [DbContext(typeof(ItAssetManagerDbContext))]
-    partial class ItAssetManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210715171856_AssetDisposalDateChangedToNullable")]
+    partial class AssetDisposalDateChangedToNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
