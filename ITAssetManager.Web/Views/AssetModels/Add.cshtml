@@ -1,5 +1,10 @@
 ﻿@model AssetModelsAddFormModel
 
+@{ 
+    var defaultBrand = "HP";
+    var defaultCategory = "Laptop";
+}
+
 @{
     ViewData["Title"] = "Add Model";
 }
@@ -13,7 +18,14 @@
                 <select asp-for="BrandId" class="form-control">
                     @foreach (var brand in Model.Brands)
                     {
-                        <option value="@brand.Id">@brand.Name</option>
+                        @if (brand.Name.ToLower() == defaultBrand.ToLower())
+                        {
+                            <option value="@brand.Id" selected>@brand.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@brand.Id">@brand.Name</option>
+                        }
                     }
                 </select>
             </div>
@@ -27,7 +39,14 @@
                 <select asp-for="CategoryId" class="form-control">
                     @foreach (var category in Model.Categories)
                     {
-                        <option value="@category.Id">@category.Name</option>
+                        @if (category.Name.ToLower() == defaultCategory.ToLower())
+                        {
+                            <option value="@category.Id" selected>@category.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
                     }
                 </select>
             </div>

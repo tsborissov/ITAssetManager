@@ -38,6 +38,11 @@ namespace ITAssetManager.Web.Controllers
                 this.ModelState.AddModelError(nameof(assetModelModel.CategoryId), "Invalid 'Category' selected!");
             }
 
+            if (this.data.AssetModels.Any(m => m.Name == assetModelModel.Name))
+            {
+                this.ModelState.AddModelError(nameof(assetModelModel.Name), "Model already exists!");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 assetModelModel.Categories = this.GetCategories();

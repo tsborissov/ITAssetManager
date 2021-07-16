@@ -19,6 +19,7 @@ namespace ITAssetManager.Web.Infrastructure
             data.Database.Migrate();
 
             SeedBrands(data);
+            SeedCategories(data);
 
             // TODO : Seed database
 
@@ -36,6 +37,7 @@ namespace ITAssetManager.Web.Infrastructure
             {
                 new Brand { Name = "HP" },
                 new Brand { Name = "Dell" },
+                new Brand { Name = "IBM" },
                 new Brand { Name = "Lenovo" },
                 new Brand { Name = "Cisco" },
                 new Brand { Name = "Acer" },
@@ -44,6 +46,28 @@ namespace ITAssetManager.Web.Infrastructure
                 new Brand { Name = "Apple" },
                 new Brand { Name = "Microsoft" },
                 new Brand { Name = "Google" },
+            });
+
+            data.SaveChanges();
+        }
+
+        private static void SeedCategories(ItAssetManagerDbContext data)
+        {
+            if (data.Categories.Any())
+            {
+                return;
+            }
+
+            data.Categories.AddRange(new[]
+            {
+                new Category { Name = "Laptop" },
+                new Category { Name = "Desktop" },
+                new Category { Name = "Tablet" },
+                new Category { Name = "Server" },
+                new Category { Name = "Printer" },
+                new Category { Name = "Projector" },
+                new Category { Name = "Switch" },
+                new Category { Name = "Router" },
             });
 
             data.SaveChanges();

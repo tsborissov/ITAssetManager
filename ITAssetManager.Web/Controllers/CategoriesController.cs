@@ -43,5 +43,21 @@ namespace ITAssetManager.Web.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        public IActionResult All()
+        {
+            var categories = this.data
+                .Categories
+                .OrderBy(c => c.Name)
+                .Select(c => new CategoryListingViewModel
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToList();
+
+            return View(categories);
+        }
     }
 }
