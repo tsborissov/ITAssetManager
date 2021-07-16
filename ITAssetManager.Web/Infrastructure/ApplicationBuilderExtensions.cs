@@ -20,6 +20,7 @@ namespace ITAssetManager.Web.Infrastructure
 
             SeedBrands(data);
             SeedCategories(data);
+            SeedStatuses(data);
 
             // TODO : Seed database
 
@@ -68,6 +69,26 @@ namespace ITAssetManager.Web.Infrastructure
                 new Category { Name = "Projector" },
                 new Category { Name = "Switch" },
                 new Category { Name = "Router" },
+            });
+
+            data.SaveChanges();
+        }
+
+        private static void SeedStatuses(ItAssetManagerDbContext data)
+        {
+            if (data.Statuses.Any())
+            {
+                return;
+            }
+
+            data.Statuses.AddRange(new[]
+            {
+                new Status { Name = "In Use" },
+                new Status { Name = "In Stock" },
+                new Status { Name = "Disposed" },
+                new Status { Name = "Pending Disposal" },
+                new Status { Name = "In Repair" },
+                new Status { Name = "Staging" },
             });
 
             data.SaveChanges();
