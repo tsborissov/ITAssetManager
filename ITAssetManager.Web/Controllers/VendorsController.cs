@@ -3,6 +3,7 @@ using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Models.Vendors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace ITAssetManager.Web.Controllers
@@ -50,15 +51,26 @@ namespace ITAssetManager.Web.Controllers
             this.data.Vendors.Add(vendor);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         [Authorize]
-        public IActionResult All()
+        public IActionResult All(string sortOrder)
         {
-            var vendors = this.data
-                .Vendors
-                .OrderBy(v => v.Name)
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["VatSortParm"] = sortOrder == "Vat" ? "vat_desc" : "Vat";
+
+            var vendorsQuery = this.data.Vendors.AsQueryable();
+
+            vendorsQuery = sortOrder switch
+            {
+                "name_desc" => vendorsQuery.OrderByDescending(v => v.Name),
+                "Vat" => vendorsQuery.OrderBy(s => s.Vat),
+                "vat_desc" => vendorsQuery.OrderByDescending(s => s.Vat),
+                _ => vendorsQuery.OrderBy(s => s.Name),
+            };
+
+            var vendors = vendorsQuery
                 .Select(v => new VendorListingViewModel
                 {
                     Id = v.Id,

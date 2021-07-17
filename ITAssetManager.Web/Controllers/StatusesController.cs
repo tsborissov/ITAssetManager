@@ -41,7 +41,7 @@ namespace ITAssetManager.Web.Controllers
             this.data.Statuses.Add(status);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         [Authorize]
@@ -49,7 +49,6 @@ namespace ITAssetManager.Web.Controllers
         {
             var statuses = this.data
                 .Statuses
-                .OrderBy(s => s.Name)
                 .Select(s => new StatusListingViewModel
                 {
                     Id = s.Id,

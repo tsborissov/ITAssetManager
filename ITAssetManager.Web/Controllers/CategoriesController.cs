@@ -41,7 +41,7 @@ namespace ITAssetManager.Web.Controllers
             this.data.Categories.Add(category);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         [Authorize]
@@ -49,7 +49,6 @@ namespace ITAssetManager.Web.Controllers
         {
             var categories = this.data
                 .Categories
-                .OrderBy(c => c.Name)
                 .Select(c => new CategoryListingViewModel
                 {
                     Id = c.Id,

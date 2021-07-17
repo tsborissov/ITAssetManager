@@ -41,7 +41,7 @@ namespace ITAssetManager.Web.Controllers
             this.data.Brands.Add(brand);
             this.data.SaveChanges();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         [Authorize]
@@ -49,7 +49,6 @@ namespace ITAssetManager.Web.Controllers
         {
             var brands = this.data
                 .Brands
-                .OrderBy(b => b.Name)
                 .Select(b => new BrandListingViewModel
                 {
                     Id = b.Id,
