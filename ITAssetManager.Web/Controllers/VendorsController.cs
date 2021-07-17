@@ -42,13 +42,32 @@ namespace ITAssetManager.Web.Controllers
             {
                 Name = vendorModel.Name,
                 Vat = vendorModel.Vat,
-                Details = vendorModel.Details
+                Telephone = vendorModel.Telephone,
+                Email = vendorModel.Email,
+                Address = vendorModel.Address
             };
 
             this.data.Vendors.Add(vendor);
             this.data.SaveChanges();
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult All()
+        {
+            var vendors = this.data
+                .Vendors
+                .OrderBy(v => v.Name)
+                .Select(v => new VendorListingViewModel
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Vat = v.Vat
+                })
+                .ToList();
+
+            return View(vendors);
         }
     }
 }

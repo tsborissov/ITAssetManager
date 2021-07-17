@@ -21,6 +21,7 @@ namespace ITAssetManager.Web.Infrastructure
             SeedBrands(data);
             SeedCategories(data);
             SeedStatuses(data);
+            SeedVendors(data);
 
             // TODO : Seed database
 
@@ -89,6 +90,26 @@ namespace ITAssetManager.Web.Infrastructure
                 new Status { Name = "Pending Disposal" },
                 new Status { Name = "In Repair" },
                 new Status { Name = "Staging" },
+            });
+
+            data.SaveChanges();
+        }
+
+        private static void SeedVendors(ItAssetManagerDbContext data)
+        {
+            if (data.Vendors.Any())
+            {
+                return;
+            }
+
+            data.Vendors.AddRange(new[]
+            {
+                new Vendor { Name = "HP Bulgaria EOOD", Vat = "BG000123444", Email = "hp@email.com", Telephone = "0035929991122", Address = "Business Park, Sofia, Bulgaria" },
+                new Vendor { Name = "Lenovo Bulgaria OOD", Vat = "BG000123445", Email = "lenovo@email.com", Telephone = "0035929992233", Address = "LenovoStreet 8, Sofia, Bulgaria" },
+                new Vendor { Name = "Dell Bulgaria OOD", Vat = "BG000123455", Email = "dell@email.com", Telephone = "0035929993344", Address = "Tech Park, Sofia, Bulgaria" },
+                new Vendor { Name = "Apple Bulgaria EOOD", Vat = "BG000123466", Email = "apple@email.com", Telephone = "0035929994321", Address = "Apple Park, Sofia, Bulgaria" },
+                new Vendor { Name = "Cisco AD", Vat = "BG000555444", Email = "cisco@email.com", Telephone = "0035929998888", Address = "Business Park, Sofia, Bulgaria" },
+                new Vendor { Name = "Acer OOD", Vat = "BG000123555", Email = "acer@email.com", Telephone = "0035923334455", Address = "Business Park, Sofia, Bulgaria" },
             });
 
             data.SaveChanges();

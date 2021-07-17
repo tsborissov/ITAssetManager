@@ -18,8 +18,16 @@ namespace ITAssetManager.Data.Models
         [MaxLength(VendorVatMaxLength)]
         public string Vat { get; set; }
 
-        [MaxLength(VendorDetailsMaxLength)]
-        public string Details { get; set; }
+        [Required]
+        [MaxLength(VendorTelephoneMaxLength)]
+        public string Telephone { get; set; }
+        
+        [Required]
+        [MaxLength(VendorEmailMaxLength)]
+        public string Email { get; set; }
+
+        [MaxLength(VendorAddressMaxLength)]
+        public string Address { get; set; }
 
         public ICollection<Asset> Assets { get; init; } = new HashSet<Asset>();
     }

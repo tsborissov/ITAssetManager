@@ -12,10 +12,18 @@ namespace ITAssetManager.Web.Models.Vendors
 
         [Required]
         [Display(Name = "VAT")]
-        [StringLength(VendorVatMaxLength, MinimumLength = VendorVatMinLength)]
+        [RegularExpression(VendorVatRegexPattern, ErrorMessage = "Invalid VAT Number!")]
         public string Vat { get; init; }
 
-        [StringLength(VendorDetailsMaxLength)]
-        public string Details { get; init; }
+        [Required]
+        [StringLength(VendorTelephoneMaxLength, MinimumLength = VendorTelephoneMinLength)]
+        public string Telephone { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [StringLength(VendorAddressMaxLength, MinimumLength = VendorAddressMinLength)]
+        public string Address { get; set; }
     }
 }

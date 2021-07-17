@@ -15,13 +15,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="Vat"></label>
-                <input asp-for="Vat" class="form-control">
+                <input asp-for="Vat" class="form-control" placeholder="BG1234567890">
                 <span asp-validation-for="Vat" class="small text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Details"></label>
-                <textarea asp-for="Details" class="form-control" rows="3" placeholder="Address, contact info, etc..."></textarea>
-                <span asp-validation-for="Details" class="small text-danger"></span>
+                <label asp-for="Telephone"></label>
+                <input asp-for="Telephone" class="form-control">
+                <span asp-validation-for="Telephone" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control">
+                <span asp-validation-for="Email" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <textarea asp-for="Address" class="form-control" rows="2" placeholder="Address, City, Country"></textarea>
+                <span asp-validation-for="Address" class="small text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary float-right">Save</button>
         </form>

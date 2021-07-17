@@ -1,0 +1,45 @@
+﻿@model ICollection<VendorListingViewModel>
+
+@{
+    ViewData["Title"] = "All Vendors";
+}
+
+@{
+    var rowNr = 1;
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin">All Vendors:</h2>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Vendor</th>
+                    <th scope="col">VAT</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var vendor in Model)
+                {
+                <tr>
+                    <th scope="row">@rowNr</th>
+                    <td>@vendor.Name</td>
+                    <td>@vendor.Vat</td>
+                    <td>
+                        <div class="button-holder">
+                            <a asp-controller="Vendors"
+                               asp-action="Details"
+                               asp-route-id="@vendor.Id"
+                               class="btn btn-primary">Details</a>
+                        </div>
+                    </td>
+                </tr>
+
+                    rowNr++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
