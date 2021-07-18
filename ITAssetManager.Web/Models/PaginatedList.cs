@@ -12,7 +12,7 @@ namespace ITAssetManager.Web.Models
         public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
         {
             PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
+            TotalPages = GetLastPage(count, pageSize);
 
             this.AddRange(items);
         }
@@ -36,8 +36,24 @@ namespace ITAssetManager.Web.Models
         public static PaginatedList<T> Create(IQueryable<T> source, int pageIndex, int pageSize)
         {
             var count = source.Count();
+            var lastPage = GetLastPage(count, pageSize);
+
+            if (pageIndex < 1)
+            {
+                pageIndex = 1;
+            }
+            else if (pageIndex > lastPage)
+            {
+                pageIndex = lastPage;
+            }
+
             var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
+        }
+
+        private static int GetLastPage(int count, int pageSize)
+        {
+            return (int)Math.Ceiling(count / (double)pageSize);
         }
     }
 }
