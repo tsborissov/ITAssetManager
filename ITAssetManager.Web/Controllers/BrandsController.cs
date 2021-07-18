@@ -1,9 +1,13 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Models;
 using ITAssetManager.Web.Models.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
@@ -45,18 +49,50 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All()
+        public IActionResult All(
+            string sortOrder,
+            string searchString,
+            string currentFilter,
+            int? pageNumber)
+
         {
-            var brands = this.data
-                .Brands
-                .Select(b => new BrandListingViewModel
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                pageNumber = 1;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var brandsQuery = this.data.Brands.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                brandsQuery = brandsQuery
+                    .Where(b =>
+                        b.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            brandsQuery = sortOrder switch
+            {
+                "name_desc" => brandsQuery.OrderByDescending(b => b.Name),
+                _ => brandsQuery.OrderBy(b => b.Name)
+            };
+
+            var vendors = brandsQuery
+                .Select(v => new BrandListingViewModel
                 {
-                    Id = b.Id,
-                    Name = b.Name
-                })
-                .ToList();
-            
-            return View(brands);
+                    Id = v.Id,
+                    Name = v.Name
+                });
+
+            return View(PaginatedList<BrandListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
         }
     }
 }
