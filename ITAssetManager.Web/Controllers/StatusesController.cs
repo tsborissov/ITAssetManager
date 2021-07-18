@@ -1,9 +1,13 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Models;
 using ITAssetManager.Web.Models.Statuses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
@@ -45,18 +49,50 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All()
-        {
-            var statuses = this.data
-                .Statuses
-                .Select(s => new StatusListingViewModel
-                {
-                    Id = s.Id,
-                    Name = s.Name
-                })
-                .ToList();
+        public IActionResult All(
+            string sortOrder,
+            string searchString,
+            string currentFilter,
+            int? pageNumber)
 
-            return View(statuses);
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                pageNumber = 1;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var statusesQuery = this.data.Statuses.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                statusesQuery = statusesQuery
+                    .Where(s =>
+                        s.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            statusesQuery = sortOrder switch
+            {
+                "name_desc" => statusesQuery.OrderByDescending(s => s.Name),
+                _ => statusesQuery.OrderBy(s => s.Name)
+            };
+
+            var vendors = statusesQuery
+                .Select(v => new StatusListingViewModel
+                {
+                    Id = v.Id,
+                    Name = v.Name
+                });
+
+            return View(PaginatedList<StatusListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
         }
     }
 }

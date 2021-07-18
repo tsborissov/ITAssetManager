@@ -1,10 +1,13 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Models;
 using ITAssetManager.Web.Models.Vendors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
@@ -55,17 +58,42 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All(string sortOrder)
+        public IActionResult All(
+            string sortOrder, 
+            string searchString, 
+            string currentFilter,
+            int? pageNumber)
+
         {
+            ViewData["CurrentSort"] = sortOrder;
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["VatSortParm"] = sortOrder == "Vat" ? "vat_desc" : "Vat";
+            ViewData["VatSortParm"] = sortOrder == "vat" ? "vat_desc" : "vat";
+
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                pageNumber = 1;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
 
             var vendorsQuery = this.data.Vendors.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                vendorsQuery = vendorsQuery
+                    .Where(v => 
+                        v.Name.ToLower().Contains(searchString.ToLower()) || 
+                        v.Vat.ToLower().Contains(searchString.ToLower()));
+            }
 
             vendorsQuery = sortOrder switch
             {
                 "name_desc" => vendorsQuery.OrderByDescending(v => v.Name),
-                "Vat" => vendorsQuery.OrderBy(s => s.Vat),
+                "vat" => vendorsQuery.OrderBy(s => s.Vat),
                 "vat_desc" => vendorsQuery.OrderByDescending(s => s.Vat),
                 _ => vendorsQuery.OrderBy(s => s.Name),
             };
@@ -76,10 +104,9 @@ namespace ITAssetManager.Web.Controllers
                     Id = v.Id,
                     Name = v.Name,
                     Vat = v.Vat
-                })
-                .ToList();
+                });
 
-            return View(vendors);
+            return View(PaginatedList<VendorListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
         }
     }
 }

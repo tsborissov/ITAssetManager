@@ -2,6 +2,8 @@
 {
     public class DataConstants
     {
+        public const int ListingPageSize = 5;
+
         public const int AssetModelNameMinLength = 3;
         public const int AssetModelNameMaxLength = 50;
         public const int AssetModelImageUrlMinLength = 3;
