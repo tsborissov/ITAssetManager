@@ -108,5 +108,34 @@ namespace ITAssetManager.Web.Controllers
 
             return View(PaginatedList<VendorListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
         }
+
+        [Authorize]
+        public IActionResult Details(
+            int id,
+            string sortOrder,
+            string currentFilter,
+            int? pageNumber)
+        {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["CurrentFilter"] = currentFilter;
+            ViewData["CurrentPage"] = pageNumber;
+
+
+            var vendor = this.data
+                .Vendors
+                .Where(v => v.Id == id)
+                .Select(v => new VendorDetailsViewModel
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Vat = v.Vat,
+                    Email = v.Email,
+                    Telephone = v.Telephone,
+                    Address = v.Address
+                })
+                .FirstOrDefault();
+
+            return View(vendor);
+        }
     }
 }

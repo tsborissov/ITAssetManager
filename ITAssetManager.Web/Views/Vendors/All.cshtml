@@ -50,7 +50,10 @@
                         <td>@vendor.Vat</td>
                         <td class="text-right">
                             <div class="button-holder">
-                                <a asp-action="Details" 
+                                <a asp-action="Details"
+                                   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                   asp-route-pageNumber="@(Model.PageIndex)"
+                                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
                                    asp-route-id="@vendor.Id" 
                                    class="btn btn-primary">
                                 Details
