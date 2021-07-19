@@ -1,9 +1,14 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Models;
 using ITAssetManager.Web.Models.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
+
+using static ITAssetManager.Data.DataConstants;
+
 
 namespace ITAssetManager.Web.Controllers
 {
@@ -45,18 +50,51 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All()
+        public IActionResult All(
+            string sortOrder,
+            string searchString,
+            string currentFilter,
+            int? pageNumber)
+
         {
-            var categories = this.data
-                .Categories
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (String.IsNullOrEmpty(searchString))
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                pageNumber = 1;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var categoriesQuery = this.data.Categories.AsQueryable();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                categoriesQuery = categoriesQuery
+                    .Where(c =>
+                        c.Name.ToLower()
+                        .Contains(searchString.ToLower()));
+            }
+
+            categoriesQuery = sortOrder switch
+            {
+                "name_desc" => categoriesQuery.OrderByDescending(c => c.Name),
+                _ => categoriesQuery.OrderBy(c => c.Name)
+            };
+
+            var categories = categoriesQuery
                 .Select(c => new CategoryListingViewModel
                 {
                     Id = c.Id,
                     Name = c.Name
-                })
-                .ToList();
+                });
 
-            return View(categories);
+            return View(PaginatedList<CategoryListingViewModel>.Create(categories, pageNumber ?? 1, ListingPageSize));
         }
     }
 }

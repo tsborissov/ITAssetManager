@@ -1,22 +1,22 @@
 ﻿@model PaginatedList<BrandListingViewModel>
 
 @{
-    ViewData["Title"] = "Brands";
+    ViewBag.Title = "Brands";
 }
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <h2 class="heading-margin">Brands</h2>
+        <h2 class="heading-margin">@ViewBag.Title</h2>
         <div class="row mt-3 mb-3">
-            <form asp-controller="Brands" asp-action="All" method="get" class="col-md-9">
+            <form asp-action="All" method="get" class="col-md-9">
                 <div class="form-actions">
                     <input type="text" name="SearchString" class="col-md-7" value="@ViewData["CurrentFilter"]" placeholder="Search by Name..." />
                     <input type="submit" class="btn btn-primary" value="Search" />
-                    <a asp-controller="Brands" asp-action="All" class="btn btn-primary">Full List</a>
+                    <a asp-action="All" class="btn btn-primary">Full List</a>
                 </div>
             </form>
             <div class="button-holder col-md-3">
-                <a asp-controller="Brands" asp-action="Add" class="btn btn-primary">Create New</a>
+                <a asp-action="Add" class="btn btn-primary">Create New</a>
             </div>
         </div>
         <div class="row mt-1 mb-2">
@@ -26,8 +26,7 @@
             <thead>
                 <tr>
                     <th scope="col">
-                        <a asp-controller="Brands"
-                           asp-action="All"
+                        <a asp-action="All"
                            asp-route-sortOrder="@ViewData["NameSortParm"]"
                            asp-route-currentFilter="@ViewData["CurrentFilter"]">
                             Name
@@ -43,8 +42,7 @@
                         <td>@brand.Name</td>
                         <td class="text-right">
                             <div class="button-holder">
-                                <a asp-controller="Brands"
-                                   asp-action="Edit"
+                                <a asp-action="Edit"
                                    asp-route-id="@brand.Id"
                                    class="btn btn-primary">
                                     Edit
@@ -62,16 +60,14 @@
         }
 
         <div class="row mt-3 mb-3">
-            <a asp-controller="Brands"
-               asp-action="All"
+            <a asp-action="All"
                asp-route-sortOrder="@ViewData["CurrentSort"]"
                asp-route-pageNumber="@(Model.PageIndex - 1)"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"
                class="btn btn-link @prevDisabled">
                 << Previous
             </a>
-            <a asp-controller="Brands"
-               asp-action="All"
+            <a asp-action="All"
                asp-route-sortOrder="@ViewData["CurrentSort"]"
                asp-route-pageNumber="@(Model.PageIndex + 1)"
                asp-route-currentFilter="@ViewData["CurrentFilter"]"

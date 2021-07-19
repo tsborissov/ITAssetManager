@@ -76,7 +76,8 @@ namespace ITAssetManager.Web.Controllers
             {
                 brandsQuery = brandsQuery
                     .Where(b =>
-                        b.Name.ToLower().Contains(searchString.ToLower()));
+                        b.Name.ToLower()
+                        .Contains(searchString.ToLower()));
             }
 
             brandsQuery = sortOrder switch
