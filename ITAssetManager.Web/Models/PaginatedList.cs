@@ -38,13 +38,15 @@ namespace ITAssetManager.Web.Models
             var count = source.Count();
             var lastPage = GetLastPage(count, pageSize);
 
+            
+            if (pageIndex > lastPage)
+            {
+                pageIndex = lastPage;
+            }
+
             if (pageIndex < 1)
             {
                 pageIndex = 1;
-            }
-            else if (pageIndex > lastPage)
-            {
-                pageIndex = lastPage;
             }
 
             var items = source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList();
