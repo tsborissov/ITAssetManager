@@ -120,7 +120,6 @@ namespace ITAssetManager.Web.Controllers
             ViewData["CurrentFilter"] = currentFilter;
             ViewData["CurrentPage"] = pageNumber;
 
-
             var vendor = this.data
                 .Vendors
                 .Where(v => v.Id == id)
@@ -136,6 +135,58 @@ namespace ITAssetManager.Web.Controllers
                 .FirstOrDefault();
 
             return View(vendor);
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            var vendor = this.data
+                .Vendors
+                .Where(v => v.Id == id)
+                .Select(v => new VendorEditModel
+                {
+                    Id = v.Id,
+                    Name = v.Name,
+                    Vat = v.Vat,
+                    Email = v.Email,
+                    Telephone = v.Telephone,
+                    Address = v.Address
+                })
+                .FirstOrDefault();
+
+            return View(vendor);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(VendorEditModel vendorModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return View(vendorModel);
+            }
+
+            var targetVendor = this.data
+                .Vendors
+                .Where(v => v.Id == vendorModel.Id)
+                .FirstOrDefault();
+
+            if (targetVendor != null)
+            {
+                targetVendor.Name = vendorModel.Name;
+                targetVendor.Vat = vendorModel.Vat;
+                targetVendor.Telephone = vendorModel.Telephone;
+                targetVendor.Email = vendorModel.Email;
+                targetVendor.Address = vendorModel.Address;
+
+                this.data.SaveChanges();
+            }
+            else
+            {
+                return RedirectToAction(nameof(All));
+            }
+
+            return View(vendorModel);
         }
     }
 }

@@ -4,8 +4,10 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Models.Vendors
 {
-    public class VendorAddFormModel
+    public class VendorEditModel
     {
+        public int Id { get; init; }
+
         [Required]
         [StringLength(VendorNameMaxLength, MinimumLength = VendorNameMinLength)]
         public string Name { get; init; }

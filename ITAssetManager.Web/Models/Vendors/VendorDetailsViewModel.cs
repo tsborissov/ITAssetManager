@@ -1,4 +1,6 @@
-﻿namespace ITAssetManager.Web.Models.Vendors
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ITAssetManager.Web.Models.Vendors
 {
     public class VendorDetailsViewModel
     {
@@ -6,6 +8,7 @@
 
         public string Name { get; init; }
 
+        [Display(Name = "VAT")]
         public string Vat { get; init; }
 
         public string Telephone { get; init; }
