@@ -85,14 +85,14 @@ namespace ITAssetManager.Web.Controllers
                 _ => statusesQuery.OrderBy(s => s.Name)
             };
 
-            var vendors = statusesQuery
+            var statuses = statusesQuery
                 .Select(v => new StatusListingViewModel
                 {
                     Id = v.Id,
                     Name = v.Name
                 });
 
-            return View(PaginatedList<StatusListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
+            return View(PaginatedList<StatusListingViewModel>.Create(statuses, pageNumber ?? 1, ListingPageSize));
         }
     }
 }

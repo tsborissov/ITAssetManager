@@ -86,14 +86,14 @@ namespace ITAssetManager.Web.Controllers
                 _ => brandsQuery.OrderBy(b => b.Name)
             };
 
-            var vendors = brandsQuery
+            var brands = brandsQuery
                 .Select(v => new BrandListingViewModel
                 {
                     Id = v.Id,
                     Name = v.Name
                 });
 
-            return View(PaginatedList<BrandListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
+            return View(PaginatedList<BrandListingViewModel>.Create(brands, pageNumber ?? 1, ListingPageSize));
         }
     }
 }
