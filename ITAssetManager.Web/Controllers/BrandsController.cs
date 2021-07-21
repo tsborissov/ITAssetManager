@@ -49,7 +49,6 @@ namespace ITAssetManager.Web.Controllers
 
         [Authorize]
         public IActionResult All([FromQuery] BrandsQueryModel query)
-
         {
             var brandsQuery = this.data
                 .Brands

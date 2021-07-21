@@ -1,6 +1,5 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
-using ITAssetManager.Web.Models;
 using ITAssetManager.Web.Models.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +50,6 @@ namespace ITAssetManager.Web.Controllers
 
         [Authorize]
         public IActionResult All([FromQuery] CategoriesQueryModel query)
-
         {
             var categoriesQuery = this.data.Categories.AsQueryable();
 
