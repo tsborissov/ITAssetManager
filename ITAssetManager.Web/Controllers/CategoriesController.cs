@@ -94,7 +94,7 @@ namespace ITAssetManager.Web.Controllers
                     Name = c.Name
                 });
 
-            return View(PaginatedList<CategoryListingViewModel>.Create(categories, pageNumber ?? 1, ListingPageSize));
+            return View(PaginatedList<CategoryListingViewModel>.Create(categories, pageNumber ?? 1, ItemsPerPage));
         }
     }
 }

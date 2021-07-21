@@ -92,7 +92,7 @@ namespace ITAssetManager.Web.Controllers
                     Name = v.Name
                 });
 
-            return View(PaginatedList<StatusListingViewModel>.Create(statuses, pageNumber ?? 1, ListingPageSize));
+            return View(PaginatedList<StatusListingViewModel>.Create(statuses, pageNumber ?? 1, ItemsPerPage));
         }
     }
 }

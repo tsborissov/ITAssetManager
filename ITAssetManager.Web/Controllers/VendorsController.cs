@@ -106,7 +106,7 @@ namespace ITAssetManager.Web.Controllers
                     Vat = v.Vat
                 });
 
-            return View(PaginatedList<VendorListingViewModel>.Create(vendors, pageNumber ?? 1, ListingPageSize));
+            return View(PaginatedList<VendorListingViewModel>.Create(vendors, pageNumber ?? 1, ItemsPerPage));
         }
 
         [Authorize]
