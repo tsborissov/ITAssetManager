@@ -39,6 +39,9 @@
             <div class="button-holder">
                 <a asp-action="Details"
                    asp-route-id="@Model.Id"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-searchString="@Model.SearchString"
+                   asp-route-currentPage="@Model.CurrentPage"
                    class="btn btn-primary float-md-left">
                     << Back
                 </a>

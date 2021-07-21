@@ -29,13 +29,20 @@
                 <textarea asp-for="Address" class="form-control" rows="2" disabled></textarea>
             </div>
             <div class="button-holder">
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary float-md-right">Edit</a>
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-searchString="@Model.SearchString"
+                   asp-route-currentPage="@Model.CurrentPage"
+                   class="btn btn-primary float-md-right">
+                    Edit
+                </a>
             </div>
             <div class="button-holder">
                 <a asp-action="All"
-                   asp-route-sortOrder="@ViewData["CurrentSort"]"
-                   asp-route-currentFilter="@ViewData["CurrentFilter"]"
-                   asp-route-pageNumber="@ViewData["CurrentPage"]"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-searchString="@Model.SearchString"
+                   asp-route-currentPage="@Model.CurrentPage"
                    class="btn btn-primary float-md-left">
                     << Back
                 </a>

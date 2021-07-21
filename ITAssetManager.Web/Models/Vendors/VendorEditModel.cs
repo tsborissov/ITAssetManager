@@ -27,5 +27,11 @@ namespace ITAssetManager.Web.Models.Vendors
 
         [StringLength(VendorAddressMaxLength, MinimumLength = VendorAddressMinLength)]
         public string Address { get; init; }
+
+        public string SearchString { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public int? CurrentPage { get; set; }
     }
 }

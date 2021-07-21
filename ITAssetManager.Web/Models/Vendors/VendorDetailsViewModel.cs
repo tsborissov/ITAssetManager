@@ -16,5 +16,11 @@ namespace ITAssetManager.Web.Models.Vendors
         public string Email { get; init; }
 
         public string Address { get; init; }
+
+        public string SearchString { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public int? CurrentPage { get; set; }
     }
 }

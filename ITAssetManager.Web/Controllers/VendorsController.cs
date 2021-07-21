@@ -58,39 +58,19 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All(
-            string sortOrder, 
-            string searchString, 
-            string currentFilter,
-            int? pageNumber)
-
+        public IActionResult All([FromQuery] VendorsQueryModel query)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["VatSortParm"] = sortOrder == "vat" ? "vat_desc" : "vat";
-
-            if (String.IsNullOrEmpty(searchString))
-            {
-                searchString = currentFilter;
-            }
-            else
-            {
-                pageNumber = 1;
-            }
-
-            ViewData["CurrentFilter"] = searchString;
-
             var vendorsQuery = this.data.Vendors.AsQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(query.SearchString))
             {
                 vendorsQuery = vendorsQuery
                     .Where(v => 
-                        v.Name.ToLower().Contains(searchString.ToLower()) || 
-                        v.Vat.ToLower().Contains(searchString.ToLower()));
+                        v.Name.ToLower().Contains(query.SearchString.ToLower()) || 
+                        v.Vat.ToLower().Contains(query.SearchString.ToLower()));
             }
 
-            vendorsQuery = sortOrder switch
+            vendorsQuery = query.SortOrder switch
             {
                 "name_desc" => vendorsQuery.OrderByDescending(v => v.Name),
                 "vat" => vendorsQuery.OrderBy(s => s.Vat),
@@ -98,28 +78,48 @@ namespace ITAssetManager.Web.Controllers
                 _ => vendorsQuery.OrderBy(s => s.Name),
             };
 
+            var itemsCount = vendorsQuery.Count();
+            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
+
+            if (query.CurrentPage < 1)
+            {
+                query.CurrentPage = 1;
+            }
+
+            if (query.CurrentPage > lastPage)
+            {
+                query.CurrentPage = lastPage;
+            }
+
             var vendors = vendorsQuery
+                .Skip((query.CurrentPage - 1) * ItemsPerPage)
+                .Take(ItemsPerPage)
                 .Select(v => new VendorListingViewModel
                 {
                     Id = v.Id,
                     Name = v.Name,
                     Vat = v.Vat
-                });
+                })
+                .ToList();
 
-            return View(PaginatedList<VendorListingViewModel>.Create(vendors, pageNumber ?? 1, ItemsPerPage));
+            return View(new VendorsQueryModel
+            {
+                Vendors = vendors,
+                SearchString = query.SearchString,
+                SortOrder = query.SortOrder,
+                CurrentPage = query.CurrentPage,
+                HasPreviousPage = query.CurrentPage > 1,
+                HasNextPage = query.CurrentPage < lastPage
+            });
         }
 
         [Authorize]
         public IActionResult Details(
             int id,
             string sortOrder,
-            string currentFilter,
-            int? pageNumber)
+            string searchString,
+            int? currentPage)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["CurrentFilter"] = currentFilter;
-            ViewData["CurrentPage"] = pageNumber;
-
             var vendor = this.data
                 .Vendors
                 .Where(v => v.Id == id)
@@ -130,7 +130,10 @@ namespace ITAssetManager.Web.Controllers
                     Vat = v.Vat,
                     Email = v.Email,
                     Telephone = v.Telephone,
-                    Address = v.Address
+                    Address = v.Address,
+                    SearchString = searchString,
+                    SortOrder = sortOrder,
+                    CurrentPage = currentPage
                 })
                 .FirstOrDefault();
 
@@ -138,7 +141,11 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(
+            int id,
+            string sortOrder,
+            string searchString,
+            int? currentPage)
         {
             var vendor = this.data
                 .Vendors
@@ -150,7 +157,10 @@ namespace ITAssetManager.Web.Controllers
                     Vat = v.Vat,
                     Email = v.Email,
                     Telephone = v.Telephone,
-                    Address = v.Address
+                    Address = v.Address,
+                    SortOrder = sortOrder,
+                    SearchString = searchString,
+                    CurrentPage = currentPage
                 })
                 .FirstOrDefault();
 
@@ -186,7 +196,19 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction(nameof(All));
             }
 
-            return View(vendorModel);
+            return RedirectToAction(nameof(Details), 
+                new VendorDetailsViewModel 
+                {
+                    Id = vendorModel.Id,
+                    Name = vendorModel.Name,
+                    Vat = vendorModel.Vat,
+                    Telephone = vendorModel.Telephone,
+                    Email = vendorModel.Email,
+                    Address = vendorModel.Address,
+                    SearchString = vendorModel.SearchString,
+                    SortOrder = vendorModel.SortOrder,
+                    CurrentPage = vendorModel.CurrentPage
+                });
         }
     }
 }
