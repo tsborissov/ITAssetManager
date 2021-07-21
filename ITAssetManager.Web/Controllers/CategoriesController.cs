@@ -50,51 +50,57 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All(
-            string sortOrder,
-            string searchString,
-            string currentFilter,
-            int? pageNumber)
+        public IActionResult All([FromQuery] CategoriesQueryModel query)
 
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-
-            if (String.IsNullOrEmpty(searchString))
-            {
-                searchString = currentFilter;
-            }
-            else
-            {
-                pageNumber = 1;
-            }
-
-            ViewData["CurrentFilter"] = searchString;
-
             var categoriesQuery = this.data.Categories.AsQueryable();
 
-            if (!String.IsNullOrEmpty(searchString))
+            if (!String.IsNullOrEmpty(query.SearchString))
             {
                 categoriesQuery = categoriesQuery
                     .Where(c =>
                         c.Name.ToLower()
-                        .Contains(searchString.ToLower()));
+                        .Contains(query.SearchString.ToLower()));
             }
 
-            categoriesQuery = sortOrder switch
+            categoriesQuery = query.SortOrder switch
             {
                 "name_desc" => categoriesQuery.OrderByDescending(c => c.Name),
                 _ => categoriesQuery.OrderBy(c => c.Name)
             };
 
-            var categories = categoriesQuery
-                .Select(c => new CategoryListingViewModel
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                });
+            var itemsCount = categoriesQuery.Count();
+            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
 
-            return View(PaginatedList<CategoryListingViewModel>.Create(categories, pageNumber ?? 1, ItemsPerPage));
+            if (query.CurrentPage < 1)
+            {
+                query.CurrentPage = 1;
+            }
+
+            if (query.CurrentPage > lastPage)
+            {
+                query.CurrentPage = lastPage;
+            }
+
+            var categories = categoriesQuery
+                .Skip((query.CurrentPage - 1) * ItemsPerPage)
+                .Take(ItemsPerPage)
+                .Select(v => new CategoryListingViewModel
+                {
+                    Id = v.Id,
+                    Name = v.Name
+                })
+                .ToList();
+
+            return View(new CategoriesQueryModel
+            {
+                Categories = categories,
+                SearchString = query.SearchString,
+                SortOrder = query.SortOrder,
+                CurrentPage = query.CurrentPage,
+                HasPreviousPage = query.CurrentPage > 1,
+                HasNextPage = query.CurrentPage < lastPage
+            });
         }
     }
 }
