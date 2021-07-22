@@ -113,11 +113,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Details(
-            int id,
-            string sortOrder,
-            string searchString,
-            int? currentPage)
+        public IActionResult Details(int id, string sortOrder, string searchString, int? currentPage)
         {
             var vendor = this.data
                 .Vendors
@@ -140,11 +136,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Edit(
-            int id,
-            string sortOrder,
-            string searchString,
-            int? currentPage)
+        public IActionResult Edit(int id, string sortOrder, string searchString, int? currentPage)
         {
             var vendor = this.data
                 .Vendors
@@ -180,20 +172,18 @@ namespace ITAssetManager.Web.Controllers
                 .Where(v => v.Id == vendorModel.Id)
                 .FirstOrDefault();
 
-            if (targetVendor != null)
+            if (targetVendor == null)
             {
-                targetVendor.Name = vendorModel.Name;
-                targetVendor.Vat = vendorModel.Vat;
-                targetVendor.Telephone = vendorModel.Telephone;
-                targetVendor.Email = vendorModel.Email;
-                targetVendor.Address = vendorModel.Address;
+                return RedirectToAction("Error", "Home");
+            }
 
-                this.data.SaveChanges();
-            }
-            else
-            {
-                return RedirectToAction(nameof(All));
-            }
+            targetVendor.Name = vendorModel.Name;
+            targetVendor.Vat = vendorModel.Vat;
+            targetVendor.Telephone = vendorModel.Telephone;
+            targetVendor.Email = vendorModel.Email;
+            targetVendor.Address = vendorModel.Address;
+
+            this.data.SaveChanges();
 
             return RedirectToAction(nameof(Details), 
                 new VendorDetailsViewModel 

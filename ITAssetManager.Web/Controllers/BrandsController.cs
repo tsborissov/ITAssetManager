@@ -30,13 +30,13 @@ namespace ITAssetManager.Web.Controllers
             {
                 this.ModelState.AddModelError(nameof(brandModel.Name), "Brand already exists!");
             }
-            
+
             if (!this.ModelState.IsValid)
             {
                 return View(brandModel);
             }
 
-            var brand = new Brand 
+            var brand = new Brand
             {
                 Name = brandModel.Name
             };
@@ -91,7 +91,7 @@ namespace ITAssetManager.Web.Controllers
                 })
                 .ToList();
 
-            return View(new BrandsQueryModel 
+            return View(new BrandsQueryModel
             {
                 Brands = brands,
                 SearchString = query.SearchString,
@@ -100,6 +100,53 @@ namespace ITAssetManager.Web.Controllers
                 HasPreviousPage = query.CurrentPage > 1,
                 HasNextPage = query.CurrentPage < lastPage
             });
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
+        {
+            var brand = this.data
+                .Brands
+                .Where(b => b.Id == id)
+                .Select(b => new BrandEditModel
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                    SearchString = searchString,
+                    SortOrder = sortOrder,
+                    CurrentPage = currentPage
+                })
+                .FirstOrDefault();
+
+            if (brand == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(brand);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(BrandEditModel brand)
+        {
+            var targetBrand = this.data.Brands.Find(brand.Id);
+
+            if (targetBrand == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            targetBrand.Name = brand.Name;
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(All),
+                new 
+                {
+                    SearchString = brand.SearchString,
+                    SortOrder = brand.SortOrder,
+                    CurrentPage = brand.CurrentPage
+                });
         }
     }
 }

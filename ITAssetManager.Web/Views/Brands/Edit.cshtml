@@ -1,0 +1,30 @@
+﻿@model BrandEditModel
+
+@{
+    ViewBag.Title = "Edit Brand";
+}
+
+<div class="row bg-danger text-white">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin">@ViewBag.Title</h2>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" class="form-control">
+                <span asp-validation-for="Name" class="small text-white"></span>
+            </div>
+            <div class="button-holder">
+                <button type="submit" class="btn btn-primary float-right">Save</button>
+            </div>
+            <div class="button-holder">
+                <a asp-action="All"
+                   asp-route-sortOrder="@Model.SortOrder"
+                   asp-route-searchString="@Model.SearchString"
+                   asp-route-currentPage="@Model.CurrentPage"
+                   class="btn btn-primary float-md-left">
+                    << Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
