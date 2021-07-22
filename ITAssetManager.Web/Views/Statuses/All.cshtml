@@ -41,6 +41,9 @@
                             <div class="button-holder">
                                 <a asp-action="Edit"
                                    asp-route-id="@status.Id"
+                                   asp-route-searchString="@Model.SearchString"
+                                   asp-route-sortOrder="@Model.SortOrder"
+                                   asp-route-currentPage="@Model.CurrentPage"
                                    class="btn btn-primary">
                                     Edit
                                 </a>

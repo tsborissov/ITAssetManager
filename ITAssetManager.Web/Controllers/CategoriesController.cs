@@ -109,6 +109,7 @@ namespace ITAssetManager.Web.Controllers
                 .Where(c => c.Id == id)
                 .Select(c => new CategoryEditModel
                 {
+                    Id = c.Id,
                     Name = c.Name,
                     SortOrder = sortOrder,
                     SearchString = searchString,
