@@ -130,6 +130,11 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Edit(BrandEditModel brand)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return View(brand);
+            }
+
             var targetBrand = this.data.Brands.Find(brand.Id);
 
             if (targetBrand == null)
@@ -140,8 +145,7 @@ namespace ITAssetManager.Web.Controllers
             targetBrand.Name = brand.Name;
             this.data.SaveChanges();
 
-            return RedirectToAction(nameof(All),
-                new 
+            return RedirectToAction(nameof(All), new
                 {
                     SearchString = brand.SearchString,
                     SortOrder = brand.SortOrder,

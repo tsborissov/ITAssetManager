@@ -113,7 +113,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Details(int id, string sortOrder, string searchString, int? currentPage)
+        public IActionResult Details(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendor = this.data
                 .Vendors
@@ -136,7 +136,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Edit(int id, string sortOrder, string searchString, int? currentPage)
+        public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendor = this.data
                 .Vendors

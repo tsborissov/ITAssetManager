@@ -21,6 +21,6 @@ namespace ITAssetManager.Web.Models.Vendors
 
         public string SortOrder { get; set; }
 
-        public int? CurrentPage { get; set; }
+        public int CurrentPage { get; set; }
     }
 }

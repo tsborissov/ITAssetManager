@@ -100,5 +100,55 @@ namespace ITAssetManager.Web.Controllers
                 HasNextPage = query.CurrentPage < lastPage
             });
         }
+
+        [Authorize]
+        public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
+        {
+            var category = this.data
+                .Categories
+                .Where(c => c.Id == id)
+                .Select(c => new CategoryEditModel
+                {
+                    Name = c.Name,
+                    SortOrder = sortOrder,
+                    SearchString = searchString,
+                    CurrentPage = currentPage
+                })
+                .FirstOrDefault();
+
+            if (category == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(category);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(CategoryEditModel category)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return View(category);
+            }
+
+            var targetCategory = this.data.Categories.Find(category.Id);
+
+            if (targetCategory == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            targetCategory.Name = category.Name;
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = category.SortOrder,
+                SearchString = category.SearchString,
+                CurrentPage = category.CurrentPage
+            });
+        }
     }
 }
