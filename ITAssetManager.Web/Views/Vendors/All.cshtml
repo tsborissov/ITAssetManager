@@ -61,6 +61,12 @@
                 }
             </tbody>
         </table>
+
+        @if (!Model.Vendors.Any())
+            {
+                <h2 class="text-center">No vendors found for the given criteria!</h2>
+            }
+
         @{
             var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.HasNextPage ? "disabled" : "";

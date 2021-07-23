@@ -53,6 +53,12 @@
                 }
             </tbody>
         </table>
+
+        @if (!Model.Brands.Any())
+        {
+            <h4 class="text-center">No brands found for the given criteria!</h4>
+        }
+
         @{
             var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.HasNextPage ? "disabled" : "";

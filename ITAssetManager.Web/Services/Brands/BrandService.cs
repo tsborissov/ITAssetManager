@@ -34,14 +34,14 @@ namespace ITAssetManager.Web.Services.Brands
             var itemsCount = brandsQuery.Count();
             var lastPage = (int)Math.Ceiling(itemsCount / (double)brandsPerPage);
 
-            if (currentPage < 1)
-            {
-                currentPage = 1;
-            }
-
             if (currentPage > lastPage)
             {
                 currentPage = lastPage;
+            }
+
+            if (currentPage < 1)
+            {
+                currentPage = 1;
             }
 
             var brands = brandsQuery
