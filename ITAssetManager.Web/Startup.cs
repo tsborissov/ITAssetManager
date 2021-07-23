@@ -1,4 +1,5 @@
 using ITAssetManager.Web.Infrastructure;
+using ITAssetManager.Web.Services.Brands;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,8 @@ namespace ITAssetManager.Web
                     .AddEntityFrameworkStores<Data.ItAssetManagerDbContext>();
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IBrandService, BrandService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

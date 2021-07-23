@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using ITAssetManager.Web.Services.Brands;
+using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Brands
 {
     public class BrandsQueryModel
     {
+        public const int BrandsPerPage = 5;
+
         public string SearchString { get; set; }
 
         public string SortOrder { get; set; }
@@ -14,6 +17,6 @@ namespace ITAssetManager.Web.Models.Brands
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<BrandListingViewModel> Brands { get; init; }
+        public IEnumerable<BrandListingServiceModel> Brands { get; set; }
     }
 }

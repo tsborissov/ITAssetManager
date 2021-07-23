@@ -1,6 +1,7 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Models.Brands;
+using ITAssetManager.Web.Services.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +14,12 @@ namespace ITAssetManager.Web.Controllers
     public class BrandsController : Controller
     {
         private readonly ItAssetManagerDbContext data;
+        private readonly IBrandService brandService;
 
-        public BrandsController(ItAssetManagerDbContext data)
+        public BrandsController(ItAssetManagerDbContext data, IBrandService brandService)
         {
             this.data = data;
+            this.brandService = brandService;
         }
 
         [Authorize]
@@ -50,56 +53,20 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult All([FromQuery] BrandsQueryModel query)
         {
-            var brandsQuery = this.data
-                .Brands
-                .AsQueryable();
+            var queryResult = this.brandService.All(
+                query.SearchString, 
+                query.SortOrder, 
+                query.CurrentPage,
+                BrandsQueryModel.BrandsPerPage);
 
-            if (!String.IsNullOrEmpty(query.SearchString))
-            {
-                brandsQuery = brandsQuery
-                    .Where(b =>
-                        b.Name.ToLower()
-                        .Contains(query.SearchString.ToLower()));
-            }
+            query.Brands = queryResult.Brands;
+            query.SearchString = queryResult.SearchString;
+            query.SortOrder = queryResult.SortOrder;
+            query.CurrentPage = queryResult.CurrentPage;
+            query.HasNextPage = queryResult.HasNextPage;
+            query.HasPreviousPage = queryResult.HasPreviousPage;
 
-            brandsQuery = query.SortOrder switch
-            {
-                "name_desc" => brandsQuery.OrderByDescending(b => b.Name),
-                _ => brandsQuery.OrderBy(b => b.Name)
-            };
-
-            var itemsCount = brandsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
-
-            if (query.CurrentPage < 1)
-            {
-                query.CurrentPage = 1;
-            }
-
-            if (query.CurrentPage > lastPage)
-            {
-                query.CurrentPage = lastPage;
-            }
-
-            var brands = brandsQuery
-                .Skip((query.CurrentPage - 1) * ItemsPerPage)
-                .Take(ItemsPerPage)
-                .Select(v => new BrandListingViewModel
-                {
-                    Id = v.Id,
-                    Name = v.Name
-                })
-                .ToList();
-
-            return View(new BrandsQueryModel
-            {
-                Brands = brands,
-                SearchString = query.SearchString,
-                SortOrder = query.SortOrder,
-                CurrentPage = query.CurrentPage,
-                HasPreviousPage = query.CurrentPage > 1,
-                HasNextPage = query.CurrentPage < lastPage
-            });
+            return View(query);
         }
 
         [Authorize]

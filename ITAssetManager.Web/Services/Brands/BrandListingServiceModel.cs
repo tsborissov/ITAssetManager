@@ -1,6 +1,6 @@
-﻿namespace ITAssetManager.Web.Models.Brands
+﻿namespace ITAssetManager.Web.Services.Brands
 {
-    public class BrandListingViewModel
+    public class BrandListingServiceModel
     {
         public int Id { get; init; }
 
