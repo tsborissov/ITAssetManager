@@ -5,3 +5,50 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+    </div>
+</div>
+
+<table class="table table-hover d-none" id="statistics-table">
+    <thead>
+        <tr>
+            <th class="text-center">Assets</th>
+            <th class="text-center">Models</th>
+            <th class="text-center">Brands</th>
+            <th class="text-center">Categories</th>
+            <th class="text-center">Statuses</th>
+            <th class="text-center">Vendors</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-center" id="total-assets"></td>
+            <td class="text-center" id="total-models"></td>
+            <td class="text-center" id="total-brands"></td>
+            <td class="text-center" id="total-categories"></td>
+            <td class="text-center" id="total-statuses"></td>
+            <td class="text-center" id="total-vendors"></td>
+        </tr>
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $('#statistics-button').on('click', ev => {
+            $.get('/api/statistics', (data) => {
+                $('#total-assets').text(data.totalAssets);
+                $('#total-models').text(data.totalModels);
+                $('#total-brands').text(data.totalBrands);
+                $('#total-categories').text(data.totalCategories);
+                $('#total-statuses').text(data.totalStatuses);
+                $('#total-vendors').text(data.totalVendors);
+
+                $('#statistics-button').addClass('d-none');
+                $('#statistics-table').removeClass('d-none');
+            });
+        });
+    </script>
+}
