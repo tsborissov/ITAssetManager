@@ -1,9 +1,8 @@
-﻿using ITAssetManager.Web.Services.Statuses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ITAssetManager.Web.Models.Statuses
+namespace ITAssetManager.Web.Services.Categories
 {
-    public class StatusesQueryModel
+    public class CategoryQueryServiceModel
     {
         public string SearchString { get; set; }
 
@@ -15,6 +14,6 @@ namespace ITAssetManager.Web.Models.Statuses
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<StatusListingServiceModel> Statuses { get; set; }
+        public IEnumerable<CategoryListingServiceModel> Categories { get; init; }
     }
 }

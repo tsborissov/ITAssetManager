@@ -1,10 +1,9 @@
-﻿namespace ITAssetManager.Web.Models.Statuses
+﻿namespace ITAssetManager.Web.Services.Statuses
 {
-    public class StatusListingViewModel
+    public class StatusListingServiceModel
     {
         public int Id { get; init; }
 
         public string Name { get; init; }
-
     }
 }

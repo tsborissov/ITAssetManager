@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ITAssetManager.Web.Services.Categories;
+using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Categories
 {
@@ -14,6 +15,6 @@ namespace ITAssetManager.Web.Models.Categories
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<CategoryListingViewModel> Categories { get; init; }
+        public IEnumerable<CategoryListingServiceModel> Categories { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Models.Categories;
+using ITAssetManager.Web.Services.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +14,12 @@ namespace ITAssetManager.Web.Controllers
 {
     public class CategoriesController : Controller
     {
+        private readonly ICategoryService categoryService;
         private readonly ItAssetManagerDbContext data;
 
-        public CategoriesController(ItAssetManagerDbContext data)
+        public CategoriesController(ICategoryService categoryService, ItAssetManagerDbContext data)
         {
+            this.categoryService = categoryService;
             this.data = data;
         }
 
@@ -51,54 +54,19 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult All([FromQuery] CategoriesQueryModel query)
         {
-            var categoriesQuery = this.data.Categories.AsQueryable();
+            var queryResult = this.categoryService.All(
+                query.SearchString,
+                query.SortOrder,
+                query.CurrentPage);
 
-            if (!String.IsNullOrEmpty(query.SearchString))
-            {
-                categoriesQuery = categoriesQuery
-                    .Where(c =>
-                        c.Name.ToLower()
-                        .Contains(query.SearchString.ToLower()));
-            }
+            query.Categories = queryResult.Categories;
+            query.SearchString = queryResult.SearchString;
+            query.SortOrder = queryResult.SortOrder;
+            query.CurrentPage = queryResult.CurrentPage;
+            query.HasPreviousPage = queryResult.HasPreviousPage;
+            query.HasNextPage = queryResult.HasNextPage;
 
-            categoriesQuery = query.SortOrder switch
-            {
-                "name_desc" => categoriesQuery.OrderByDescending(c => c.Name),
-                _ => categoriesQuery.OrderBy(c => c.Name)
-            };
-
-            var itemsCount = categoriesQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
-
-            if (query.CurrentPage < 1)
-            {
-                query.CurrentPage = 1;
-            }
-
-            if (query.CurrentPage > lastPage)
-            {
-                query.CurrentPage = lastPage;
-            }
-
-            var categories = categoriesQuery
-                .Skip((query.CurrentPage - 1) * ItemsPerPage)
-                .Take(ItemsPerPage)
-                .Select(v => new CategoryListingViewModel
-                {
-                    Id = v.Id,
-                    Name = v.Name
-                })
-                .ToList();
-
-            return View(new CategoriesQueryModel
-            {
-                Categories = categories,
-                SearchString = query.SearchString,
-                SortOrder = query.SortOrder,
-                CurrentPage = query.CurrentPage,
-                HasPreviousPage = query.CurrentPage > 1,
-                HasNextPage = query.CurrentPage < lastPage
-            });
+            return View(query);
         }
 
         [Authorize]

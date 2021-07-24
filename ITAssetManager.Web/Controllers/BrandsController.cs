@@ -4,10 +4,7 @@ using ITAssetManager.Web.Models.Brands;
 using ITAssetManager.Web.Services.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Linq;
-
-using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {

@@ -53,6 +53,12 @@
                 }
             </tbody>
         </table>
+
+        @if (!Model.Statuses.Any())
+        {
+            <h4 class="text-center">No statuses found for the given criteria!</h4>
+        }
+
         @{
             var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
             var nextDisabled = !Model.HasNextPage ? "disabled" : "";

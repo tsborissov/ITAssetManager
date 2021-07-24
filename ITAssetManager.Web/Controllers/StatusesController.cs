@@ -1,6 +1,7 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Models.Statuses;
+using ITAssetManager.Web.Services.Statuses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,10 +14,12 @@ namespace ITAssetManager.Web.Controllers
     [Authorize]
     public class StatusesController : Controller
     {
+        private readonly IStatusService statusService;
         private readonly ItAssetManagerDbContext data;
 
-        public StatusesController(ItAssetManagerDbContext data)
+        public StatusesController(IStatusService statusService, ItAssetManagerDbContext data)
         {
+            this.statusService = statusService;
             this.data = data;
         }
 
@@ -48,53 +51,16 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult All([FromQuery] StatusesQueryModel query)
         {
-            var statusesQuery = this.data.Statuses.AsQueryable();
+            var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 
-            if (!String.IsNullOrEmpty(query.SearchString))
-            {
-                statusesQuery = statusesQuery
-                    .Where(s =>
-                        s.Name.ToLower().Contains(query.SearchString.ToLower()));
-            }
+            query.Statuses = queryResult.Statuses;
+            query.SearchString = queryResult.SearchString;
+            query.SortOrder = queryResult.SortOrder;
+            query.CurrentPage = queryResult.CurrentPage;
+            query.HasPreviousPage = queryResult.HasPreviousPage;
+            query.HasNextPage = queryResult.HasNextPage;
 
-            statusesQuery = query.SortOrder switch
-            {
-                "name_desc" => statusesQuery.OrderByDescending(s => s.Name),
-                _ => statusesQuery.OrderBy(s => s.Name)
-            };
-
-            var itemsCount = statusesQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
-
-            if (query.CurrentPage < 1)
-            {
-                query.CurrentPage = 1;
-            }
-
-            if (query.CurrentPage > lastPage)
-            {
-                query.CurrentPage = lastPage;
-            }
-
-            var statuses = statusesQuery
-                .Skip((query.CurrentPage - 1) * ItemsPerPage)
-                .Take(ItemsPerPage)
-                .Select(v => new StatusListingViewModel
-                {
-                    Id = v.Id,
-                    Name = v.Name
-                })
-                .ToList();
-
-            return View(new StatusesQueryModel
-            {
-                Statuses = statuses,
-                SearchString = query.SearchString,
-                SortOrder = query.SortOrder,
-                CurrentPage = query.CurrentPage,
-                HasPreviousPage = query.CurrentPage > 1,
-                HasNextPage = query.CurrentPage < lastPage
-            });
+            return View(query);
         }
 
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)

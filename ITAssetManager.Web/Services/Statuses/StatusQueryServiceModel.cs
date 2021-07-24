@@ -1,9 +1,8 @@
-﻿using ITAssetManager.Web.Services.Statuses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ITAssetManager.Web.Models.Statuses
+namespace ITAssetManager.Web.Services.Statuses
 {
-    public class StatusesQueryModel
+    public class StatusQueryServiceModel
     {
         public string SearchString { get; set; }
 

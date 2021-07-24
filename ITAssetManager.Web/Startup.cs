@@ -1,5 +1,7 @@
 using ITAssetManager.Web.Infrastructure;
 using ITAssetManager.Web.Services.Brands;
+using ITAssetManager.Web.Services.Categories;
+using ITAssetManager.Web.Services.Statuses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -34,6 +36,8 @@ namespace ITAssetManager.Web
             services.AddControllersWithViews();
 
             services.AddTransient<IBrandService, BrandService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IStatusService, StatusService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
