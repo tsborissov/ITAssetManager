@@ -1,0 +1,21 @@
+﻿@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div class="row mt-2 mb-2 offset-md-3">
+    <a asp-action="All"
+       asp-route-sortOrder="@Model.SortOrder"
+       asp-route-currentPage="@(Model.CurrentPage - 1)"
+       asp-route-searchString="@Model.SearchString"
+       class="btn btn-link @prevDisabled">
+        << Previous
+    </a>
+    <a asp-action="All"
+       asp-route-sortOrder="@Model.SortOrder"
+       asp-route-currentPage="@(Model.CurrentPage + 1)"
+       asp-route-searchString="@Model.SearchString"
+       class="btn btn-link @nextDisabled">
+        Next >>
+    </a>
+</div>
