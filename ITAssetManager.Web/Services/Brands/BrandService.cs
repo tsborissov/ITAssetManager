@@ -1,6 +1,9 @@
 ﻿using ITAssetManager.Data;
+using ITAssetManager.Data.Models;
 using System;
 using System.Linq;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Services.Brands
 {
@@ -11,7 +14,18 @@ namespace ITAssetManager.Web.Services.Brands
         public BrandService(ItAssetManagerDbContext data) 
             => this.data = data;
 
-        public BrandQueryServiceModel All(string searchString, string sortOrder, int currentPage, int brandsPerPage)
+        public void Add(string name)
+        {
+            var brand = new Brand
+            {
+                Name = name
+            };
+
+            this.data.Brands.Add(brand);
+            this.data.SaveChanges();
+        }
+
+        public BrandQueryServiceModel All(string searchString, string sortOrder, int currentPage)
         {
             var brandsQuery = this.data
                 .Brands
@@ -32,7 +46,7 @@ namespace ITAssetManager.Web.Services.Brands
             };
 
             var itemsCount = brandsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)brandsPerPage);
+            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
 
             if (currentPage > lastPage)
             {
@@ -45,8 +59,8 @@ namespace ITAssetManager.Web.Services.Brands
             }
 
             var brands = brandsQuery
-                .Skip((currentPage - 1) * brandsPerPage)
-                .Take(brandsPerPage)
+                .Skip((currentPage - 1) * ItemsPerPage)
+                .Take(ItemsPerPage)
                 .Select(v => new BrandListingServiceModel
                 {
                     Id = v.Id,
@@ -64,5 +78,33 @@ namespace ITAssetManager.Web.Services.Brands
                 HasNextPage = currentPage < lastPage
             };
         }
+
+        public BrandEditServiceModel Details(int id)
+            => this.data
+                .Brands
+                .Where(b => b.Id == id)
+                .Select(b => new BrandEditServiceModel
+                {
+                    Id = b.Id,
+                    Name = b.Name,
+                })
+                .FirstOrDefault();
+
+        public void Update(BrandEditServiceModel brand)
+        {
+            var targetBrand = this.data
+                .Brands
+                .Where(b => b.Id == brand.Id)
+                .FirstOrDefault();
+
+            targetBrand.Name = brand.Name;
+            this.data.SaveChanges();
+        }
+
+        public bool IsExistingBrand(int id)
+            => this.data.Brands.Any(b => b.Id == id);
+
+        public bool IsExistingName(string name)
+            => this.data.Brands.Any(b => b.Name == name);
     }
 }

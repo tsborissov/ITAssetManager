@@ -18,7 +18,6 @@ namespace ITAssetManager.Web.Controllers.Api
             => this.brandService.All(
                 query.SearchString,
                 query.SortOrder,
-                query.CurrentPage,
-                query.BrandsPerPage);
+                query.CurrentPage);
     }
 }

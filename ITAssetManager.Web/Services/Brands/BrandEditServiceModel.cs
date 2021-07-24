@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Brands
+namespace ITAssetManager.Web.Services.Brands
 {
-    public class BrandEditModel
+    public class BrandEditServiceModel
     {
         public int Id { get; set; }
 

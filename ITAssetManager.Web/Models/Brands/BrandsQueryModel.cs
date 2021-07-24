@@ -5,8 +5,6 @@ namespace ITAssetManager.Web.Models.Brands
 {
     public class BrandsQueryModel
     {
-        public const int BrandsPerPage = 5;
-
         public string SearchString { get; set; }
 
         public string SortOrder { get; set; }

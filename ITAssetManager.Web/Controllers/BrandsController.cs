@@ -1,23 +1,16 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Data.Models;
-using ITAssetManager.Web.Models.Brands;
+﻿using ITAssetManager.Web.Models.Brands;
 using ITAssetManager.Web.Services.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace ITAssetManager.Web.Controllers
 {
     public class BrandsController : Controller
     {
-        private readonly ItAssetManagerDbContext data;
         private readonly IBrandService brandService;
 
-        public BrandsController(ItAssetManagerDbContext data, IBrandService brandService)
-        {
-            this.data = data;
-            this.brandService = brandService;
-        }
+        public BrandsController(IBrandService brandService)
+            => this.brandService = brandService;
 
         [Authorize]
         public IActionResult Add() => View();
@@ -26,7 +19,7 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Add(BrandAddFormModel brandModel)
         {
-            if (this.data.Brands.Any(b => b.Name == brandModel.Name))
+            if (this.brandService.IsExistingName(brandModel.Name))
             {
                 this.ModelState.AddModelError(nameof(brandModel.Name), "Brand already exists!");
             }
@@ -36,13 +29,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(brandModel);
             }
 
-            var brand = new Brand
-            {
-                Name = brandModel.Name
-            };
-
-            this.data.Brands.Add(brand);
-            this.data.SaveChanges();
+            this.brandService.Add(brandModel.Name);
 
             return RedirectToAction(nameof(All));
         }
@@ -51,10 +38,9 @@ namespace ITAssetManager.Web.Controllers
         public IActionResult All([FromQuery] BrandsQueryModel query)
         {
             var queryResult = this.brandService.All(
-                query.SearchString, 
-                query.SortOrder, 
-                query.CurrentPage,
-                BrandsQueryModel.BrandsPerPage);
+                query.SearchString,
+                query.SortOrder,
+                query.CurrentPage);
 
             query.Brands = queryResult.Brands;
             query.SearchString = queryResult.SearchString;
@@ -69,47 +55,38 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
-            var brand = this.data
-                .Brands
-                .Where(b => b.Id == id)
-                .Select(b => new BrandEditModel
-                {
-                    Id = b.Id,
-                    Name = b.Name,
-                    SearchString = searchString,
-                    SortOrder = sortOrder,
-                    CurrentPage = currentPage
-                })
-                .FirstOrDefault();
-
-            if (brand == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-
-            return View(brand);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public IActionResult Edit(BrandEditModel brand)
-        {
-            if (!this.ModelState.IsValid)
-            {
-                return View(brand);
-            }
-
-            var targetBrand = this.data.Brands.Find(brand.Id);
+            var targetBrand = this.brandService.Details(id);
 
             if (targetBrand == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            targetBrand.Name = brand.Name;
-            this.data.SaveChanges();
+            targetBrand.SearchString = searchString;
+            targetBrand.SortOrder = sortOrder;
+            targetBrand.CurrentPage = currentPage;
 
-            return RedirectToAction(nameof(All), new
+            return View(targetBrand);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(BrandEditServiceModel brand)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return View(brand);
+            }
+
+            if (!this.brandService.IsExistingBrand(brand.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.brandService.Update(brand);
+
+            return RedirectToAction(nameof(All),
+                new
                 {
                     SearchString = brand.SearchString,
                     SortOrder = brand.SortOrder,
