@@ -2,6 +2,6 @@
 {
     public interface IStatusService
     {
-        public StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage);
+        StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage);
     }
 }

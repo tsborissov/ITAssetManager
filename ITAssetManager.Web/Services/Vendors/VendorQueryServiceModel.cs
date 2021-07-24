@@ -1,9 +1,8 @@
-﻿using ITAssetManager.Web.Services.Vendors;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace ITAssetManager.Web.Models.Vendors
+namespace ITAssetManager.Web.Services.Vendors
 {
-    public class VendorsQueryModel
+    public class VendorQueryServiceModel
     {
         public string SearchString { get; set; }
 
@@ -15,6 +14,6 @@ namespace ITAssetManager.Web.Models.Vendors
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<VendorListingServiceModel> Vendors { get; set; }
+        public IEnumerable<VendorListingServiceModel> Vendors { get; init; }
     }
 }

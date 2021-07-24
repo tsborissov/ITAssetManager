@@ -1,6 +1,6 @@
-﻿namespace ITAssetManager.Web.Models.Vendors
+﻿namespace ITAssetManager.Web.Services.Vendors
 {
-    public class VendorListingViewModel
+    public class VendorListingServiceModel
     {
         public int Id { get; init; }
 

@@ -1,6 +1,7 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Models.Vendors;
+using ITAssetManager.Web.Services.Vendors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,10 +13,12 @@ namespace ITAssetManager.Web.Controllers
 {
     public class VendorsController : Controller
     {
+        private readonly IVendorService vendorService;
         private readonly ItAssetManagerDbContext data;
 
-        public VendorsController(ItAssetManagerDbContext data)
+        public VendorsController(IVendorService vendorService, ItAssetManagerDbContext data)
         {
+            this.vendorService = vendorService;
             this.data = data;
         }
 
@@ -59,57 +62,16 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult All([FromQuery] VendorsQueryModel query)
         {
-            var vendorsQuery = this.data.Vendors.AsQueryable();
+            var queryResult = this.vendorService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 
-            if (!String.IsNullOrEmpty(query.SearchString))
-            {
-                vendorsQuery = vendorsQuery
-                    .Where(v => 
-                        v.Name.ToLower().Contains(query.SearchString.ToLower()) || 
-                        v.Vat.ToLower().Contains(query.SearchString.ToLower()));
-            }
+            query.Vendors = queryResult.Vendors;
+            query.SearchString = queryResult.SearchString;
+            query.SortOrder = queryResult.SortOrder;
+            query.CurrentPage = queryResult.CurrentPage;
+            query.HasNextPage = queryResult.HasNextPage;
+            query.HasPreviousPage = queryResult.HasPreviousPage;
 
-            vendorsQuery = query.SortOrder switch
-            {
-                "name_desc" => vendorsQuery.OrderByDescending(v => v.Name),
-                "vat" => vendorsQuery.OrderBy(s => s.Vat),
-                "vat_desc" => vendorsQuery.OrderByDescending(s => s.Vat),
-                _ => vendorsQuery.OrderBy(s => s.Name),
-            };
-
-            var itemsCount = vendorsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
-
-            if (query.CurrentPage < 1)
-            {
-                query.CurrentPage = 1;
-            }
-
-            if (query.CurrentPage > lastPage)
-            {
-                query.CurrentPage = lastPage;
-            }
-
-            var vendors = vendorsQuery
-                .Skip((query.CurrentPage - 1) * ItemsPerPage)
-                .Take(ItemsPerPage)
-                .Select(v => new VendorListingViewModel
-                {
-                    Id = v.Id,
-                    Name = v.Name,
-                    Vat = v.Vat
-                })
-                .ToList();
-
-            return View(new VendorsQueryModel
-            {
-                Vendors = vendors,
-                SearchString = query.SearchString,
-                SortOrder = query.SortOrder,
-                CurrentPage = query.CurrentPage,
-                HasPreviousPage = query.CurrentPage > 1,
-                HasNextPage = query.CurrentPage < lastPage
-            });
+            return View(query);
         }
 
         [Authorize]
