@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Categories
+namespace ITAssetManager.Web.Services.Categories
 {
-    public class CategoryEditModel
+    public class CategoryEditServiceModel
     {
         public int Id { get; init; }
 

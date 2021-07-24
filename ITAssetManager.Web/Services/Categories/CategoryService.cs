@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Data;
+using ITAssetManager.Data.Models;
 using System;
 using System.Linq;
 
@@ -10,8 +11,19 @@ namespace ITAssetManager.Web.Services.Categories
     {
         private readonly ItAssetManagerDbContext data;
 
-        public CategoryService(ItAssetManagerDbContext data) 
+        public CategoryService(ItAssetManagerDbContext data)
             => this.data = data;
+
+        public void Add(string name)
+        {
+            var category = new Category
+            {
+                Name = name
+            };
+
+            this.data.Categories.Add(category);
+            this.data.SaveChanges();
+        }
 
         public CategoryQueryServiceModel All(string searchString, string sortOrder, int currentPage)
         {
@@ -54,7 +66,7 @@ namespace ITAssetManager.Web.Services.Categories
                 })
                 .ToList();
 
-            return new CategoryQueryServiceModel 
+            return new CategoryQueryServiceModel
             {
                 Categories = categories,
                 SearchString = searchString,
@@ -64,5 +76,30 @@ namespace ITAssetManager.Web.Services.Categories
                 HasNextPage = currentPage < lastPage
             };
         }
+
+        public CategoryEditServiceModel Details(int id)
+            => this.data
+                .Categories
+                .Where(c => c.Id == id)
+                .Select(c => new CategoryEditServiceModel
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                })
+                .FirstOrDefault();
+
+        public void Update(CategoryEditServiceModel category)
+        {
+            var targetCategory = this.data.Categories.Find(category.Id);
+
+            targetCategory.Name = category.Name;
+            this.data.SaveChanges();
+        }
+
+        public bool IsExistingCategory(int id)
+            => this.data.Categories.Any(c => c.Id == id);
+
+        public bool IsExistingName(string name)
+            => this.data.Categories.Any(c => c.Name == name);
     }
 }

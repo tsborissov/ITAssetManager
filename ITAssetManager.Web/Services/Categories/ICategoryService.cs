@@ -3,5 +3,15 @@
     public interface ICategoryService
     {
         CategoryQueryServiceModel All(string searchString, string sortOrder, int currentPage);
+
+        void Add(string name);
+
+        CategoryEditServiceModel Details(int id);
+
+        void Update(CategoryEditServiceModel category);
+
+        bool IsExistingCategory(int id);
+
+        public bool IsExistingName(string name);
     }
 }

@@ -55,12 +55,12 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
-            var targetBrand = this.brandService.Details(id);
-
-            if (targetBrand == null)
+            if (!this.brandService.IsExistingBrand(id))
             {
                 return RedirectToAction("Error", "Home");
             }
+
+            var targetBrand = this.brandService.Details(id);
 
             targetBrand.SearchString = searchString;
             targetBrand.SortOrder = sortOrder;
