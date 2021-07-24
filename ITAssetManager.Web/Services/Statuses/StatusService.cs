@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Data;
+using ITAssetManager.Data.Models;
 using System;
 using System.Linq;
 
@@ -13,6 +14,17 @@ namespace ITAssetManager.Web.Services.Statuses
         public StatusService(ItAssetManagerDbContext data)
         {
             this.data = data;
+        }
+
+        public void Add(string name)
+        {
+            var status = new Status
+            {
+                Name = name
+            };
+
+            this.data.Statuses.Add(status);
+            this.data.SaveChanges();
         }
 
         public StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage)
@@ -65,5 +77,33 @@ namespace ITAssetManager.Web.Services.Statuses
                 HasNextPage = currentPage < lastPage
             };
         }
+
+        public StatusEditServiceModel Details(int id)
+            => this.data
+                .Statuses
+                .Where(s => s.Id == id)
+                .Select(s => new StatusEditServiceModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                })
+                .FirstOrDefault();
+
+        public void Update(StatusEditServiceModel status)
+        {
+            var targetStatus = this.data
+                .Statuses
+                .Where(s => s.Id == status.Id)
+                .FirstOrDefault();
+
+            targetStatus.Name = status.Name;
+            this.data.SaveChanges();
+        }
+
+        public bool IsExistingName(string name)
+            => this.data.Statuses.Any(s => s.Name == name);
+
+        public bool IsExistingStatus(int id)
+            => this.data.Statuses.Any(s => s.Id == id);
     }
 }

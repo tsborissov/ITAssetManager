@@ -1,25 +1,17 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Data.Models;
-using ITAssetManager.Web.Models.Statuses;
+﻿using ITAssetManager.Web.Models.Statuses;
 using ITAssetManager.Web.Services.Statuses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-
-using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
     public class StatusesController : Controller
     {
         private readonly IStatusService statusService;
-        private readonly ItAssetManagerDbContext data;
 
-        public StatusesController(IStatusService statusService, ItAssetManagerDbContext data)
+        public StatusesController(IStatusService statusService)
         {
             this.statusService = statusService;
-            this.data = data;
         }
 
         [Authorize]
@@ -29,7 +21,7 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Add(StatusAddFormModel statusModel)
         {
-            if (this.data.Statuses.Any(s => s.Name == statusModel.Name))
+            if (this.statusService.IsExistingName(statusModel.Name))
             {
                 this.ModelState.AddModelError(nameof(statusModel.Name), "Status already exists!");
             }
@@ -39,13 +31,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(statusModel);
             }
 
-            var status = new Status 
-            {
-                Name = statusModel.Name
-            };
-
-            this.data.Statuses.Add(status);
-            this.data.SaveChanges();
+            this.statusService.Add(statusModel.Name);
 
             return RedirectToAction(nameof(All));
         }
@@ -68,46 +54,35 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
-            var status = this.data
-                .Statuses
-                .Where(s => s.Id == id)
-                .Select(s => new StatusEditModel
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    SortOrder = sortOrder,
-                    SearchString = searchString,
-                    CurrentPage = currentPage
-                })
-
-                .FirstOrDefault();
-
-            if (status == null)
+            if (!this.statusService.IsExistingStatus(id))
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(status);
+            var targetStatus = this.statusService.Details(id);
+
+            targetStatus.SortOrder = sortOrder;
+            targetStatus.SearchString = searchString;
+            targetStatus.CurrentPage = currentPage;
+
+            return View(targetStatus);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Edit(StatusEditModel status)
+        public IActionResult Edit(StatusEditServiceModel status)
         {
             if (!this.ModelState.IsValid)
             {
                 return View(status);
             }
 
-            var targetStatus = this.data.Statuses.Find(status.Id);
-
-            if (targetStatus == null)
+            if (!this.statusService.IsExistingStatus(status.Id))
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            targetStatus.Name = status.Name;
-            this.data.SaveChanges();
+            this.statusService.Update(status);
 
             return RedirectToAction(nameof(All), new 
             {

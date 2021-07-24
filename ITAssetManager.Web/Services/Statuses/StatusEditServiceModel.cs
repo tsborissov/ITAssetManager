@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Statuses
+namespace ITAssetManager.Web.Services.Statuses
 {
-    public class StatusEditModel
+    public class StatusEditServiceModel
     {
         public int Id { get; init; }
 
