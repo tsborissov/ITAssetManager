@@ -1,25 +1,17 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Data.Models;
-using ITAssetManager.Web.Models.Vendors;
+﻿using ITAssetManager.Web.Models.Vendors;
 using ITAssetManager.Web.Services.Vendors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-
-using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
     public class VendorsController : Controller
     {
         private readonly IVendorService vendorService;
-        private readonly ItAssetManagerDbContext data;
 
-        public VendorsController(IVendorService vendorService, ItAssetManagerDbContext data)
+        public VendorsController(IVendorService vendorService)
         {
             this.vendorService = vendorService;
-            this.data = data;
         }
 
         [Authorize]
@@ -27,14 +19,14 @@ namespace ITAssetManager.Web.Controllers
 
         [Authorize]
         [HttpPost]
-        public IActionResult Add(VendorAddFormModel vendorModel)
+        public IActionResult Add(VendorAddFormServiceModel vendorModel)
         {
-            if (this.data.Vendors.Any(v => v.Name == vendorModel.Name))
+            if (this.vendorService.IsExistingName(vendorModel.Name))
             {
                 this.ModelState.AddModelError(nameof(vendorModel.Name), $"Vendor '{vendorModel.Name}' already exists!");
             }
 
-            if (this.data.Vendors.Any(v => v.Vat == vendorModel.Vat))
+            if (this.vendorService.IsExistingVat(vendorModel.Vat))
             {
                 this.ModelState.AddModelError(nameof(vendorModel.Vat), $"Vendor with VAT '{vendorModel.Vat}' already exists!");
             }
@@ -44,17 +36,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(vendorModel);
             }
 
-            var vendor = new Vendor 
-            {
-                Name = vendorModel.Name,
-                Vat = vendorModel.Vat,
-                Telephone = vendorModel.Telephone,
-                Email = vendorModel.Email,
-                Address = vendorModel.Address
-            };
-
-            this.data.Vendors.Add(vendor);
-            this.data.SaveChanges();
+            this.vendorService.Add(vendorModel);
 
             return RedirectToAction(nameof(All));
         }
@@ -77,78 +59,59 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult Details(int id, string sortOrder, string searchString, int currentPage)
         {
-            var vendor = this.data
-                .Vendors
-                .Where(v => v.Id == id)
-                .Select(v => new VendorDetailsViewModel
-                {
-                    Id = v.Id,
-                    Name = v.Name,
-                    Vat = v.Vat,
-                    Email = v.Email,
-                    Telephone = v.Telephone,
-                    Address = v.Address,
-                    SearchString = searchString,
-                    SortOrder = sortOrder,
-                    CurrentPage = currentPage
-                })
-                .FirstOrDefault();
+            var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
+
+            if (vendor == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
 
             return View(vendor);
         }
+
 
         [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
-            var vendor = this.data
-                .Vendors
-                .Where(v => v.Id == id)
-                .Select(v => new VendorEditModel
-                {
-                    Id = v.Id,
-                    Name = v.Name,
-                    Vat = v.Vat,
-                    Email = v.Email,
-                    Telephone = v.Telephone,
-                    Address = v.Address,
-                    SortOrder = sortOrder,
-                    SearchString = searchString,
-                    CurrentPage = currentPage
-                })
-                .FirstOrDefault();
+            var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
 
-            return View(vendor);
+            if (vendor == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            return View(new VendorEditServiceModel 
+            {
+                Id = vendor.Id,
+                Name = vendor.Name,
+                Vat = vendor.Vat,
+                Email = vendor.Email,
+                Telephone = vendor.Telephone,
+                Address = vendor.Address,
+                CurrentPage = vendor.CurrentPage,
+                SearchString = vendor.SearchString,
+                SortOrder = vendor.SortOrder
+            });
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Edit(VendorEditModel vendorModel)
+        public IActionResult Edit(VendorEditServiceModel vendorModel)
         {
             if (!this.ModelState.IsValid)
             {
                 return View(vendorModel);
             }
 
-            var targetVendor = this.data
-                .Vendors
-                .Where(v => v.Id == vendorModel.Id)
-                .FirstOrDefault();
-
-            if (targetVendor == null)
+            if (!this.vendorService.IsExistingVendor(vendorModel.Id))
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            targetVendor.Name = vendorModel.Name;
-            targetVendor.Vat = vendorModel.Vat;
-            targetVendor.Telephone = vendorModel.Telephone;
-            targetVendor.Email = vendorModel.Email;
-            targetVendor.Address = vendorModel.Address;
-
-            this.data.SaveChanges();
+            this.vendorService.Update(vendorModel);
 
             return RedirectToAction(nameof(Details), 
-                new VendorDetailsViewModel 
+                new VendorDetailsServiceModel 
                 {
                     Id = vendorModel.Id,
                     Name = vendorModel.Name,

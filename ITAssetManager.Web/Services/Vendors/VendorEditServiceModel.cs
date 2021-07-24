@@ -2,10 +2,12 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Vendors
+namespace ITAssetManager.Web.Services.Vendors
 {
-    public class VendorAddFormModel
+    public class VendorEditServiceModel
     {
+        public int Id { get; init; }
+
         [Required]
         [StringLength(VendorNameMaxLength, MinimumLength = VendorNameMinLength)]
         public string Name { get; init; }
@@ -25,5 +27,11 @@ namespace ITAssetManager.Web.Models.Vendors
 
         [StringLength(VendorAddressMaxLength, MinimumLength = VendorAddressMinLength)]
         public string Address { get; init; }
+
+        public string SearchString { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public int CurrentPage { get; set; }
     }
 }

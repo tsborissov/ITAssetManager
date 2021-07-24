@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ITAssetManager.Web.Models.Vendors
+namespace ITAssetManager.Web.Services.Vendors
 {
-    public class VendorDetailsViewModel
+    public class VendorDetailsServiceModel
     {
         public int Id { get; init; }
 

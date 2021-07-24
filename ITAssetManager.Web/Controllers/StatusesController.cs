@@ -11,7 +11,6 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize]
     public class StatusesController : Controller
     {
         private readonly IStatusService statusService;
@@ -23,8 +22,10 @@ namespace ITAssetManager.Web.Controllers
             this.data = data;
         }
 
+        [Authorize]
         public IActionResult Add() => View();
 
+        [Authorize]
         [HttpPost]
         public IActionResult Add(StatusAddFormModel statusModel)
         {
@@ -49,6 +50,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize]
         public IActionResult All([FromQuery] StatusesQueryModel query)
         {
             var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
@@ -63,6 +65,7 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
+        [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             var status = this.data
@@ -87,6 +90,7 @@ namespace ITAssetManager.Web.Controllers
             return View(status);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Edit(StatusEditModel status)
         {
