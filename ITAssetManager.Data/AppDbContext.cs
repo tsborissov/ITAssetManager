@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetManager.Data
 {
-    public class ItAssetManagerDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext
     {
-        public ItAssetManagerDbContext(DbContextOptions<ItAssetManagerDbContext> options)
+        public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
         }

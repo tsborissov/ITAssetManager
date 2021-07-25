@@ -11,9 +11,9 @@ namespace ITAssetManager.Web.Controllers.Api
     [Route("api/vendors")]
     public class VendorsApiController : ControllerBase
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public VendorsApiController(ItAssetManagerDbContext data)
+        public VendorsApiController(AppDbContext data)
         {
             this.data = data;
         }

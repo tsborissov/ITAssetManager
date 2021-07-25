@@ -1,22 +1,19 @@
-﻿using ITAssetManager.Web.Models.AssetModels;
-using ITAssetManager.Web.Models.Statuses;
-using ITAssetManager.Web.Models.Vendors;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Assets
+namespace ITAssetManager.Web.Services.Assets
 {
-    public class AssetAddFormModel
+    public class AssetAddFormServiceModel
     {
         [Display(Name = "Model")]
         public int AssetModelId { get; init; }
 
         [BindNever]
-        public IEnumerable<AssetModelDropdownViewModel> Models { get; set; }
+        public IEnumerable<AssetModelDropdownServiceModel> Models { get; set; }
 
         [Required]
         [Display(Name = "Serial Number")]
@@ -32,13 +29,13 @@ namespace ITAssetManager.Web.Models.Assets
         public int StatusId { get; init; }
 
         [BindNever]
-        public IEnumerable<StatusDropdownViewModel> Statuses { get; set; }
+        public IEnumerable<StatusDropdownServiceModel> Statuses { get; set; }
 
         [Display(Name = "Vendor")]
         public int VendorId { get; init; }
 
         [BindNever]
-        public IEnumerable<VendorDropdownViewModel> Vendors { get; set; }
+        public IEnumerable<VendorDropdownServiceModel> Vendors { get; set; }
 
         [Required]
         [Display(Name = "Invoice")]

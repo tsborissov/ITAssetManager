@@ -10,7 +10,7 @@ namespace ITAssetManager.Web.Controllers
     {
         private readonly IAssetModelService assetModelService;
 
-        public AssetModelsController(IAssetModelService assetModelService, ItAssetManagerDbContext data) 
+        public AssetModelsController(IAssetModelService assetModelService, AppDbContext data) 
             => this.assetModelService = assetModelService;
 
         [Authorize]

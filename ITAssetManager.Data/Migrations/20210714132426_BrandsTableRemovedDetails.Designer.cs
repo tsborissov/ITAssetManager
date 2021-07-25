@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITAssetManager.Data.Migrations
 {
-    [DbContext(typeof(ItAssetManagerDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20210714132426_BrandsTableRemovedDetails")]
     partial class BrandsTableRemovedDetails
     {

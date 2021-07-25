@@ -9,9 +9,9 @@ namespace ITAssetManager.Web.Services.Vendors
 {
     public class VendorService : IVendorService
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public VendorService(ItAssetManagerDbContext data)
+        public VendorService(AppDbContext data)
         {
             this.data = data;
         }

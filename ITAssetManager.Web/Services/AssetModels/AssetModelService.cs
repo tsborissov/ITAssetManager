@@ -10,9 +10,9 @@ namespace ITAssetManager.Web.Services.AssetModels
 {
     public class AssetModelService : IAssetModelService
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public AssetModelService(ItAssetManagerDbContext data)
+        public AssetModelService(AppDbContext data)
             => this.data = data;
 
         public void Add(AssetModelsAddFormServiceModel assetModel)

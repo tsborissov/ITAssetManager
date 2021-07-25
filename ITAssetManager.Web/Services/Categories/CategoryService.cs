@@ -9,9 +9,9 @@ namespace ITAssetManager.Web.Services.Categories
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public CategoryService(ItAssetManagerDbContext data)
+        public CategoryService(AppDbContext data)
             => this.data = data;
 
         public void Add(string name)

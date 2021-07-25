@@ -1,6 +1,6 @@
 ﻿namespace ITAssetManager.Web.Models.Statuses
 {
-    public class StatusDropdownViewModel
+    public class StatusDropdownServiceModel
     {
         public int Id { get; init; }
 

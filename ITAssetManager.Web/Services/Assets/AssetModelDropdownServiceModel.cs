@@ -1,6 +1,6 @@
-﻿namespace ITAssetManager.Web.Models.Vendors
+﻿namespace ITAssetManager.Web.Services.Assets
 {
-    public class VendorDropdownServiceModel
+    public class AssetModelDropdownServiceModel
     {
         public int Id { get; init; }
 

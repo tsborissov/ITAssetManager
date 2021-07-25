@@ -14,7 +14,7 @@ namespace ITAssetManager.Web.Infrastructure
         {
             using var scopedServices = app.ApplicationServices.CreateScope();
 
-            var data = scopedServices.ServiceProvider.GetService<Data.ItAssetManagerDbContext>();
+            var data = scopedServices.ServiceProvider.GetService<Data.AppDbContext>();
 
             data.Database.Migrate();
 
@@ -28,7 +28,7 @@ namespace ITAssetManager.Web.Infrastructure
             return app;
         }
 
-        private static void SeedBrands(ItAssetManagerDbContext data)
+        private static void SeedBrands(Data.AppDbContext data)
         {
             if (data.Brands.Any())
             {
@@ -53,7 +53,7 @@ namespace ITAssetManager.Web.Infrastructure
             data.SaveChanges();
         }
 
-        private static void SeedCategories(ItAssetManagerDbContext data)
+        private static void SeedCategories(Data.AppDbContext data)
         {
             if (data.Categories.Any())
             {
@@ -75,7 +75,7 @@ namespace ITAssetManager.Web.Infrastructure
             data.SaveChanges();
         }
 
-        private static void SeedStatuses(ItAssetManagerDbContext data)
+        private static void SeedStatuses(Data.AppDbContext data)
         {
             if (data.Statuses.Any())
             {
@@ -95,7 +95,7 @@ namespace ITAssetManager.Web.Infrastructure
             data.SaveChanges();
         }
 
-        private static void SeedVendors(ItAssetManagerDbContext data)
+        private static void SeedVendors(Data.AppDbContext data)
         {
             if (data.Vendors.Any())
             {

@@ -1,4 +1,4 @@
-﻿namespace ITAssetManager.Web.Models.Vendors
+﻿namespace ITAssetManager.Web.Services.Assets
 {
     public class VendorDropdownServiceModel
     {

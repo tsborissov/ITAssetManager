@@ -9,9 +9,9 @@ namespace ITAssetManager.Web.Services.Statuses
 {
     public class StatusService : IStatusService
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public StatusService(ItAssetManagerDbContext data)
+        public StatusService(AppDbContext data)
         {
             this.data = data;
         }

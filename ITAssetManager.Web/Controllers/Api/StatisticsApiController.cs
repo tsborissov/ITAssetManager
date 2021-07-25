@@ -9,9 +9,9 @@ namespace ITAssetManager.Web.Controllers.Api
     [Route("api/statistics")]
     public class StatisticsApiController : ControllerBase
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public StatisticsApiController(ItAssetManagerDbContext data)
+        public StatisticsApiController(AppDbContext data)
         {
             this.data = data;
         }

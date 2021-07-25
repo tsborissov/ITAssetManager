@@ -1,5 +1,6 @@
 using ITAssetManager.Web.Infrastructure;
 using ITAssetManager.Web.Services.AssetModels;
+using ITAssetManager.Web.Services.Assets;
 using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Categories;
 using ITAssetManager.Web.Services.Statuses;
@@ -24,7 +25,7 @@ namespace ITAssetManager.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddDbContext<Data.ItAssetManagerDbContext>(options => options
+                .AddDbContext<Data.AppDbContext>(options => options
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services
@@ -33,7 +34,7 @@ namespace ITAssetManager.Web
             services
                 .AddDefaultIdentity<IdentityUser>(options => options
                     .SignIn.RequireConfirmedAccount = false)
-                    .AddEntityFrameworkStores<Data.ItAssetManagerDbContext>();
+                    .AddEntityFrameworkStores<Data.AppDbContext>();
 
             services.AddControllersWithViews();
 
@@ -42,7 +43,8 @@ namespace ITAssetManager.Web
                 .AddTransient<ICategoryService, CategoryService>()
                 .AddTransient<IStatusService, StatusService>()
                 .AddTransient<IVendorService, VendorService>()
-                .AddTransient<IAssetModelService, AssetModelService>();
+                .AddTransient<IAssetModelService, AssetModelService>()
+                .AddTransient<IAssetService, AssetService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -9,9 +9,9 @@ namespace ITAssetManager.Web.Services.Brands
 {
     public class BrandService : IBrandService
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly AppDbContext data;
 
-        public BrandService(ItAssetManagerDbContext data) 
+        public BrandService(AppDbContext data) 
             => this.data = data;
 
         public void Add(string name)
