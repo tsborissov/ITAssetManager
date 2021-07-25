@@ -2,6 +2,7 @@
 using ITAssetManager.Web.Services.AssetModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace ITAssetManager.Web.Controllers
 {
@@ -44,7 +45,7 @@ namespace ITAssetManager.Web.Controllers
 
             this.assetModelService.Add(assetModel);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction(nameof(All));
         }
 
         [Authorize]
@@ -69,6 +70,63 @@ namespace ITAssetManager.Web.Controllers
             assetModel.CurrentPage = currentPage;
 
             return View(assetModel);
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id, string searchString, int currentPage)
+        {
+            if (!assetModelService.IsExistingModel(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var assetModel = this.assetModelService.Details(id);
+
+            var brands = this.assetModelService.GetBrands();
+            var currentBrandId = brands
+                .Where(b => b.Name == assetModel.Brand)
+                .Select(b => b.Id)
+                .FirstOrDefault();
+            
+            var categories = this.assetModelService.GetCategories();
+            var currentCategoryId = categories
+                .Where(c => c.Name == assetModel.Category)
+                .Select(c => c.Id)
+                .FirstOrDefault();
+
+            return View(
+                new AssetModelEditFormServiceModel 
+                { 
+                    Id = assetModel.Id,
+                    BrandId = currentBrandId,
+                    Brands = brands,
+                    CategoryId = currentCategoryId,
+                    Categories= categories,
+                    Name = assetModel.Name,
+                    ImageUrl = assetModel.ImageUrl,
+                    Details = assetModel.Details,
+                    SearchString = searchString,
+                    CurrentPage = currentPage
+                });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(AssetModelEditFormServiceModel assetModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return View(assetModel);
+            }
+
+            if (!this.assetModelService.IsExistingModel(assetModel.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.assetModelService.Update(assetModel);
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

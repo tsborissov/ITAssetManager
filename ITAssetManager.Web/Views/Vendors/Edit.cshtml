@@ -33,19 +33,7 @@
                 <textarea asp-for="Address" class="form-control" rows="2"></textarea>
                 <span asp-validation-for="Address" class="small text-white"></span>
             </div>
-            <div class="button-holder">
-                <a asp-action="Details"
-                   asp-route-id="@Model.Id"
-                   asp-route-sortOrder="@Model.SortOrder"
-                   asp-route-searchString="@Model.SearchString"
-                   asp-route-currentPage="@Model.CurrentPage"
-                   class="btn btn-primary float-left">
-                    << Back
-                </a>
-            </div>
-            <div class="button-holder">
-                <button type="submit" class="btn btn-primary float-right">Save</button>
-            </div>
+            <partial name="_BackSaveButtonsToDetailsPartial" model="@Model" />
         </form>
     </div>
 </div>

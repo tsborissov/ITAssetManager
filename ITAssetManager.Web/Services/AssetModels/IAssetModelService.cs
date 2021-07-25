@@ -10,6 +10,8 @@ namespace ITAssetManager.Web.Services.AssetModels
 
         AssetModelDetailsServiceModel Details(int id);
 
+        void Update(AssetModelEditFormServiceModel vendorModel);
+
         IEnumerable<BrandDropdownServiceModel> GetBrands();
 
         IEnumerable<CategoryDropdownServiceModel> GetCategories();

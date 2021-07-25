@@ -102,6 +102,22 @@ namespace ITAssetManager.Web.Services.AssetModels
                 .FirstOrDefault();
         }
 
+        public void Update(AssetModelEditFormServiceModel assetModel)
+        {
+            var targetAssetModel = this.data
+                .AssetModels
+                .Where(m => m.Id == assetModel.Id)
+                .FirstOrDefault();
+
+            targetAssetModel.BrandId = assetModel.BrandId;
+            targetAssetModel.CategoryId = assetModel.CategoryId;
+            targetAssetModel.Details = assetModel.Details;
+            targetAssetModel.ImageUrl = assetModel.ImageUrl;
+            targetAssetModel.Name = assetModel.Name;
+
+            this.data.SaveChanges();
+        }
+
         public IEnumerable<BrandDropdownServiceModel> GetBrands()
             => this.data
                    .Brands

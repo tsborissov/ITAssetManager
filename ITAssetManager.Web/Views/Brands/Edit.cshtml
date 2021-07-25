@@ -13,18 +13,7 @@
                 <input asp-for="Name" class="form-control">
                 <span asp-validation-for="Name" class="small text-white"></span>
             </div>
-            <div class="button-holder">
-                <a asp-action="All"
-                   asp-route-sortOrder="@Model.SortOrder"
-                   asp-route-searchString="@Model.SearchString"
-                   asp-route-currentPage="@Model.CurrentPage"
-                   class="btn btn-primary float-left">
-                    << Back
-                </a>
-            </div>
-            <div class="button-holder">
-                <button type="submit" class="btn btn-primary float-right">Save</button>
-            </div>
+            <partial name="_BackSaveButtonsToAllPartial" model="@Model" />
         </form>
     </div>
 </div>
