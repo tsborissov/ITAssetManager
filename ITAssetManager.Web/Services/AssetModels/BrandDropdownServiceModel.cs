@@ -1,6 +1,6 @@
-﻿namespace ITAssetManager.Web.Models.Brands
+﻿namespace ITAssetManager.Web.Services.AssetModels
 {
-    public class BrandDropdownViewModel
+    public class BrandDropdownServiceModel
     {
         public int Id { get; init; }
 

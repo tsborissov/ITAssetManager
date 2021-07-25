@@ -1,0 +1,50 @@
+﻿@model AssetModelQueryServiceModel
+
+@{
+    ViewBag.Title = "Models";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <div class="row mt-3 mb-3">
+            <form asp-action="All" method="get" class="col-md-10">
+                <div class="form-actions">
+                    <input type="text" name="SearchString" class="col-md-7" value="@Model.SearchString" placeholder="Search by Name..." />
+                    <input type="submit" class="btn btn-primary" value="Search" />
+                    <a asp-action="All" class="btn btn-primary">Full List</a>
+                </div>
+            </form>
+            <div class="button-holder col-md-2">
+                <a asp-action="Add" class="btn btn-primary">Create New</a>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var assetModel in Model.AssetModels)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <img class="card-img-top" src="@assetModel.ImageUrl" alt="@assetModel.Category @assetModel.Brand - (@assetModel.Name)">
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-center">@assetModel.Brand  @assetModel.Name</h5>
+                            <a asp-action="Details" 
+                               asp-route-id="@assetModel.Id"
+                               asp-route-searchString="@Model.SearchString"
+                               asp-route-sortOrder="@Model.SortOrder"
+                               asp-route-currentPage="@Model.CurrentPage"
+                               class="btn btn-primary">Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (!Model.AssetModels.Any())
+        {
+            <h4 class="text-center">No models found for the given criteria!</h4>
+        }
+
+        <partial name="_PaginationPartial" model="@Model" />
+    </div>
+</div>

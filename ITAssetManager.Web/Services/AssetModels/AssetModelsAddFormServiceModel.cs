@@ -1,20 +1,19 @@
-﻿using ITAssetManager.Web.Models.Brands;
-using ITAssetManager.Web.Models.Categories;
+﻿using ITAssetManager.Web.Services.AssetModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.AssetModels
+namespace ITAssetManager.Web.Services.AssetModels
 {
-    public class AssetModelsAddFormModel
+    public class AssetModelsAddFormServiceModel
     {
         [Display(Name = "Brand")]
         public int BrandId { get; init; }
 
         [BindNever]
-        public IEnumerable<BrandDropdownViewModel> Brands { get; set; }
+        public IEnumerable<BrandDropdownServiceModel> Brands { get; set; }
 
         [Required]
         [StringLength(AssetModelNameMaxLength, MinimumLength = AssetModelNameMinLength)]
@@ -24,7 +23,7 @@ namespace ITAssetManager.Web.Models.AssetModels
         public int CategoryId { get; init; }
 
         [BindNever]
-        public IEnumerable<CategoryDropdownViewModel> Categories { get; set; }
+        public IEnumerable<CategoryDropdownServiceModel> Categories { get; set; }
 
         [Url]
         [Required]

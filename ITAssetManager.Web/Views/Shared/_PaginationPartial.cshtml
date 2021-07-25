@@ -3,7 +3,7 @@
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
 
-<div class="row mt-2 mb-2 offset-md-3">
+<div class="row mt-2 mb-2 mt-2 justify-content-md-center">
     <a asp-action="All"
        asp-route-sortOrder="@Model.SortOrder"
        asp-route-currentPage="@(Model.CurrentPage - 1)"

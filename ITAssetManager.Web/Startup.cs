@@ -1,4 +1,5 @@
 using ITAssetManager.Web.Infrastructure;
+using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Categories;
 using ITAssetManager.Web.Services.Statuses;
@@ -40,7 +41,8 @@ namespace ITAssetManager.Web
                 .AddTransient<IBrandService, BrandService>()
                 .AddTransient<ICategoryService, CategoryService>()
                 .AddTransient<IStatusService, StatusService>()
-                .AddTransient<IVendorService, VendorService>();
+                .AddTransient<IVendorService, VendorService>()
+                .AddTransient<IAssetModelService, AssetModelService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

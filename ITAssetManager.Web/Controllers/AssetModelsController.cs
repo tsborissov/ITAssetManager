@@ -1,91 +1,74 @@
 ﻿using ITAssetManager.Data;
-using ITAssetManager.Data.Models;
-using ITAssetManager.Web.Models.AssetModels;
-using ITAssetManager.Web.Models.Brands;
-using ITAssetManager.Web.Models.Categories;
+using ITAssetManager.Web.Services.AssetModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace ITAssetManager.Web.Controllers
 {
     public class AssetModelsController : Controller
     {
-        private readonly ItAssetManagerDbContext data;
+        private readonly IAssetModelService assetModelService;
 
-        public AssetModelsController(ItAssetManagerDbContext data) 
-            => this.data = data;
+        public AssetModelsController(IAssetModelService assetModelService, ItAssetManagerDbContext data) 
+            => this.assetModelService = assetModelService;
 
         [Authorize]
-        public IActionResult Add() => View(new AssetModelsAddFormModel 
-        {
-            Brands = this.GetBrands(),
-            Categories = this.GetCategories()
-        });
+        public IActionResult Add() => View(
+            new AssetModelsAddFormServiceModel
+            {
+                Brands = this.assetModelService.GetBrands(),
+                Categories = this.assetModelService.GetCategories()
+            });
 
         [Authorize]
         [HttpPost]
-        public IActionResult Add(AssetModelsAddFormModel assetModelModel)
+        public IActionResult Add(AssetModelsAddFormServiceModel assetModel)
         {
-            if (!this.data.Brands.Any(b => b.Id == assetModelModel.BrandId))
+            if (!this.assetModelService.IsBrandValid(assetModel.BrandId))
             {
-                this.ModelState.AddModelError(nameof(assetModelModel.BrandId), "Invalid 'Brand' selected!");
+                this.ModelState.AddModelError(nameof(assetModel.BrandId), "Invalid 'Brand' selected!");
             }
 
-            if (!this.data.Categories.Any(c => c.Id == assetModelModel.CategoryId))
+            if (!this.assetModelService.IsCategoryValid(assetModel.CategoryId))
             {
-                this.ModelState.AddModelError(nameof(assetModelModel.CategoryId), "Invalid 'Category' selected!");
-            }
-
-            if (this.data.AssetModels.Any(m => m.Name == assetModelModel.Name))
-            {
-                this.ModelState.AddModelError(nameof(assetModelModel.Name), "Model already exists!");
+                this.ModelState.AddModelError(nameof(assetModel.CategoryId), "Invalid 'Category' selected!");
             }
 
             if (!this.ModelState.IsValid)
             {
-                assetModelModel.Categories = this.GetCategories();
-                assetModelModel.Brands = this.GetBrands();
+                assetModel.Categories = this.assetModelService.GetCategories();
+                assetModel.Brands = this.assetModelService.GetBrands();
 
-                return View(assetModelModel);
+                return View(assetModel);
             }
 
-            var assetModel = new AssetModel 
-            {
-                BrandId = assetModelModel.BrandId,
-                CategoryId = assetModelModel.CategoryId,
-                Name = assetModelModel.Name,
-                ImageUrl = assetModelModel.ImageUrl,
-                Details = assetModelModel.Details
-            };
-
-            this.data.AssetModels.Add(assetModel);
-            this.data.SaveChanges();
+            this.assetModelService.Add(assetModel);
 
             return RedirectToAction("Index", "Home");
         }
 
-        private IEnumerable<BrandDropdownViewModel> GetBrands() 
-            => this.data
-                   .Brands
-                   .OrderBy(b => b.Name)
-                   .Select(b => new BrandDropdownViewModel
-                   {
-                       Id = b.Id,
-                       Name = b.Name
-                   })
-                   .ToList();
+        [Authorize]
+        public IActionResult All(string searchString, string sortOrder, int currentPage)
+        {
+            var queryResult = this.assetModelService.All(searchString, currentPage);
 
-        private IEnumerable<CategoryDropdownViewModel> GetCategories()
-            => this.data
-                    .Categories
-                    .OrderBy(c => c.Name)
-                    .Select(c => new CategoryDropdownViewModel
-                    {
-                        Id = c.Id,
-                        Name = c.Name
-                    })
-                    .ToList();
+            return View(queryResult);
+        }
+
+        [Authorize]
+        public IActionResult Details(int id, string searchString, int currentPage)
+        {
+            if (!assetModelService.IsExistingModel(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var assetModel = this.assetModelService.Details(id);
+
+            assetModel.SearchString = searchString;
+            assetModel.CurrentPage = currentPage;
+
+            return View(assetModel);
+        }
     }
 }

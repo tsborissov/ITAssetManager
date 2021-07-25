@@ -1,0 +1,38 @@
+﻿@model AssetModelDetailsServiceModel
+
+@{
+    ViewBag.Title = "Model Details";
+}
+
+<div class="container">
+    <div class="section">
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <div class="page-header text-center">
+                    <h2 id="tables">Details for: </h2>
+                    <h2 class="font-weight-bold font-italic">@Model.Category @Model.Brand @Model.Name</h2>
+                </div>
+
+                <div class="component">
+                    <table class="table table-hover">
+                        <thead class=" table-active">
+                            <tr>
+                                <th scope="col" class="text-center">Image</th>
+                                <th class="text-center">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-light">
+                                <td>
+                                    <img class="card-img-top" src="@Model.ImageUrl">
+                                </td>
+                                <td>@Model.Details</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <partial name="_BackEditButtonsPartial" model="@Model" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
