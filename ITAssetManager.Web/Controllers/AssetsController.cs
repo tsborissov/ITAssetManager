@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Data;
+using ITAssetManager.Web.Models.Assets;
 using ITAssetManager.Web.Services.Assets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,9 +67,18 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All()
+        public IActionResult All([FromQuery] AssetsQueryModel query)
         {
-            return View();
+            var queryResult = this.assetService.All(query.SearchString, query.SortOrder, query.CurrentPage);
+
+            query.Assets = queryResult.Assets;
+            query.SearchString = queryResult.SearchString;
+            query.SortOrder = queryResult.SortOrder;
+            query.CurrentPage = queryResult.CurrentPage;
+            query.HasNextPage = queryResult.HasNextPage;
+            query.HasPreviousPage = queryResult.HasPreviousPage;
+
+            return View(query);
         }
     }
 }

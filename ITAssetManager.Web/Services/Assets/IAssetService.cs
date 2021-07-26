@@ -6,6 +6,8 @@ namespace ITAssetManager.Web.Services.Assets
     {
         int Add(AssetAddFormServiceModel vendorModel);
 
+        AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage);
+
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 
         IEnumerable<AssetModelDropdownServiceModel> GetModels();

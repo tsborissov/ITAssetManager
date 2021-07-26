@@ -6,11 +6,14 @@
     <h1 class="display-4">Welcome</h1>
 </div>
 
-<div class="row">
-    <div class="col-12 text-center">
-        <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row">
+        <div class="col-12 text-center">
+            <button class="btn btn-primary" id="statistics-button">Show Statistics</button>
+        </div>
     </div>
-</div>
+}
 
 <table class="table table-hover d-none" id="statistics-table">
     <thead>

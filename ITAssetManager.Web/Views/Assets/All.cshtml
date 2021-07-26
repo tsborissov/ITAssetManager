@@ -1,5 +1,99 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model AssetsQueryModel
+
 @{
+    ViewBag.Title = "Assets";
 }
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <div class="row mt-3 mb-3">
+            <form asp-action="All" method="get" class="col-md-9">
+                <div class="form-actions">
+                    <input type="text" name="SearchString" class="col-md-7" value="@Model.SearchString" placeholder="Search by Brand, Model, etc..." />
+                    <input type="submit" class="btn btn-primary" value="Search" />
+                    <a asp-action="All" class="btn btn-primary">Full List</a>
+                </div>
+            </form>
+            <div class="button-holder col-md-3">
+                <a asp-action="Add" class="btn btn-primary">Create New</a>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <a asp-action="All"
+                           asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
+                           asp-route-searchString="@Model.SearchString">
+                            Brand
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="All"
+                           asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
+                           asp-route-searchString="@Model.SearchString">
+                            Model
+                        </a>
+                    </th>
+                    <th>
+                        <a asp-action="All"
+                           asp-route-sortOrder="@(Model.SortOrder == "status" ? "status_desc" : "status")"
+                           asp-route-searchString="@Model.SearchString">
+                            Status
+                        </a>
+                    </th>
+                    <th>SerialNr</th>
+                    <th>InventoryNr</th>
+                    <th>User</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var asset in Model.Assets)
+                {
+                    <tr>
+                        <td>@asset.Brand</td>
+                        <td>@asset.Model</td>
+                        <td>@asset.Status</td>
+                        <td>@asset.SerialNr</td>
+                        <td>@asset.InventoryNr</td>
+                        <td>@asset.User</td>
+
+                        @if (asset.User == null)
+                        {
+                            <td>
+                                <div class="button-holder col-md-3">
+                                    <a asp-action="Assign"
+                                       asp-route-id="@asset.Id"
+                                       class="btn btn-danger">Assign</a>
+                                </div>
+                            </td>
+                        }
+
+                        @if (asset.User != null)
+                        {
+                            <td>
+                                <div class="button-holder col-md-3">
+                                    <a asp-action="Collect"
+                                       asp-route-id="@asset.Id"
+                                       class="btn btn-success">Collect</a>
+                                </div>
+                            </td>
+                        }
+
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (!Model.Assets.Any())
+        {
+            <h4 class="text-center">No assets found for the given criteria!</h4>
+        }
+
+        <partial name="_PaginationPartial" model="@Model" />
+    </div>
+</div>

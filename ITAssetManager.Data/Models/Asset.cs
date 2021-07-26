@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 using static ITAssetManager.Data.DataConstants;
@@ -42,5 +43,7 @@ namespace ITAssetManager.Data.Models
         public DateTime? DisposalDate { get; set; }
 
         public bool IsDeleted { get; set; }
+
+        public ICollection<UserAsset> AssetUsers { get; init; } = new HashSet<UserAsset>();
     }
 }

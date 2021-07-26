@@ -1,3 +1,4 @@
+using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Infrastructure;
 using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.Assets;
@@ -32,8 +33,15 @@ namespace ITAssetManager.Web
                 .AddDatabaseDeveloperPageExceptionFilter();
 
             services
-                .AddDefaultIdentity<IdentityUser>(options => options
-                    .SignIn.RequireConfirmedAccount = false)
+                .AddDefaultIdentity<ApplicationUser>(options => 
+                    {
+                        options.SignIn.RequireConfirmedAccount = false;
+                        options.Password.RequireDigit = false;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequireUppercase = false;
+                        options.Password.RequireNonAlphanumeric = false;
+                    })
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<Data.AppDbContext>();
 
             services.AddControllersWithViews();

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize]
     public class VendorsController : Controller
     {
         private readonly IVendorService vendorService;
@@ -14,10 +15,8 @@ namespace ITAssetManager.Web.Controllers
             this.vendorService = vendorService;
         }
 
-        [Authorize]
         public IActionResult Add() => View();
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(VendorAddFormServiceModel vendorModel)
         {
@@ -41,7 +40,6 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
         public IActionResult All([FromQuery] VendorsQueryModel query)
         {
             var queryResult = this.vendorService.All(query.SearchString, query.SortOrder, query.CurrentPage);
@@ -56,7 +54,6 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
-        [Authorize]
         public IActionResult Details(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
@@ -70,7 +67,6 @@ namespace ITAssetManager.Web.Controllers
         }
 
 
-        [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
@@ -94,7 +90,6 @@ namespace ITAssetManager.Web.Controllers
             });
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Edit(VendorEditServiceModel vendorModel)
         {

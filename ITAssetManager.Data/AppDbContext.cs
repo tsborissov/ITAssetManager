@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ITAssetManager.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -22,6 +22,8 @@ namespace ITAssetManager.Data
         public DbSet<Status> Statuses { get; init; }
 
         public DbSet<Vendor> Vendors { get; init; }
+
+        public DbSet<UserAsset> UsersAssets { get; init; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -59,6 +61,10 @@ namespace ITAssetManager.Data
                 .WithMany(c => c.AssetModels)
                 .HasForeignKey(c => c.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<UserAsset>()
+                .HasKey(k => new { k.AssetId, k.UserId });
 
             base.OnModelCreating(builder);
         }

@@ -1,5 +1,4 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Data.Models;
+﻿using ITAssetManager.Data.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
