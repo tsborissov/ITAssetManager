@@ -14,7 +14,7 @@ namespace ITAssetManager.Web.Controllers.Api
             => this.brandService = brandService;
 
         [HttpGet]
-        public BrandQueryServiceModel All([FromQuery] AllBrandsApiRequestModel query)
+        public BrandQueryServiceModel All(AllBrandsApiRequestModel query)
             => this.brandService.All(
                 query.SearchString,
                 query.SortOrder,

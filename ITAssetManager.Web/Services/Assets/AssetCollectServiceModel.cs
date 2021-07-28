@@ -4,7 +4,7 @@ namespace ITAssetManager.Web.Services.Assets
 {
     public class AssetCollectServiceModel
     {
-        public int AssetId { get; init; }
+        public int Id { get; init; }
 
         public string Model { get; init; }
 
@@ -19,5 +19,11 @@ namespace ITAssetManager.Web.Services.Assets
 
         [Display(Name = "User")]
         public string UserName { get; set; }
+
+        public string SearchString { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public int CurrentPage { get; set; }
     }
 }

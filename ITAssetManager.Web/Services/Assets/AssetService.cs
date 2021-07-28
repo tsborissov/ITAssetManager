@@ -1,6 +1,5 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,25 +15,25 @@ namespace ITAssetManager.Web.Services.Assets
         public AssetService(AppDbContext data)
             => this.data = data;
 
-        public int Add(AssetAddFormServiceModel assetModel)
+        public int Add(AssetAddFormServiceModel asset)
         {
-            var asset = new Asset
+            var assetData = new Asset
             {
-                AssetModelId = assetModel.AssetModelId,
-                InventoryNr = assetModel.InventoryNr,
-                InvoiceNr = assetModel.InvoiceNr,
-                Price = assetModel.Price,
-                PurchaseDate = assetModel.PurchaseDate,
-                SerialNr = assetModel.SerialNr,
-                StatusId = assetModel.StatusId,
-                VendorId = assetModel.VendorId,
-                WarranyExpirationDate = assetModel.WarranyExpirationDate
+                AssetModelId = asset.AssetModelId,
+                InventoryNr = asset.InventoryNr,
+                InvoiceNr = asset.InvoiceNr,
+                Price = asset.Price,
+                PurchaseDate = asset.PurchaseDate,
+                SerialNr = asset.SerialNr,
+                StatusId = asset.StatusId,
+                VendorId = asset.VendorId,
+                WarranyExpirationDate = asset.WarranyExpirationDate
             };
 
-            this.data.Assets.Add(asset);
+            this.data.Assets.Add(assetData);
             this.data.SaveChanges();
 
-            return asset.Id;
+            return assetData.Id;
         }
 
         public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId)
@@ -117,7 +116,7 @@ namespace ITAssetManager.Web.Services.Assets
             };
         }
 
-        public AssetAssignServiceModel GetById(int id)
+        public AssetAssignServiceModel AssignById(int id, string searchString, string sortOrder, int currentPage)
         {
             var targetAsset = this.data
                 .Assets
@@ -128,6 +127,9 @@ namespace ITAssetManager.Web.Services.Assets
                     Model = a.AssetModel.Brand.Name + " " + a.AssetModel.Name,
                     SerialNr = a.SerialNr,
                     InventoryNr = a.InventoryNr,
+                    SearchString = searchString,
+                    SortOrder = sortOrder,
+                    CurrentPage = currentPage
                 })
                 .FirstOrDefault();
 
@@ -150,7 +152,7 @@ namespace ITAssetManager.Web.Services.Assets
 
             var targetStatusId = this.data
                 .Statuses
-                .Where(s => s.Name == "In Use")
+                .Where(s => s.Name == AssetTargetAssignStatus)
                 .Select(s => s.Id )
                 .FirstOrDefault();
 
@@ -160,20 +162,23 @@ namespace ITAssetManager.Web.Services.Assets
             this.data.SaveChanges();
         }
 
-        public AssetCollectServiceModel UserAssetById(int assetId)
+        public AssetCollectServiceModel UserAssetById(int assetId, string searchString, string sortOrder, int currentPage)
         {
             var targetUserAsset = this.data
                 .UsersAssets
                 .Where(ua => ua.AssetId == assetId && ua.ReturnDate == null)
                 .Select(ua => new AssetCollectServiceModel
                 {
-                    AssetId = ua.AssetId,
+                    Id = ua.AssetId,
                     Model = ua.Asset.AssetModel.Name,
                     SerialNr = ua.Asset.SerialNr,
                     InventoryNr = ua.Asset.InventoryNr,
                     AssignDate = ua.AssignDate.ToString("dd.MM.yyyy"),
                     UserId = ua.UserId,
-                    UserName = ua.User.UserName
+                    UserName = ua.User.UserName,
+                    SearchString = searchString,
+                    SortOrder = sortOrder,
+                    CurrentPage = currentPage
                 })
                 .FirstOrDefault();
 
@@ -194,7 +199,7 @@ namespace ITAssetManager.Web.Services.Assets
 
             var targetStatusId = this.data
                 .Statuses
-                .Where(s => s.Name == "In Stock")
+                .Where(s => s.Name == AssetTargetCollectStatus)
                 .Select(s => s.Id)
                 .FirstOrDefault();
 
@@ -203,6 +208,67 @@ namespace ITAssetManager.Web.Services.Assets
             targetUserAsset.ReturnDate = DateTime.UtcNow;
             this.data.SaveChanges();
         }
+
+        public AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage)
+        {
+            var assetData = this.data
+                .Assets
+                .Where(a => a.Id == id)
+                .Select(a => new AssetEditFormServiceModel
+                {
+                    Id = a.Id,
+                    AssetModelId = a.AssetModelId,
+                    SerialNr = a.SerialNr,
+                    InventoryNr = a.InventoryNr,
+                    StatusId = a.StatusId,
+                    VendorId = a.VendorId,
+                    InvoiceNr = a.InvoiceNr,
+                    Price = a.Price,
+                    PurchaseDate = a.PurchaseDate,
+                    WarranyExpirationDate = a.WarranyExpirationDate,
+                    SearchString = searchString,
+                    SortOrder = sortOrder,
+                    CurrentPage = currentPage
+                })
+                .FirstOrDefault();
+
+            assetData.Models = this.GetModels();
+            assetData.Statuses = this.GetStatuses();
+            assetData.Vendors = this.GetVendors();
+
+            return assetData;
+        }
+
+        public void Update(AssetEditFormServiceModel asset)
+        {
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == asset.Id)
+                .FirstOrDefault();
+
+            targetAsset.AssetModelId = asset.AssetModelId;
+            targetAsset.SerialNr = asset.SerialNr;
+            targetAsset.InventoryNr = asset.InventoryNr;
+            targetAsset.StatusId = asset.StatusId;
+            targetAsset.VendorId = asset.VendorId;
+            targetAsset.InvoiceNr = asset.InvoiceNr;
+            targetAsset.Price = asset.Price;
+            targetAsset.PurchaseDate = asset.PurchaseDate;
+            targetAsset.WarranyExpirationDate = asset.WarranyExpirationDate;
+
+            this.data.SaveChanges();
+        }
+
+        public IEnumerable<UserDropdownServiceModel> GetAllUsers()
+            => this.data
+                .Users
+                .OrderBy(u => u.UserName)
+                .Select(u => new UserDropdownServiceModel
+                {
+                    Id = u.Id,
+                    Username = u.UserName
+                })
+                .ToList();
 
         public IEnumerable<AssetModelDropdownServiceModel> GetModels()
         => this.data
@@ -218,22 +284,12 @@ namespace ITAssetManager.Web.Services.Assets
         public IEnumerable<StatusDropdownServiceModel> GetStatuses()
         => this.data
                 .Statuses
+                .Where(s => s.Name != AssetTargetAssignStatus)
                 .OrderBy(s => s.Name)
                 .Select(s => new StatusDropdownServiceModel
                 {
                     Id = s.Id,
                     Name = s.Name
-                })
-                .ToList();
-
-        public IEnumerable<UserDropdownServiceModel> GetAllUsers()
-            => this.data
-                .Users
-                .OrderBy(u => u.UserName)
-                .Select(u => new UserDropdownServiceModel
-                {
-                    Id = u.Id,
-                    Username = u.UserName
                 })
                 .ToList();
 

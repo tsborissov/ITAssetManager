@@ -8,13 +8,17 @@ namespace ITAssetManager.Web.Services.Assets
 
         AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId);
 
-        AssetAssignServiceModel GetById(int id);
+        AssetAssignServiceModel AssignById(int id, string searchString, string sortOrder, int currentPage);
 
         void Assign(string userId, int assetId);
 
-        AssetCollectServiceModel UserAssetById(int assetId);
+        AssetCollectServiceModel UserAssetById(int assetId, string searchString, string sortOrder, int currentPage);
 
         void Collect(string userId, int assetId);
+
+        AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage);
+
+        void Update(AssetEditFormServiceModel asset);
 
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 

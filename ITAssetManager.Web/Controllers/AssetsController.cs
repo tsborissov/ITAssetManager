@@ -66,7 +66,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All([FromQuery] AssetsQueryModel query)
+        public IActionResult All(AssetsQueryModel query)
         {
             var queryResult = this.assetService
                 .All(query.SearchString, query.SortOrder, query.CurrentPage, query.UserId);
@@ -81,9 +81,9 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
-        public IActionResult Assign(int id)
+        public IActionResult Assign(int id, string searchString, string sortOrder, int currentPage)
         {
-            var targetAsset = this.assetService.GetById(id);
+            var targetAsset = this.assetService.AssignById(id, searchString, sortOrder, currentPage);
             targetAsset.AllUsers = this.assetService.GetAllUsers();
 
             return View(targetAsset);
@@ -94,20 +94,59 @@ namespace ITAssetManager.Web.Controllers
         {
             this.assetService.Assign(assetModel.UserId, assetModel.Id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All), new 
+                {
+                    SortOrder = assetModel.SortOrder,
+                    SearchString = assetModel.SearchString,
+                    CurrentPage = assetModel.CurrentPage
+                });
         }
 
-        public IActionResult Collect(int id)
+        public IActionResult Collect(int id, string searchString, string sortOrder, int currentPage)
         {
-            return View(this.assetService.UserAssetById(id));
+            return View(this.assetService.UserAssetById(id, searchString, sortOrder, currentPage));
         }
 
         [HttpPost]
         public IActionResult Collect(AssetCollectServiceModel assetModel)
         {
-            this.assetService.Collect(assetModel.UserId, assetModel.AssetId);
+            this.assetService.Collect(assetModel.UserId, assetModel.Id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = assetModel.SortOrder,
+                SearchString = assetModel.SearchString,
+                CurrentPage = assetModel.CurrentPage
+            });
+        }
+
+        public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
+        {
+            var targetAsset = this.assetService.EditById(id, searchString, sortOrder, currentPage);
+
+            return View(targetAsset);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(AssetEditFormServiceModel assetModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                assetModel.Models = this.assetService.GetModels();
+                assetModel.Statuses = this.assetService.GetStatuses();
+                assetModel.Vendors = this.assetService.GetVendors();
+
+                return View(assetModel);
+            }
+
+            this.assetService.Update(assetModel);
+
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = assetModel.SortOrder,
+                SearchString = assetModel.SearchString,
+                CurrentPage = assetModel.CurrentPage
+            });
         }
     }
 }

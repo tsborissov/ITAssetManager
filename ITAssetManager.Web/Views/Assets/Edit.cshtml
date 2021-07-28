@@ -1,0 +1,93 @@
+﻿@model AssetEditFormServiceModel
+
+@{
+    ViewBag.Title = "Edit Asset";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="InventoryNr"></label>
+                <input asp-for="InventoryNr" class="form-control" hidden />
+                <input asp-for="InventoryNr" class="form-control" disabled />
+                <span asp-validation-for="InventoryNr" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssetModelId"></label>
+                <select asp-for="AssetModelId" class="form-control">
+                    @foreach (var assetModel in Model.Models)
+                    {
+                        @if (assetModel.Id == Model.AssetModelId)
+                        {
+                            <option value="@assetModel.Id" selected>@assetModel.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@assetModel.Id">@assetModel.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="SerialNr"></label>
+                <input asp-for="SerialNr" class="form-control" />
+                <span asp-validation-for="SerialNr" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusId"></label>
+                <select asp-for="StatusId" class="form-control">
+                    @foreach (var status in Model.Statuses)
+                    {
+                        if (status.Id == Model.StatusId)
+                        {
+                            <option value="@status.Id" selected>@status.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="VendorId"></label>
+                <select asp-for="VendorId" class="form-control">
+                    @foreach (var vendor in Model.Vendors)
+                    {
+                        @if (vendor.Id == Model.VendorId)
+                        {
+                            <option value="@vendor.Id" selected>@vendor.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@vendor.Id">@vendor.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceNr"></label>
+                <input asp-for="InvoiceNr" class="form-control /">
+                <span asp-validation-for="InvoiceNr" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PurchaseDate"></label>
+                <input asp-for="PurchaseDate" class="form-control" />
+                <span asp-validation-for="PurchaseDate" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WarranyExpirationDate"></label>
+                <input asp-for="WarranyExpirationDate" class="form-control" />
+                <span asp-validation-for="WarranyExpirationDate" class="small text-danger"></span>
+            </div>
+            <partial name="_BackSaveButtonsToAllPartial" model="@Model" />
+        </form>
+    </div>
+</div>

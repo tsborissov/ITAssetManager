@@ -38,7 +38,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All([FromQuery] CategoriesQueryModel query)
+        public IActionResult All(CategoriesQueryModel query)
         {
             var queryResult = this.categoryService.All(
                 query.SearchString,

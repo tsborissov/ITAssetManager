@@ -16,6 +16,12 @@ namespace ITAssetManager.Web.Services.Assets
         [Display(Name = "User")]
         public string UserId { get; set; }
 
+        public string SearchString { get; set; }
+
+        public string SortOrder { get; set; }
+
+        public int CurrentPage { get; set; }
+
         public IEnumerable<UserDropdownServiceModel> AllUsers { get; set; }
     }
 }

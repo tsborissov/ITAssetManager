@@ -29,12 +29,7 @@
                     }
                 </select>
             </div>
-            <div class="button-holder">
-                <a asp-action="All" class="btn btn-primary float-left"><< Back</a>
-            </div>
-            <div class="button-holder">
-                <button type="submit" class="btn btn-primary float-right">Save</button>
-            </div>
+            <partial name="_BackSaveButtonsToAllPartial" model="@Model" />
         </form>
     </div>
 </div>

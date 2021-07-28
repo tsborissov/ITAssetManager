@@ -37,7 +37,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All([FromQuery] StatusesQueryModel query)
+        public IActionResult All(StatusesQueryModel query)
         {
             var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 

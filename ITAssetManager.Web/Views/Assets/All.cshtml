@@ -46,8 +46,8 @@
                     <th>SerialNr</th>
                     <th>InventoryNr</th>
                     <th>User</th>
-                    <th></th>
-                    <th></th>
+                    <th>Edit</th>
+                    <th>Assign/Collect</th>
                 </tr>
             </thead>
             <tbody>
@@ -61,11 +61,19 @@
                         <td>@asset.InventoryNr</td>
                         <td>@asset.User</td>
                         <td>
-                            <div class="button-holder col-md-3">
-                                <a asp-action="Edit"
-                                   asp-route-id="@asset.Id"
-                                   class="btn btn-warning">Edit</a>
-                            </div>
+                            @if (asset.Status != "In Use")
+                            {
+                                <div class="button-holder col-md-3">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@asset.Id"
+                                       asp-route-searchString="@Model.SearchString"
+                                       asp-route-sortOrder="@Model.SortOrder"
+                                       asp-route-currentPage="@Model.CurrentPage"
+                                       class="btn btn-warning">
+                                        Edit
+                                    </a>
+                                </div>
+                            }
                         </td>
                         <td>
                             @if (asset.User == null && asset.Status == "In Stock")
@@ -73,7 +81,12 @@
                                 <div class="button-holder col-md-3">
                                     <a asp-action="Assign"
                                        asp-route-id="@asset.Id"
-                                       class="btn btn-danger">Assign</a>
+                                       asp-route-searchString="@Model.SearchString"
+                                       asp-route-sortOrder="@Model.SortOrder"
+                                       asp-route-currentPage="@Model.CurrentPage"
+                                       class="btn btn-danger">
+                                        Assign
+                                    </a>
                                 </div>
                             }
 
@@ -82,7 +95,12 @@
                                 <div class="button-holder col-md-3">
                                     <a asp-action="Collect"
                                        asp-route-id="@asset.Id"
-                                       class="btn btn-success">Collect</a>
+                                       asp-route-searchString="@Model.SearchString"
+                                       asp-route-sortOrder="@Model.SortOrder"
+                                       asp-route-currentPage="@Model.CurrentPage"
+                                       class="btn btn-success">
+                                        Collect
+                                    </a>
                                 </div>
                             }
                         </td>

@@ -40,7 +40,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        public IActionResult All([FromQuery] VendorsQueryModel query)
+        public IActionResult All(VendorsQueryModel query)
         {
             var queryResult = this.vendorService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 

@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize]
     public class AssetModelsController : Controller
     {
         private readonly IAssetModelService assetModelService;
@@ -13,7 +14,6 @@ namespace ITAssetManager.Web.Controllers
         public AssetModelsController(IAssetModelService assetModelService, AppDbContext data) 
             => this.assetModelService = assetModelService;
 
-        [Authorize]
         public IActionResult Add() => View(
             new AssetModelsAddFormServiceModel
             {
@@ -21,7 +21,6 @@ namespace ITAssetManager.Web.Controllers
                 Categories = this.assetModelService.GetCategories()
             });
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(AssetModelsAddFormServiceModel assetModel)
         {
@@ -56,7 +55,6 @@ namespace ITAssetManager.Web.Controllers
             return View(queryResult);
         }
 
-        [Authorize]
         public IActionResult Details(int id, string searchString, int currentPage)
         {
             if (!assetModelService.IsExistingModel(id))
@@ -72,7 +70,6 @@ namespace ITAssetManager.Web.Controllers
             return View(assetModel);
         }
 
-        [Authorize]
         public IActionResult Edit(int id, string searchString, int currentPage)
         {
             if (!assetModelService.IsExistingModel(id))
@@ -110,7 +107,6 @@ namespace ITAssetManager.Web.Controllers
                 });
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Edit(AssetModelEditFormServiceModel assetModel)
         {

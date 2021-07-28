@@ -35,7 +35,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All([FromQuery] BrandsQueryModel query)
+        public IActionResult All(BrandsQueryModel query)
         {
             var queryResult = this.brandService.All(
                 query.SearchString,
