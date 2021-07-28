@@ -12,6 +12,10 @@ namespace ITAssetManager.Web.Services.Assets
 
         void Assign(string userId, int assetId);
 
+        AssetCollectServiceModel UserAssetById(int assetId);
+
+        void Collect(string userId, int assetId);
+
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 
         IEnumerable<AssetModelDropdownServiceModel> GetModels();

@@ -99,7 +99,15 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult Collect(int id)
         {
-            return View();
+            return View(this.assetService.UserAssetById(id));
+        }
+
+        [HttpPost]
+        public IActionResult Collect(AssetCollectServiceModel assetModel)
+        {
+            this.assetService.Collect(assetModel.UserId, assetModel.AssetId);
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

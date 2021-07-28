@@ -64,7 +64,7 @@ namespace ITAssetManager.Data
 
             builder
                 .Entity<UserAsset>()
-                .HasKey(k => new { k.AssetId, k.UserId });
+                .HasKey(k => new { k.AssetId, k.UserId, k.AssignDate });
 
             base.OnModelCreating(builder);
         }

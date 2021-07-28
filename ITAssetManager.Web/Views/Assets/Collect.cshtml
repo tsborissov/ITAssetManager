@@ -1,12 +1,12 @@
 ﻿@model AssetCollectServiceModel
 
 @{
-    ViewBag.Title = "Assign Asset";
+    ViewBag.Title = "Collect Asset";
 }
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <h2 class="heading-margin">@ViewBag.Title</h2>
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
         <form method="post">
             <div class="form-group">
                 <label asp-for="Model"></label>
@@ -21,13 +21,16 @@
                 <input asp-for="InventoryNr" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <label asp-for="UserId"></label>
-                <select asp-for="UserId" class="form-control">
-                    @foreach (var user in Model.AllUsers)
-                    {
-                        <option value="@user.Id">@user.Username</option>
-                    }
-                </select>
+                <label asp-for="AssignDate"></label>
+                <input asp-for="AssignDate" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="UserName"></label>
+                <input asp-for="UserName" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <input asp-for="UserId" class="form-control" readonly hidden />
+                <input asp-for="AssetId" class="form-control" readonly hidden />
             </div>
             <div class="button-holder">
                 <a asp-action="All" class="btn btn-primary float-left"><< Back</a>

@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +58,11 @@ namespace ITAssetManager.Web.Services.Assets
                         a.InventoryNr.ToLower().Contains(searchString.ToLower()) ||
                         a.SerialNr.ToLower().Contains(searchString.ToLower()) ||
                         a.Status.Name.ToLower().Contains(searchString.ToLower()) ||
-                        a.AssetUsers.Any(au => au.User.UserName.ToLower().Contains(searchString.ToLower())));
+                        a.AssetUsers.Any(au => au.User.UserName.ToLower()
+                            .Contains(
+                                searchString.ToLower()) && 
+                                au.Asset.Status.Name == "In Use" &&
+                                au.ReturnDate == null));
             }
 
             assetsQuery = sortOrder switch
@@ -152,6 +157,50 @@ namespace ITAssetManager.Web.Services.Assets
             targetAsset.StatusId = targetStatusId;
 
             this.data.UsersAssets.Add(userAsset);
+            this.data.SaveChanges();
+        }
+
+        public AssetCollectServiceModel UserAssetById(int assetId)
+        {
+            var targetUserAsset = this.data
+                .UsersAssets
+                .Where(ua => ua.AssetId == assetId && ua.ReturnDate == null)
+                .Select(ua => new AssetCollectServiceModel
+                {
+                    AssetId = ua.AssetId,
+                    Model = ua.Asset.AssetModel.Name,
+                    SerialNr = ua.Asset.SerialNr,
+                    InventoryNr = ua.Asset.InventoryNr,
+                    AssignDate = ua.AssignDate.ToString("dd.MM.yyyy"),
+                    UserId = ua.UserId,
+                    UserName = ua.User.UserName
+                })
+                .FirstOrDefault();
+
+            return targetUserAsset;
+        }
+
+        public void Collect(string userId, int assetId)
+        {
+            var targetUserAsset = this.data
+                .UsersAssets
+                .Where(ua => ua.UserId == userId && ua.AssetId == assetId && ua.ReturnDate == null)
+                .FirstOrDefault();
+
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == assetId)
+                .FirstOrDefault();
+
+            var targetStatusId = this.data
+                .Statuses
+                .Where(s => s.Name == "In Stock")
+                .Select(s => s.Id)
+                .FirstOrDefault();
+
+            targetAsset.StatusId = targetStatusId;
+
+            targetUserAsset.ReturnDate = DateTime.UtcNow;
             this.data.SaveChanges();
         }
 
