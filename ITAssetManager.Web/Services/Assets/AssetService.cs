@@ -36,9 +36,17 @@ namespace ITAssetManager.Web.Services.Assets
             return asset.Id;
         }
 
-        public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage)
+        public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId)
         {
-            var assetsQuery = this.data.Assets.AsQueryable();
+            var assetsQuery = this.data
+                .Assets
+                .AsQueryable();
+
+            if (userId != null)
+            {
+                assetsQuery = assetsQuery
+                    .Where(a => a.AssetUsers.Any(u => u.UserId == userId));
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -48,7 +56,8 @@ namespace ITAssetManager.Web.Services.Assets
                         a.AssetModel.Name.ToLower().Contains(searchString.ToLower()) ||
                         a.InventoryNr.ToLower().Contains(searchString.ToLower()) ||
                         a.SerialNr.ToLower().Contains(searchString.ToLower()) ||
-                        a.Status.Name.ToLower().Contains(searchString.ToLower()));
+                        a.Status.Name.ToLower().Contains(searchString.ToLower()) ||
+                        a.AssetUsers.Any(au => au.User.UserName.ToLower().Contains(searchString.ToLower())));
             }
 
             assetsQuery = sortOrder switch
@@ -103,6 +112,49 @@ namespace ITAssetManager.Web.Services.Assets
             };
         }
 
+        public AssetAssignServiceModel GetById(int id)
+        {
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == id)
+                .Select(a => new AssetAssignServiceModel
+                {
+                    Id = a.Id,
+                    Model = a.AssetModel.Brand.Name + " " + a.AssetModel.Name,
+                    SerialNr = a.SerialNr,
+                    InventoryNr = a.InventoryNr,
+                })
+                .FirstOrDefault();
+
+            return targetAsset;
+        }
+
+        public void Assign(string userId, int assetId)
+        {
+            var userAsset = new UserAsset
+            {
+                UserId = userId,
+                AssetId = assetId,
+                AssignDate = DateTime.UtcNow
+            };
+
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == assetId)
+                .FirstOrDefault();
+
+            var targetStatusId = this.data
+                .Statuses
+                .Where(s => s.Name == "In Use")
+                .Select(s => s.Id )
+                .FirstOrDefault();
+
+            targetAsset.StatusId = targetStatusId;
+
+            this.data.UsersAssets.Add(userAsset);
+            this.data.SaveChanges();
+        }
+
         public IEnumerable<AssetModelDropdownServiceModel> GetModels()
         => this.data
                 .AssetModels
@@ -122,6 +174,17 @@ namespace ITAssetManager.Web.Services.Assets
                 {
                     Id = s.Id,
                     Name = s.Name
+                })
+                .ToList();
+
+        public IEnumerable<UserDropdownServiceModel> GetAllUsers()
+            => this.data
+                .Users
+                .OrderBy(u => u.UserName)
+                .Select(u => new UserDropdownServiceModel
+                {
+                    Id = u.Id,
+                    Username = u.UserName
                 })
                 .ToList();
 

@@ -15,7 +15,7 @@
                     <a asp-action="All" class="btn btn-primary">Full List</a>
                 </div>
             </form>
-            <div class="button-holder col-md-3">
+            <div class="button-holder">
                 <a asp-action="Add" class="btn btn-primary">Create New</a>
             </div>
         </div>
@@ -60,30 +60,32 @@
                         <td>@asset.SerialNr</td>
                         <td>@asset.InventoryNr</td>
                         <td>@asset.User</td>
-
-                        @if (asset.User == null)
-                        {
-                            <td>
+                        <td>
+                            <div class="button-holder col-md-3">
+                                <a asp-action="Edit"
+                                   asp-route-id="@asset.Id"
+                                   class="btn btn-primary">Edit</a>
+                            </div>
+                        </td>
+                        <td>
+                            @if (asset.User == null && asset.Status == "In Stock")
+                            {
                                 <div class="button-holder col-md-3">
                                     <a asp-action="Assign"
                                        asp-route-id="@asset.Id"
                                        class="btn btn-danger">Assign</a>
                                 </div>
-                            </td>
-                        }
+                            }
 
-                        @if (asset.User != null)
-                        {
-                            <td>
+                            @if (asset.User != null)
+                            {
                                 <div class="button-holder col-md-3">
                                     <a asp-action="Collect"
                                        asp-route-id="@asset.Id"
                                        class="btn btn-success">Collect</a>
                                 </div>
-                            </td>
-                        }
-
-
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

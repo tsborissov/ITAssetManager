@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Add Asset";
+    var defaultStatus = "In Stock";
 }
 
 <div class="row">
@@ -32,7 +33,15 @@
                 <select asp-for="StatusId" class="form-control">
                     @foreach (var status in Model.Statuses)
                     {
-                        <option value="@status.Id">@status.Name</option>
+                        if (status.Name == defaultStatus)
+                        {
+                            <option value="@status.Id" selected>@status.Name</option>
+                        }
+
+                        if (status.Name != defaultStatus)
+                        {
+                            <option value="@status.Id">@status.Name</option>
+                        }
                     }
                 </select>
             </div>

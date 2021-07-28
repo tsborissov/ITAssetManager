@@ -6,13 +6,19 @@ namespace ITAssetManager.Web.Services.Assets
     {
         int Add(AssetAddFormServiceModel vendorModel);
 
-        AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage);
+        AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId);
+
+        AssetAssignServiceModel GetById(int id);
+
+        void Assign(string userId, int assetId);
 
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 
         IEnumerable<AssetModelDropdownServiceModel> GetModels();
 
         IEnumerable<VendorDropdownServiceModel> GetVendors();
+
+        IEnumerable<UserDropdownServiceModel> GetAllUsers();
 
         bool IsValidModel(int id);
 

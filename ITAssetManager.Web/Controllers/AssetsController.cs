@@ -7,6 +7,7 @@ using System;
 
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize]
     public class AssetsController : Controller
     {
         private readonly IAssetService assetService;
@@ -14,7 +15,6 @@ namespace ITAssetManager.Web.Controllers
         public AssetsController(IAssetService assetService, AppDbContext data) 
             => this.assetService = assetService;
 
-        [Authorize]
         public IActionResult Add() => View(new AssetAddFormServiceModel 
         {
             Statuses = this.assetService.GetStatuses(),
@@ -24,7 +24,6 @@ namespace ITAssetManager.Web.Controllers
             WarranyExpirationDate = DateTime.Now.Date.AddYears(5)
         });
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(AssetAddFormServiceModel assetModel)
         {
@@ -69,7 +68,8 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult All([FromQuery] AssetsQueryModel query)
         {
-            var queryResult = this.assetService.All(query.SearchString, query.SortOrder, query.CurrentPage);
+            var queryResult = this.assetService
+                .All(query.SearchString, query.SortOrder, query.CurrentPage, query.UserId);
 
             query.Assets = queryResult.Assets;
             query.SearchString = queryResult.SearchString;
@@ -79,6 +79,27 @@ namespace ITAssetManager.Web.Controllers
             query.HasPreviousPage = queryResult.HasPreviousPage;
 
             return View(query);
+        }
+
+        public IActionResult Assign(int id)
+        {
+            var targetAsset = this.assetService.GetById(id);
+            targetAsset.AllUsers = this.assetService.GetAllUsers();
+
+            return View(targetAsset);
+        }
+
+        [HttpPost]
+        public IActionResult Assign(AssetAssignServiceModel assetModel)
+        {
+            this.assetService.Assign(assetModel.UserId, assetModel.Id);
+
+            return RedirectToAction(nameof(All));
+        }
+
+        public IActionResult Collect(int id)
+        {
+            return View();
         }
     }
 }
