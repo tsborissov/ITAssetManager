@@ -36,16 +36,22 @@ namespace ITAssetManager.Web.Services.Assets
             return assetData.Id;
         }
 
-        public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId)
+        public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userName)
         {
             var assetsQuery = this.data
                 .Assets
                 .AsQueryable();
 
-            if (userId != null)
+            if (userName != null)
             {
+                var userId = this.data
+                    .Users
+                    .Where(u => u.UserName == userName)
+                    .Select(u => u.Id)
+                    .FirstOrDefault();
+
                 assetsQuery = assetsQuery
-                    .Where(a => a.AssetUsers.Any(u => u.UserId == userId));
+                    .Where(a => a.AssetUsers.Any(au => au.UserId == userId && au.ReturnDate == null));
             }
 
             if (!String.IsNullOrEmpty(searchString))

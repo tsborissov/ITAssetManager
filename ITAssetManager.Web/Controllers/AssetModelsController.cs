@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize]
     public class AssetModelsController : Controller
     {
         private readonly IAssetModelService assetModelService;
@@ -21,6 +22,7 @@ namespace ITAssetManager.Web.Controllers
                 Categories = this.assetModelService.GetCategories()
             });
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(AssetModelsAddFormServiceModel assetModel)
         {
@@ -55,6 +57,7 @@ namespace ITAssetManager.Web.Controllers
             return View(queryResult);
         }
 
+        [Authorize]
         public IActionResult Details(int id, string searchString, int currentPage)
         {
             if (!assetModelService.IsExistingModel(id))
@@ -70,6 +73,7 @@ namespace ITAssetManager.Web.Controllers
             return View(assetModel);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string searchString, int currentPage)
         {
             if (!assetModelService.IsExistingModel(id))
@@ -107,6 +111,7 @@ namespace ITAssetManager.Web.Controllers
                 });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(AssetModelEditFormServiceModel assetModel)
         {

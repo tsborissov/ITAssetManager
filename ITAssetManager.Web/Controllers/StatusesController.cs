@@ -3,8 +3,11 @@ using ITAssetManager.Web.Services.Statuses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize(Roles = AdministratorRoleName)]
     public class StatusesController : Controller
     {
         private readonly IStatusService statusService;
@@ -14,10 +17,8 @@ namespace ITAssetManager.Web.Controllers
             this.statusService = statusService;
         }
 
-        [Authorize]
         public IActionResult Add() => View();
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(StatusAddFormModel statusModel)
         {
@@ -36,7 +37,6 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
         public IActionResult All(StatusesQueryModel query)
         {
             var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
@@ -51,7 +51,6 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
-        [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.statusService.IsExistingStatus(id))
@@ -68,7 +67,6 @@ namespace ITAssetManager.Web.Controllers
             return View(targetStatus);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Edit(StatusEditServiceModel status)
         {

@@ -2,6 +2,13 @@
 
 @{
     ViewBag.Title = "Assets";
+
+    var userName = @User.Identity.Name;
+
+    if (User.IsInRole("Administrator"))
+    {
+        userName = null;
+    }
 }
 
 <div class="row">
@@ -11,8 +18,9 @@
             <form asp-action="All" method="get" class="col-12">
                 <div class="form-actions">
                     <input type="text" name="SearchString" class="col-md-7" value="@Model.SearchString" placeholder="Search by Brand, Model, etc..." />
+                    <input type="text" name="UserName" value="@userName" hidden />
                     <input type="submit" class="btn btn-primary" value="Search" />
-                    <a asp-action="All" class="btn btn-primary">Full List</a>
+                    <a asp-action="All" asp-route-userName="@userName" class="btn btn-primary">Full List</a>
                 </div>
             </form>
         </div>
@@ -26,29 +34,32 @@
                     <th scope="col">
                         <a asp-action="All"
                            asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
-                           asp-route-searchString="@Model.SearchString">
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-userName="@userName">
                             Brand
                         </a>
                     </th>
                     <th>
                         <a asp-action="All"
                            asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
-                           asp-route-searchString="@Model.SearchString">
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-userName="@userName">
                             Model
                         </a>
                     </th>
                     <th>
                         <a asp-action="All"
                            asp-route-sortOrder="@(Model.SortOrder == "status" ? "status_desc" : "status")"
-                           asp-route-searchString="@Model.SearchString">
+                           asp-route-searchString="@Model.SearchString"
+                           asp-route-userName="@userName">
                             Status
                         </a>
                     </th>
                     <th>SerialNr</th>
                     <th>InventoryNr</th>
                     <th>User</th>
-                    <th>Edit</th>
-                    <th>Assign/Collect</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -61,50 +72,54 @@
                         <td>@asset.SerialNr</td>
                         <td>@asset.InventoryNr</td>
                         <td>@asset.User</td>
-                        <td>
-                            @if (asset.Status != "In Use")
-                            {
-                                <div class="button-holder col-md-3">
-                                    <a asp-action="Edit"
-                                       asp-route-id="@asset.Id"
-                                       asp-route-searchString="@Model.SearchString"
-                                       asp-route-sortOrder="@Model.SortOrder"
-                                       asp-route-currentPage="@Model.CurrentPage"
-                                       class="btn btn-warning">
-                                        Edit
-                                    </a>
-                                </div>
-                            }
-                        </td>
-                        <td>
-                            @if (asset.User == null && asset.Status == "In Stock")
-                            {
-                                <div class="button-holder col-md-3">
-                                    <a asp-action="Assign"
-                                       asp-route-id="@asset.Id"
-                                       asp-route-searchString="@Model.SearchString"
-                                       asp-route-sortOrder="@Model.SortOrder"
-                                       asp-route-currentPage="@Model.CurrentPage"
-                                       class="btn btn-danger">
-                                        Assign
-                                    </a>
-                                </div>
-                            }
 
-                            @if (asset.User != null)
-                            {
-                                <div class="button-holder col-md-3">
-                                    <a asp-action="Collect"
-                                       asp-route-id="@asset.Id"
-                                       asp-route-searchString="@Model.SearchString"
-                                       asp-route-sortOrder="@Model.SortOrder"
-                                       asp-route-currentPage="@Model.CurrentPage"
-                                       class="btn btn-success">
-                                        Collect
-                                    </a>
-                                </div>
-                            }
-                        </td>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <td>
+                                @if (asset.Status != "In Use")
+                                {
+                                    <div class="button-holder col-md-3">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@asset.Id"
+                                           asp-route-searchString="@Model.SearchString"
+                                           asp-route-sortOrder="@Model.SortOrder"
+                                           asp-route-currentPage="@Model.CurrentPage"
+                                           class="btn btn-warning">
+                                            Edit
+                                        </a>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                @if (asset.User == null && asset.Status == "In Stock")
+                                {
+                                    <div class="button-holder col-md-3">
+                                        <a asp-action="Assign"
+                                           asp-route-id="@asset.Id"
+                                           asp-route-searchString="@Model.SearchString"
+                                           asp-route-sortOrder="@Model.SortOrder"
+                                           asp-route-currentPage="@Model.CurrentPage"
+                                           class="btn btn-danger">
+                                            Assign
+                                        </a>
+                                    </div>
+                                }
+
+                                @if (asset.User != null)
+                                {
+                                    <div class="button-holder col-md-3">
+                                        <a asp-action="Collect"
+                                           asp-route-id="@asset.Id"
+                                           asp-route-searchString="@Model.SearchString"
+                                           asp-route-sortOrder="@Model.SortOrder"
+                                           asp-route-currentPage="@Model.CurrentPage"
+                                           class="btn btn-success">
+                                            Collect
+                                        </a>
+                                    </div>
+                                }
+                            </td>
+                        }
                     </tr>
                 }
             </tbody>

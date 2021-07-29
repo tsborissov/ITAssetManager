@@ -5,9 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize]
     public class AssetsController : Controller
     {
         private readonly IAssetService assetService;
@@ -15,6 +16,7 @@ namespace ITAssetManager.Web.Controllers
         public AssetsController(IAssetService assetService, AppDbContext data) 
             => this.assetService = assetService;
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View(new AssetAddFormServiceModel 
         {
             Statuses = this.assetService.GetStatuses(),
@@ -24,6 +26,7 @@ namespace ITAssetManager.Web.Controllers
             WarranyExpirationDate = DateTime.Now.Date.AddYears(5)
         });
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(AssetAddFormServiceModel assetModel)
         {
@@ -66,10 +69,11 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize]
         public IActionResult All(AssetsQueryModel query)
         {
             var queryResult = this.assetService
-                .All(query.SearchString, query.SortOrder, query.CurrentPage, query.UserId);
+                .All(query.SearchString, query.SortOrder, query.CurrentPage, query.UserName);
 
             query.Assets = queryResult.Assets;
             query.SearchString = queryResult.SearchString;
@@ -81,6 +85,7 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Assign(int id, string searchString, string sortOrder, int currentPage)
         {
             var targetAsset = this.assetService.AssignById(id, searchString, sortOrder, currentPage);
@@ -89,6 +94,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetAsset);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Assign(AssetAssignServiceModel assetModel)
         {
@@ -102,11 +108,13 @@ namespace ITAssetManager.Web.Controllers
                 });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Collect(int id, string searchString, string sortOrder, int currentPage)
         {
             return View(this.assetService.UserAssetById(id, searchString, sortOrder, currentPage));
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Collect(AssetCollectServiceModel assetModel)
         {
@@ -120,6 +128,7 @@ namespace ITAssetManager.Web.Controllers
             });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
             var targetAsset = this.assetService.EditById(id, searchString, sortOrder, currentPage);
@@ -127,6 +136,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetAsset);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(AssetEditFormServiceModel assetModel)
         {

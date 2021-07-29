@@ -7,6 +7,8 @@
         << Back
     </a>
 </div>
+@if (User.IsInRole("Administrator"))
+{
 <div class="button-holder">
     <a asp-action="Edit"
        asp-route-id="@Model.Id"
@@ -17,8 +19,4 @@
         Edit
     </a>
 </div>
-
-@if (User.IsInRole("Admin"))
-{
-    
 }

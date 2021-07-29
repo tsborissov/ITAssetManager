@@ -3,8 +3,11 @@ using ITAssetManager.Web.Services.Brands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize(Roles = AdministratorRoleName)]
     public class BrandsController : Controller
     {
         private readonly IBrandService brandService;
@@ -12,10 +15,8 @@ namespace ITAssetManager.Web.Controllers
         public BrandsController(IBrandService brandService)
             => this.brandService = brandService;
 
-        [Authorize]
         public IActionResult Add() => View();
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(BrandAddFormModel brandModel)
         {
@@ -34,7 +35,6 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
         public IActionResult All(BrandsQueryModel query)
         {
             var queryResult = this.brandService.All(
@@ -52,7 +52,6 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
-        [Authorize]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
             if (!this.brandService.IsExistingBrand(id))
@@ -69,7 +68,6 @@ namespace ITAssetManager.Web.Controllers
             return View(targetBrand);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Edit(BrandEditServiceModel brand)
         {

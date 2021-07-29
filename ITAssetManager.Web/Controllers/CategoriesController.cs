@@ -3,9 +3,11 @@ using ITAssetManager.Web.Services.Categories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
+    [Authorize(Roles = AdministratorRoleName)]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService categoryService;
@@ -15,10 +17,8 @@ namespace ITAssetManager.Web.Controllers
             this.categoryService = categoryService;
         }
 
-        [Authorize]
         public IActionResult Add() => View();
 
-        [Authorize]
         [HttpPost]
         public IActionResult Add(CategoryAddFormModel categoryModel)
         {
@@ -37,7 +37,6 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
-        [Authorize]
         public IActionResult All(CategoriesQueryModel query)
         {
             var queryResult = this.categoryService.All(
@@ -55,7 +54,6 @@ namespace ITAssetManager.Web.Controllers
             return View(query);
         }
 
-        [Authorize]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.categoryService.IsExistingCategory(id))
@@ -72,7 +70,6 @@ namespace ITAssetManager.Web.Controllers
             return View(targetCategory);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Edit(CategoryEditServiceModel category)
         {

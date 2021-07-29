@@ -3,9 +3,11 @@ using ITAssetManager.Web.Services.Vendors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = AdministratorRoleName)]
     public class VendorsController : Controller
     {
         private readonly IVendorService vendorService;
@@ -65,7 +67,6 @@ namespace ITAssetManager.Web.Controllers
 
             return View(vendor);
         }
-
 
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
