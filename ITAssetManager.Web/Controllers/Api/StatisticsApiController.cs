@@ -1,8 +1,7 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Web.Models.Api.Statistics;
+﻿using ITAssetManager.Web.Models.Api.Statistics;
+using ITAssetManager.Web.Services.Statistics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 
 namespace ITAssetManager.Web.Controllers.Api
 {
@@ -11,11 +10,11 @@ namespace ITAssetManager.Web.Controllers.Api
     [Route("api/statistics")]
     public class StatisticsApiController : ControllerBase
     {
-        private readonly AppDbContext data;
+        private readonly IStatisticsService statisticsService;
 
-        public StatisticsApiController(AppDbContext data)
+        public StatisticsApiController(IStatisticsService statisticsService)
         {
-            this.data = data;
+            this.statisticsService = statisticsService;
         }
 
         [HttpGet]
@@ -23,13 +22,13 @@ namespace ITAssetManager.Web.Controllers.Api
         {
             return new StatisticsResponseModel
             {
-                TotalUsers = this.data.Users.Count(),
-                TotalAssets = this.data.Assets.Count(),
-                TotalBrands = this.data.Brands.Count(),
-                TotalCategories = this.data.Categories.Count(),
-                TotalModels = this.data.AssetModels.Count(),
-                TotalStatuses = this.data.Statuses.Count(),
-                TotalVendors = this.data.Vendors.Count()
+                TotalUsers = this.statisticsService.TotalUsers(),
+                TotalAssets = this.statisticsService.TotalAssets(),
+                TotalBrands = this.statisticsService.TotalBrands(),
+                TotalCategories = this.statisticsService.TotalCategories(),
+                TotalModels = this.statisticsService.TotalModels(),
+                TotalStatuses = this.statisticsService.TotalStatuses(),
+                TotalVendors = this.statisticsService.TotalVendors()
             };
         }
     }

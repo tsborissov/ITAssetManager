@@ -4,6 +4,7 @@ using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.Assets;
 using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Categories;
+using ITAssetManager.Web.Services.Statistics;
 using ITAssetManager.Web.Services.Statuses;
 using ITAssetManager.Web.Services.Vendors;
 using Microsoft.AspNetCore.Builder;
@@ -56,7 +57,8 @@ namespace ITAssetManager.Web
                 .AddTransient<IStatusService, StatusService>()
                 .AddTransient<IVendorService, VendorService>()
                 .AddTransient<IAssetModelService, AssetModelService>()
-                .AddTransient<IAssetService, AssetService>();
+                .AddTransient<IAssetService, AssetService>()
+                .AddTransient<IStatisticsService, StatisticsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
