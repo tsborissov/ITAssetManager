@@ -2,13 +2,6 @@
 
 @{
     ViewBag.Title = "Assets";
-
-    var userName = @User.Identity.Name;
-
-    if (User.IsInRole("Administrator"))
-    {
-        userName = null;
-    }
 }
 
 <div class="row">
@@ -18,9 +11,8 @@
             <form asp-action="All" method="get" class="col-12">
                 <div class="form-actions">
                     <input type="text" name="SearchString" class="col-md-7" value="@Model.SearchString" placeholder="Search by Brand, Model, etc..." />
-                    <input type="text" name="UserName" value="@userName" hidden />
                     <input type="submit" class="btn btn-primary" value="Search" />
-                    <a asp-action="All" asp-route-userName="@userName" class="btn btn-primary">Full List</a>
+                    <a asp-action="All" class="btn btn-primary">Full List</a>
                 </div>
             </form>
         </div>
@@ -34,24 +26,21 @@
                     <th scope="col">
                         <a asp-action="All"
                            asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
-                           asp-route-searchString="@Model.SearchString"
-                           asp-route-userName="@userName">
+                           asp-route-searchString="@Model.SearchString">
                             Brand
                         </a>
                     </th>
                     <th>
                         <a asp-action="All"
                            asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
-                           asp-route-searchString="@Model.SearchString"
-                           asp-route-userName="@userName">
+                           asp-route-searchString="@Model.SearchString">
                             Model
                         </a>
                     </th>
                     <th>
                         <a asp-action="All"
                            asp-route-sortOrder="@(Model.SortOrder == "status" ? "status_desc" : "status")"
-                           asp-route-searchString="@Model.SearchString"
-                           asp-route-userName="@userName">
+                           asp-route-searchString="@Model.SearchString">
                             Status
                         </a>
                     </th>
@@ -73,7 +62,7 @@
                         <td>@asset.InventoryNr</td>
                         <td>@asset.User</td>
 
-                        @if (User.IsInRole("Administrator"))
+                        @if (User.IsAdmin())
                         {
                             <td>
                                 @if (asset.Status != "In Use")
@@ -127,8 +116,9 @@
 
         @if (!Model.Assets.Any())
         {
-            <h4 class="text-center">No assets found for the given criteria!</h4>
+            <h4 class="text-center">No assets found!</h4>
         }
+
     </div>
 </div>
 <div class="row">

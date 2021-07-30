@@ -1,10 +1,12 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Web.Models.Api.Statistics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace ITAssetManager.Web.Controllers.Api
 {
+    [Authorize]
     [ApiController]
     [Route("api/statistics")]
     public class StatisticsApiController : ControllerBase
@@ -21,6 +23,7 @@ namespace ITAssetManager.Web.Controllers.Api
         {
             return new StatisticsResponseModel
             {
+                TotalUsers = this.data.Users.Count(),
                 TotalAssets = this.data.Assets.Count(),
                 TotalBrands = this.data.Brands.Count(),
                 TotalCategories = this.data.Categories.Count(),

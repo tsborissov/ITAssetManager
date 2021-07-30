@@ -1,9 +1,9 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Web.Models.Assets;
+﻿using ITAssetManager.Web.Models.Assets;
 using ITAssetManager.Web.Services.Assets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using ITAssetManager.Web.Infrastructure;
 
 using static ITAssetManager.Data.DataConstants;
 
@@ -13,7 +13,7 @@ namespace ITAssetManager.Web.Controllers
     {
         private readonly IAssetService assetService;
 
-        public AssetsController(IAssetService assetService, AppDbContext data) 
+        public AssetsController(IAssetService assetService) 
             => this.assetService = assetService;
 
         [Authorize(Roles = AdministratorRoleName)]
@@ -72,8 +72,10 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult All(AssetsQueryModel query)
         {
+            var userId = !User.IsAdmin() ? User.Id() : null;
+
             var queryResult = this.assetService
-                .All(query.SearchString, query.SortOrder, query.CurrentPage, query.UserName);
+                .All(query.SearchString, query.SortOrder, query.CurrentPage, userId);
 
             query.Assets = queryResult.Assets;
             query.SearchString = queryResult.SearchString;

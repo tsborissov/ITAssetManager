@@ -18,6 +18,7 @@
 <table class="table table-hover d-none" id="statistics-table">
     <thead>
         <tr>
+            <th class="text-center">Users</th>
             <th class="text-center">Assets</th>
             <th class="text-center">Models</th>
             <th class="text-center">Brands</th>
@@ -28,6 +29,7 @@
     </thead>
     <tbody>
         <tr>
+            <td class="text-center" id="total-users"></td>
             <td class="text-center" id="total-assets"></td>
             <td class="text-center" id="total-models"></td>
             <td class="text-center" id="total-brands"></td>
@@ -42,6 +44,7 @@
     <script>
         $('#statistics-button').on('click', ev => {
             $.get('/api/statistics', (data) => {
+                $('#total-users').text(data.totalUsers);
                 $('#total-assets').text(data.totalAssets);
                 $('#total-models').text(data.totalModels);
                 $('#total-brands').text(data.totalBrands);

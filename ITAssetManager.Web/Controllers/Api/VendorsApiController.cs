@@ -1,12 +1,13 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace ITAssetManager.Web.Controllers.Api
 {
+    [Authorize]
     [ApiController]
     [Route("api/vendors")]
     public class VendorsApiController : ControllerBase

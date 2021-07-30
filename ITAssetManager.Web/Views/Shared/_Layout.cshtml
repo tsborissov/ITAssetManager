@@ -20,13 +20,13 @@
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @if (User.IsInRole("Administrator"))
+                            @if (User.IsAdmin())
                             {
-                                <partial name="_AdministratorPartial" />
+                                <partial name="_AdministratorNavbarPartial" />
                             }
                             else
                             {
-                                <partial name="_UserPartial" />
+                                <partial name="_UserNavbarPartial" />
                             }
                         }
                     </ul>

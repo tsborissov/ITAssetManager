@@ -1,9 +1,11 @@
 ﻿using ITAssetManager.Web.Models.Api.Brands;
 using ITAssetManager.Web.Services.Brands;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITAssetManager.Web.Controllers.Api
 {
+    [Authorize]
     [ApiController]
     [Route("api/brands")]
     public class BrandsApiController : ControllerBase

@@ -2,6 +2,8 @@
 {
     public class StatisticsResponseModel
     {
+        public int TotalUsers { get; init; }
+
         public int TotalAssets { get; init; }
 
         public int TotalModels { get; init; }
