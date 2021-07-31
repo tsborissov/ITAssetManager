@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ITAssetManager.Web.Services.Brands.Models;
 
 namespace ITAssetManager.Web.Services.Brands
 {

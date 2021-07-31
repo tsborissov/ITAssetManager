@@ -1,10 +1,10 @@
-﻿using ITAssetManager.Web.Models.Assets;
+﻿using ITAssetManager.Web.Infrastructure;
+using ITAssetManager.Web.Models.Assets;
 using ITAssetManager.Web.Services.Assets;
+using ITAssetManager.Web.Services.Assets.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using ITAssetManager.Web.Infrastructure;
-
 using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers

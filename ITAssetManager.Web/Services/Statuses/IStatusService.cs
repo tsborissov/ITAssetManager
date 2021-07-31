@@ -1,4 +1,6 @@
-﻿namespace ITAssetManager.Web.Services.Statuses
+﻿using ITAssetManager.Web.Services.Statuses.Models;
+
+namespace ITAssetManager.Web.Services.Statuses
 {
     public interface IStatusService
     {

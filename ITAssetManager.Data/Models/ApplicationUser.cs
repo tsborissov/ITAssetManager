@@ -5,6 +5,6 @@ namespace ITAssetManager.Data.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public ICollection<UserAsset> UserAssets { get; set; } = new HashSet<UserAsset>();
+        public ICollection<UserAsset> UserAssets { get; init; } = new HashSet<UserAsset>();
     }
 }

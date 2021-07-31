@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Web.Models.Statuses;
 using ITAssetManager.Web.Services.Statuses;
+using ITAssetManager.Web.Services.Statuses.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

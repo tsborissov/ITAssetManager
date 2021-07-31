@@ -1,4 +1,4 @@
-﻿using ITAssetManager.Web.Services.Categories;
+﻿using ITAssetManager.Web.Services.Categories.Models;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Categories

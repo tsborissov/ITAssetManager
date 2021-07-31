@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Web.Services.AssetModels;
+using ITAssetManager.Web.Services.AssetModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -69,6 +70,20 @@ namespace ITAssetManager.Web.Controllers
 
             assetModel.SearchString = searchString;
             assetModel.CurrentPage = currentPage;
+
+            var referer = HttpContext.Request.Headers["Referer"].ToString().Split('/').Skip(3).ToArray();
+
+            var refererController = referer[0];
+            var refererAction = referer[1].Split('?').Take(1).ToArray()[0];
+
+            if (refererAction == nameof(Edit))
+            {
+                refererController = ControllerContext.ActionDescriptor.ControllerName;
+                refererAction = nameof(All);
+            }
+
+            ViewBag.RefererController = refererController;
+            ViewBag.RefererAction = refererAction;
 
             return View(assetModel);
         }

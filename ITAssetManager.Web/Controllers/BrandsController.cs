@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Web.Models.Brands;
 using ITAssetManager.Web.Services.Brands;
+using ITAssetManager.Web.Services.Brands.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

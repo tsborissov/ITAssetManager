@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Web.Models.Vendors;
 using ITAssetManager.Web.Services.Vendors;
+using ITAssetManager.Web.Services.Vendors.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

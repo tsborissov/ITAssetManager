@@ -46,9 +46,16 @@
                     </th>
                     <th>SerialNr</th>
                     <th>InventoryNr</th>
-                    <th>User</th>
-                    <th></th>
-                    <th></th>
+                    @if (User.IsAdmin())
+                    {
+                        <th>User</th>
+                        <th>Edit</th>
+                        <th>Assign/Collect</th>
+                    }
+                    else
+                    {
+                        <th>User</th>
+                    }
                 </tr>
             </thead>
             <tbody>
@@ -60,10 +67,10 @@
                         <td>@asset.Status</td>
                         <td>@asset.SerialNr</td>
                         <td>@asset.InventoryNr</td>
-                        <td>@asset.User</td>
 
                         @if (User.IsAdmin())
                         {
+                            <td>@asset.User</td>
                             <td>
                                 @if (asset.Status != "In Use")
                                 {
@@ -107,6 +114,19 @@
                                         </a>
                                     </div>
                                 }
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <div class="button-holder col-md-3">
+                                    <a asp-controller="AssetModels"
+                                       asp-action="Details"
+                                       asp-route-id="@asset.ModelId"
+                                       class="btn btn-primary">
+                                        Details
+                                    </a>
+                                </div>
                             </td>
                         }
                     </tr>

@@ -1,4 +1,6 @@
-﻿namespace ITAssetManager.Web.Services.Vendors
+﻿using ITAssetManager.Web.Services.Vendors.Models;
+
+namespace ITAssetManager.Web.Services.Vendors
 {
     public interface IVendorService
     {

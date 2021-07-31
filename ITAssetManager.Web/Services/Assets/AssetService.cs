@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Services.Assets.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -95,6 +96,7 @@ namespace ITAssetManager.Web.Services.Assets
                     Id = a.Id,
                     Brand = a.AssetModel.Brand.Name,
                     Model = a.AssetModel.Name,
+                    ModelId = a.AssetModel.Id,
                     SerialNr = a.SerialNr,
                     InventoryNr = a.InventoryNr,
                     Status = a.Status.Name,

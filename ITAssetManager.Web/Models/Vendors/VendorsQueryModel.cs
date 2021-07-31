@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Web.Services.Vendors;
+using ITAssetManager.Web.Services.Vendors.Models;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Vendors

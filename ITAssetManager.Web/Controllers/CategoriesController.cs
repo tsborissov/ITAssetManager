@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Web.Models.Categories;
 using ITAssetManager.Web.Services.Categories;
+using ITAssetManager.Web.Services.Categories.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

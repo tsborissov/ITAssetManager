@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Web.Services.Assets;
+using ITAssetManager.Web.Services.Assets.Models;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Assets

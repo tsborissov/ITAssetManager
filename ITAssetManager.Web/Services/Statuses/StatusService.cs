@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Services.Statuses.Models;
 using System;
 using System.Linq;
 

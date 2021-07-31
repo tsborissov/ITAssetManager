@@ -1,4 +1,6 @@
-﻿namespace ITAssetManager.Web.Services.Categories
+﻿using ITAssetManager.Web.Services.Categories.Models;
+
+namespace ITAssetManager.Web.Services.Categories
 {
     public interface ICategoryService
     {

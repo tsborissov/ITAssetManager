@@ -1,5 +1,6 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Services.Vendors.Models;
 using System;
 using System.Linq;
 

@@ -30,8 +30,6 @@ namespace ITAssetManager.Web.Infrastructure
             SeedVendors(services);
             SeedModels(services);
 
-            // TODO : Seed database
-
             return app;
         }
 
@@ -60,7 +58,7 @@ namespace ITAssetManager.Web.Infrastructure
                     await roleManager.CreateAsync(role);
 
                     const string adminEmail = "admin@email.com";
-                    const string adminPassword = "Admin135.";
+                    const string adminPassword = "Zaqw135.";
 
                     var user = new ApplicationUser
                     {
