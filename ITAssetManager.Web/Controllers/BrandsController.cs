@@ -100,5 +100,22 @@ namespace ITAssetManager.Web.Controllers
                     CurrentPage = brand.CurrentPage
                 });
         }
+
+        public IActionResult Delete(int id)
+        {
+            if (!this.brandService.IsExistingBrand(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (this.brandService.IsInUse(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.brandService.Delete(id);
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }

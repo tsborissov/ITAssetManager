@@ -132,6 +132,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.ModelState.IsValid)
             {
+                var brands = this.assetModelService.GetBrands();
+                assetModel.Brands = brands;
+
+                var categories = this.assetModelService.GetCategories();
+                assetModel.Categories = categories;
+
                 return View(assetModel);
             }
 

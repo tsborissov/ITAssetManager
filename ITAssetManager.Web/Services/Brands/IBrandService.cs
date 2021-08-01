@@ -12,8 +12,12 @@ namespace ITAssetManager.Web.Services.Brands
 
         void Update(BrandEditServiceModel brand);
 
+        void Delete(int id);
+
         bool IsExistingBrand(int id);
 
         public bool IsExistingName(string name);
+
+        public bool IsInUse(int id);
     }
 }

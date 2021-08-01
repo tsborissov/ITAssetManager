@@ -3,7 +3,8 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4" id="welcome-heading">Welcome</h1>
+    <h1 class="display-4 d-none" id="statistics-heading">Statistics</h1>
 </div>
 
 @if (User.Identity.IsAuthenticated)
@@ -54,6 +55,8 @@
 
                 $('#statistics-button').addClass('d-none');
                 $('#statistics-table').removeClass('d-none');
+                $('#welcome-heading').addClass('d-none');
+                $('#statistics-heading').removeClass('d-none');
             });
         });
     </script>

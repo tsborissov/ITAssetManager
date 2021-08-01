@@ -115,11 +115,12 @@ namespace ITAssetManager.Web.Services.Categories
         public bool IsExistingName(string name)
             => this.data.Categories.Any(c => c.Name == name);
 
-        public bool IsInUse(int id)
+        public bool IsInUse(int id) 
             => this.data
-                .Categories
-                .Where(c => c.Id == id)
-                .SelectMany(c => c.AssetModels)
-                .Any();
+               .Categories
+               .Where(c => c.Id == id)
+               .SelectMany(c => c.AssetModels)
+               .Any();
     }
 }
+

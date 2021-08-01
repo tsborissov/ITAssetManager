@@ -65,7 +65,8 @@ namespace ITAssetManager.Web.Services.Brands
                 .Select(v => new BrandListingServiceModel
                 {
                     Id = v.Id,
-                    Name = v.Name
+                    Name = v.Name,
+                    IsInUse = v.AssetModels.Any()
                 })
                 .ToList();
 
@@ -105,10 +106,28 @@ namespace ITAssetManager.Web.Services.Brands
             this.data.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var targetBrand = this.data
+                .Brands
+                .Where(b => b.Id == id)
+                .FirstOrDefault();
+
+            this.data.Brands.Remove(targetBrand);
+            this.data.SaveChanges();
+        }
+
         public bool IsExistingBrand(int id)
             => this.data.Brands.Any(b => b.Id == id);
 
         public bool IsExistingName(string name)
             => this.data.Brands.Any(b => b.Name == name);
+
+        public bool IsInUse(int id)
+            => this.data
+                .Brands
+                .Where(b => b.Id == id)
+                .SelectMany(b => b.AssetModels)
+                .Any();
     }
 }
