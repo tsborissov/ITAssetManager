@@ -90,5 +90,22 @@ namespace ITAssetManager.Web.Controllers
                 CurrentPage = status.CurrentPage
             });
         }
+
+        public IActionResult Delete(int id)
+        {
+            if (!this.statusService.IsExistingStatus(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (this.statusService.IsInUse(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.statusService.Delete(id);
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }

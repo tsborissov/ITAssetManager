@@ -46,6 +46,8 @@ namespace ITAssetManager.Web
                     .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<Data.AppDbContext>();
 
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews(options =>
             {
                 options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();

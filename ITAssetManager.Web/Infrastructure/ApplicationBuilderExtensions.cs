@@ -22,6 +22,7 @@ namespace ITAssetManager.Web.Infrastructure
 
             MigrateDatabase(services);
 
+            SeedRoles(services);
             SeedAdministrator(services);
 
             SeedBrands(services);
@@ -40,23 +41,38 @@ namespace ITAssetManager.Web.Infrastructure
             data.Database.Migrate();
         }
 
-        private static void SeedAdministrator(IServiceProvider services)
+        private static void SeedRoles(IServiceProvider services)
         {
-            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
             Task
                 .Run(async () =>
                 {
-                    if (await roleManager.RoleExistsAsync(AdministratorRoleName))
+                    if (!await roleManager.RoleExistsAsync(AdministratorRoleName))
                     {
-                        return;
+                        var role = new IdentityRole { Name = AdministratorRoleName };
+
+                        await roleManager.CreateAsync(role);
                     }
 
-                    var role = new IdentityRole { Name = AdministratorRoleName };
+                    if (!await roleManager.RoleExistsAsync(UserRoleName))
+                    {
+                        var role = new IdentityRole { Name = UserRoleName };
 
-                    await roleManager.CreateAsync(role);
+                        await roleManager.CreateAsync(role);
+                    }
+                })
+                .GetAwaiter()
+                .GetResult();
+        }
 
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+            Task
+                .Run(async () =>
+                {
                     const string adminEmail = "admin@email.com";
                     const string adminPassword = "Zaqw135.";
 
@@ -68,7 +84,7 @@ namespace ITAssetManager.Web.Infrastructure
 
                     await userManager.CreateAsync(user, adminPassword);
 
-                    await userManager.AddToRoleAsync(user, role.Name);
+                    await userManager.AddToRoleAsync(user, AdministratorRoleName);
                 })
                 .GetAwaiter()
                 .GetResult();

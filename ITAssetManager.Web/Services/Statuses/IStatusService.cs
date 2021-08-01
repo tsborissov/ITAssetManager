@@ -12,8 +12,12 @@ namespace ITAssetManager.Web.Services.Statuses
 
         void Update(StatusEditServiceModel status);
 
+        void Delete(int id);
+
         bool IsExistingStatus(int id);
 
         public bool IsExistingName(string name);
+
+        bool IsInUse(int id);
     }
 }

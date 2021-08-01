@@ -1,5 +1,4 @@
-﻿using ITAssetManager.Web.Services.Brands;
-using ITAssetManager.Web.Services.Brands.Models;
+﻿using ITAssetManager.Web.Services.Brands.Models;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Brands

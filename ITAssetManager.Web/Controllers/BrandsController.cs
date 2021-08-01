@@ -14,7 +14,9 @@ namespace ITAssetManager.Web.Controllers
         private readonly IBrandService brandService;
 
         public BrandsController(IBrandService brandService)
-            => this.brandService = brandService;
+        {
+            this.brandService = brandService;
+        }
 
         public IActionResult Add() => View();
 
@@ -43,14 +45,15 @@ namespace ITAssetManager.Web.Controllers
                 query.SortOrder,
                 query.CurrentPage);
 
-            query.Brands = queryResult.Brands;
-            query.SearchString = queryResult.SearchString;
-            query.SortOrder = queryResult.SortOrder;
-            query.CurrentPage = queryResult.CurrentPage;
-            query.HasNextPage = queryResult.HasNextPage;
-            query.HasPreviousPage = queryResult.HasPreviousPage;
-
-            return View(query);
+            return View(new BrandsQueryModel
+            {
+                Brands = queryResult.Brands,
+                SearchString = queryResult.SearchString,
+                SortOrder = queryResult.SortOrder,
+                CurrentPage = queryResult.CurrentPage,
+                HasNextPage = queryResult.HasNextPage,
+                HasPreviousPage = queryResult.HasPreviousPage
+            });
         }
 
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
@@ -61,6 +64,11 @@ namespace ITAssetManager.Web.Controllers
             }
 
             var targetBrand = this.brandService.Details(id);
+
+            if (targetBrand == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
 
             targetBrand.SearchString = searchString;
             targetBrand.SortOrder = sortOrder;

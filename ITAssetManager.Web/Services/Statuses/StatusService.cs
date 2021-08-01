@@ -64,7 +64,8 @@ namespace ITAssetManager.Web.Services.Statuses
                 .Select(v => new StatusListingServiceModel
                 {
                     Id = v.Id,
-                    Name = v.Name
+                    Name = v.Name,
+                    IsInUse = v.Assets.Any()
                 })
                 .ToList();
 
@@ -101,10 +102,29 @@ namespace ITAssetManager.Web.Services.Statuses
             this.data.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var targetStatus = this.data
+                .Statuses
+                .Where(s => s.Id == id)
+                .FirstOrDefault();
+
+            this.data.Remove(targetStatus);
+            this.data.SaveChanges();
+        }
+
         public bool IsExistingName(string name)
             => this.data.Statuses.Any(s => s.Name == name);
 
         public bool IsExistingStatus(int id)
             => this.data.Statuses.Any(s => s.Id == id);
+
+        public bool IsInUse(int id)
+            => this.data
+                .Statuses
+                .Where(s => s.Id == id)
+                .Select(s => s.Assets)
+                .ToList()
+                .Any();
     }
 }

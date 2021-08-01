@@ -69,14 +69,17 @@ namespace ITAssetManager.Web.Services.Brands
                 })
                 .ToList();
 
+            var hasPreviousPage = currentPage > 1;
+            var hasNextPage = currentPage < lastPage;
+
             return new BrandQueryServiceModel
             {
                 Brands = brands,
                 SearchString = searchString,
                 SortOrder = sortOrder,
                 CurrentPage = currentPage,
-                HasPreviousPage = currentPage > 1,
-                HasNextPage = currentPage < lastPage
+                HasPreviousPage = hasPreviousPage,
+                HasNextPage = hasNextPage
             };
         }
 
