@@ -6,6 +6,6 @@
 
         public string Name { get; init; }
 
-        public bool IsInUse { get; set; }
+        public bool IsInUse { get; init; }
     }
 }

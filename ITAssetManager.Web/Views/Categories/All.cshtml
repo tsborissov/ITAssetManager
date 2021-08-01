@@ -26,27 +26,40 @@
                             Name
                         </a>
                     </th>
-                    <th></th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var category in Model.Categories)
                 {
-                    <tr>
-                        <td>@category.Name</td>
-                        <td class="text-right">
+                <tr>
+                    <td>@category.Name</td>
+                    <td>
+                        <div class="button-holder">
+                            <a asp-action="Edit"
+                               asp-route-id="@category.Id"
+                               asp-route-sortOrder="@Model.SortOrder"
+                               asp-route-searchString="@Model.SearchString"
+                               asp-route-currentPage="@Model.CurrentPage"
+                               class="btn btn-warning">
+                                Edit
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        @if (!category.IsInUse)
+                        {
                             <div class="button-holder">
-                                <a asp-action="Edit"
+                                <a asp-action="Delete"
                                    asp-route-id="@category.Id"
-                                   asp-route-sortOrder="@Model.SortOrder"
-                                   asp-route-searchString="@Model.SearchString"
-                                   asp-route-currentPage="@Model.CurrentPage"
-                                   class="btn btn-primary">
-                                    Edit
+                                   class="btn btn-danger">
+                                    Delete
                                 </a>
                             </div>
-                        </td>
-                    </tr>
+                        }
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

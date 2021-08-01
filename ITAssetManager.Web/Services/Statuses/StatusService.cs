@@ -123,8 +123,7 @@ namespace ITAssetManager.Web.Services.Statuses
             => this.data
                 .Statuses
                 .Where(s => s.Id == id)
-                .Select(s => s.Assets)
-                .ToList()
+                .SelectMany(s => s.Assets)
                 .Any();
     }
 }

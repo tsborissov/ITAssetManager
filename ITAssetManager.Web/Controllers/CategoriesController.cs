@@ -93,5 +93,22 @@ namespace ITAssetManager.Web.Controllers
                 CurrentPage = category.CurrentPage
             });
         }
+
+        public IActionResult Delete(int id)
+        {
+            if (!this.categoryService.IsExistingCategory(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (this.categoryService.IsInUse(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.categoryService.Delete(id);
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }

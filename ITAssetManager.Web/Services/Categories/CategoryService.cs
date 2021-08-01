@@ -63,7 +63,8 @@ namespace ITAssetManager.Web.Services.Categories
                 .Select(v => new CategoryListingServiceModel
                 {
                     Id = v.Id,
-                    Name = v.Name
+                    Name = v.Name,
+                    IsInUse = v.AssetModels.Any()
                 })
                 .ToList();
 
@@ -97,10 +98,28 @@ namespace ITAssetManager.Web.Services.Categories
             this.data.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var targetCategory = this.data
+                .Categories
+                .Where(c => c.Id == id)
+                .FirstOrDefault();
+
+            this.data.Remove(targetCategory);
+            this.data.SaveChanges();
+        }
+
         public bool IsExistingCategory(int id)
             => this.data.Categories.Any(c => c.Id == id);
 
         public bool IsExistingName(string name)
             => this.data.Categories.Any(c => c.Name == name);
+
+        public bool IsInUse(int id)
+            => this.data
+                .Categories
+                .Where(c => c.Id == id)
+                .SelectMany(c => c.AssetModels)
+                .Any();
     }
 }

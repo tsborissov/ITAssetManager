@@ -12,8 +12,12 @@ namespace ITAssetManager.Web.Services.Categories
 
         void Update(CategoryEditServiceModel category);
 
+        void Delete(int id);
+
         bool IsExistingCategory(int id);
 
         public bool IsExistingName(string name);
+
+        bool IsInUse(int id);
     }
 }
