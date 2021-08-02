@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Statuses
+namespace ITAssetManager.Web.Services.Statuses.Models
 {
-    public class StatusAddFormModel
+    public class StatusAddFormServiceModel
     {
         [Required]
         [StringLength(StatusNameMaxLength, MinimumLength = StatusNameMinLength)]

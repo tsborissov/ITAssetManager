@@ -21,7 +21,7 @@ namespace ITAssetManager.Web.Controllers
         public IActionResult Add() => View();
 
         [HttpPost]
-        public IActionResult Add(StatusAddFormModel statusModel)
+        public IActionResult Add(StatusAddFormServiceModel statusModel)
         {
             if (this.statusService.IsExistingName(statusModel.Name))
             {
@@ -33,7 +33,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(statusModel);
             }
 
-            this.statusService.Add(statusModel.Name);
+            this.statusService.Add(statusModel);
 
             return RedirectToAction(nameof(All));
         }

@@ -4,6 +4,7 @@ using ITAssetManager.Web.Models.Vendors;
 using ITAssetManager.Web.Services.Assets.Models;
 using ITAssetManager.Web.Models.Assets;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Services.Statuses.Models;
 
 namespace ITAssetManager.Web.Infrastructure
 {
@@ -15,6 +16,7 @@ namespace ITAssetManager.Web.Infrastructure
             this.CreateMap<VendorQueryServiceModel, VendorsQueryModel>();
             this.CreateMap<AssetsQueryServiceModel, AssetsQueryModel>();
             this.CreateMap<VendorAddFormServiceModel, Vendor>();
+            this.CreateMap<StatusAddFormServiceModel, Status>();
         }
     }
 }

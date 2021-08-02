@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Statuses.Models;
 using System;
@@ -11,18 +12,17 @@ namespace ITAssetManager.Web.Services.Statuses
     public class StatusService : IStatusService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
 
-        public StatusService(AppDbContext data)
+        public StatusService(AppDbContext data, IMapper mapper)
         {
             this.data = data;
+            this.mapper = mapper;
         }
 
-        public void Add(string name)
+        public void Add(StatusAddFormServiceModel statusModel)
         {
-            var status = new Status
-            {
-                Name = name
-            };
+            var status = this.mapper.Map<Status>(statusModel);
 
             this.data.Statuses.Add(status);
             this.data.SaveChanges();

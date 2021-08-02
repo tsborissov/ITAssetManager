@@ -6,7 +6,7 @@ namespace ITAssetManager.Web.Services.Statuses
     {
         StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(string name);
+        void Add(StatusAddFormServiceModel statusModel);
 
         StatusEditServiceModel Details(int id);
 
