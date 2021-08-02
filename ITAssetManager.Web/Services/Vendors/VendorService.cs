@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Vendors.Models;
 using System;
@@ -11,22 +12,17 @@ namespace ITAssetManager.Web.Services.Vendors
     public class VendorService : IVendorService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
 
-        public VendorService(AppDbContext data)
+        public VendorService(AppDbContext data, IMapper mapper)
         {
             this.data = data;
+            this.mapper = mapper;
         }
 
         public int Add(VendorAddFormServiceModel vendorModel)
         {
-            var vendor = new Vendor
-            {
-                Name = vendorModel.Name,
-                Vat = vendorModel.Vat,
-                Telephone = vendorModel.Telephone,
-                Email = vendorModel.Email,
-                Address = vendorModel.Address
-            };
+            var vendor = this.mapper.Map<Vendor>(vendorModel);
 
             this.data.Vendors.Add(vendor);
             this.data.SaveChanges();
