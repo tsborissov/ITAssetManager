@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Brands
+namespace ITAssetManager.Web.Services.Brands.Models
 {
-    public class BrandAddFormModel
+    public class BrandAddFormServiceModel
     {
         [Required]
         [StringLength(BrandNameMaxLength, MinimumLength = BrandNameMinLength)]

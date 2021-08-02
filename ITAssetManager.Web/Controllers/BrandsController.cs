@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Web.Models.Brands;
+﻿using AutoMapper;
+using ITAssetManager.Web.Models.Brands;
 using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Brands.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,16 +13,18 @@ namespace ITAssetManager.Web.Controllers
     public class BrandsController : Controller
     {
         private readonly IBrandService brandService;
+        private readonly IMapper mapper;
 
-        public BrandsController(IBrandService brandService)
+        public BrandsController(IBrandService brandService, IMapper mapper)
         {
             this.brandService = brandService;
+            this.mapper = mapper;
         }
 
         public IActionResult Add() => View();
 
         [HttpPost]
-        public IActionResult Add(BrandAddFormModel brandModel)
+        public IActionResult Add(BrandAddFormServiceModel brandModel)
         {
             if (this.brandService.IsExistingName(brandModel.Name))
             {
@@ -33,7 +36,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(brandModel);
             }
 
-            this.brandService.Add(brandModel.Name);
+            this.brandService.Add(brandModel);
 
             return RedirectToAction(nameof(All));
         }
@@ -45,15 +48,9 @@ namespace ITAssetManager.Web.Controllers
                 query.SortOrder,
                 query.CurrentPage);
 
-            return View(new BrandsQueryModel
-            {
-                Brands = queryResult.Brands,
-                SearchString = queryResult.SearchString,
-                SortOrder = queryResult.SortOrder,
-                CurrentPage = queryResult.CurrentPage,
-                HasNextPage = queryResult.HasNextPage,
-                HasPreviousPage = queryResult.HasPreviousPage
-            });
+            var brands = this.mapper.Map<BrandsQueryModel>(queryResult);
+
+            return View(brands);
         }
 
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)

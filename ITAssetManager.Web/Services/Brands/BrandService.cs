@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Brands.Models;
 using System;
@@ -11,16 +12,17 @@ namespace ITAssetManager.Web.Services.Brands
     public class BrandService : IBrandService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
 
-        public BrandService(AppDbContext data) 
-            => this.data = data;
-
-        public void Add(string name)
+        public BrandService(AppDbContext data, IMapper mapper)
         {
-            var brand = new Brand
-            {
-                Name = name
-            };
+            this.data = data;
+            this.mapper = mapper;
+        }
+
+        public void Add(BrandAddFormServiceModel brandModel)
+        {
+            var brand = this.mapper.Map<Brand>(brandModel);
 
             this.data.Brands.Add(brand);
             this.data.SaveChanges();

@@ -6,7 +6,7 @@ namespace ITAssetManager.Web.Services.Brands
     {
         BrandQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(string name);
+        void Add(BrandAddFormServiceModel brandModel);
 
         BrandEditServiceModel Details(int id);
 
