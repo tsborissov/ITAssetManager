@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Web.Models.Categories;
+﻿using AutoMapper;
+using ITAssetManager.Web.Models.Categories;
 using ITAssetManager.Web.Services.Categories;
 using ITAssetManager.Web.Services.Categories.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,12 @@ namespace ITAssetManager.Web.Controllers
     public class CategoriesController : Controller
     {
         private readonly ICategoryService categoryService;
+        private readonly IMapper mapper;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IMapper mapper)
         {
             this.categoryService = categoryService;
+            this.mapper = mapper;
         }
 
         public IActionResult Add() => View();
@@ -45,14 +48,9 @@ namespace ITAssetManager.Web.Controllers
                 query.SortOrder,
                 query.CurrentPage);
 
-            query.Categories = queryResult.Categories;
-            query.SearchString = queryResult.SearchString;
-            query.SortOrder = queryResult.SortOrder;
-            query.CurrentPage = queryResult.CurrentPage;
-            query.HasPreviousPage = queryResult.HasPreviousPage;
-            query.HasNextPage = queryResult.HasNextPage;
+            var categories = this.mapper.Map<CategoriesQueryModel>(queryResult);
 
-            return View(query);
+            return View(categories);
         }
 
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
