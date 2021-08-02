@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Categories.Models;
 using System;
@@ -11,16 +12,17 @@ namespace ITAssetManager.Web.Services.Categories
     public class CategoryService : ICategoryService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
 
-        public CategoryService(AppDbContext data)
-            => this.data = data;
-
-        public void Add(string name)
+        public CategoryService(AppDbContext data, IMapper mapper)
         {
-            var category = new Category
-            {
-                Name = name
-            };
+            this.data = data;
+            this.mapper = mapper;
+        }
+
+        public void Add(CategoryAddFormServiceModel categoryModel)
+        {
+            var category = this.mapper.Map<Category>(categoryModel);
 
             this.data.Categories.Add(category);
             this.data.SaveChanges();

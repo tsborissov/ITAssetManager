@@ -6,7 +6,7 @@ namespace ITAssetManager.Web.Services.Categories
     {
         CategoryQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(string name);
+        void Add(CategoryAddFormServiceModel categoryModel);
 
         CategoryEditServiceModel Details(int id);
 

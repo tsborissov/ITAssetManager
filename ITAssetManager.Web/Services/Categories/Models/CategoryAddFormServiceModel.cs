@@ -2,9 +2,9 @@
 
 using static ITAssetManager.Data.DataConstants;
 
-namespace ITAssetManager.Web.Models.Categories
+namespace ITAssetManager.Web.Services.Categories.Models
 {
-    public class CategoryAddFormModel
+    public class CategoryAddFormServiceModel
     {
         [Required]
         [StringLength(CategoryNameMaxLength, MinimumLength = CategoryNameMinLength)]

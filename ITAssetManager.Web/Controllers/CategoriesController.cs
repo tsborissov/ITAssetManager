@@ -21,7 +21,7 @@ namespace ITAssetManager.Web.Controllers
         public IActionResult Add() => View();
 
         [HttpPost]
-        public IActionResult Add(CategoryAddFormModel categoryModel)
+        public IActionResult Add(CategoryAddFormServiceModel categoryModel)
         {
             if (this.categoryService.IsExistingName(categoryModel.Name))
             {
@@ -33,7 +33,7 @@ namespace ITAssetManager.Web.Controllers
                 return View(categoryModel);
             }
 
-            this.categoryService.Add(categoryModel.Name);
+            this.categoryService.Add(categoryModel);
 
             return RedirectToAction(nameof(All));
         }
