@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Web.Infrastructure;
+﻿using AutoMapper;
+using ITAssetManager.Web.Infrastructure;
 using ITAssetManager.Web.Models.Assets;
 using ITAssetManager.Web.Services.Assets;
 using ITAssetManager.Web.Services.Assets.Models;
@@ -13,9 +14,13 @@ namespace ITAssetManager.Web.Controllers
     public class AssetsController : Controller
     {
         private readonly IAssetService assetService;
+        private readonly IMapper mapper;
 
-        public AssetsController(IAssetService assetService) 
-            => this.assetService = assetService;
+        public AssetsController(IAssetService assetService, IMapper mapper)
+        {
+            this.assetService = assetService;
+            this.mapper = mapper;
+        }
 
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View(new AssetAddFormServiceModel 
@@ -78,14 +83,9 @@ namespace ITAssetManager.Web.Controllers
             var queryResult = this.assetService
                 .All(query.SearchString, query.SortOrder, query.CurrentPage, userId);
 
-            query.Assets = queryResult.Assets;
-            query.SearchString = queryResult.SearchString;
-            query.SortOrder = queryResult.SortOrder;
-            query.CurrentPage = queryResult.CurrentPage;
-            query.HasNextPage = queryResult.HasNextPage;
-            query.HasPreviousPage = queryResult.HasPreviousPage;
+            var asset = this.mapper.Map<AssetsQueryModel>(queryResult);
 
-            return View(query);
+            return View(asset);
         }
 
         [Authorize(Roles = AdministratorRoleName)]
