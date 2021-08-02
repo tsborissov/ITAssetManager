@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Web.Models.Vendors;
+﻿using AutoMapper;
+using ITAssetManager.Web.Models.Vendors;
 using ITAssetManager.Web.Services.Vendors;
 using ITAssetManager.Web.Services.Vendors.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,12 @@ namespace ITAssetManager.Web.Controllers
     public class VendorsController : Controller
     {
         private readonly IVendorService vendorService;
+        private readonly IMapper mapper;
 
-        public VendorsController(IVendorService vendorService)
+        public VendorsController(IVendorService vendorService, IMapper mapper)
         {
             this.vendorService = vendorService;
+            this.mapper = mapper;
         }
 
         public IActionResult Add() => View();
@@ -47,14 +50,9 @@ namespace ITAssetManager.Web.Controllers
         {
             var queryResult = this.vendorService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 
-            query.Vendors = queryResult.Vendors;
-            query.SearchString = queryResult.SearchString;
-            query.SortOrder = queryResult.SortOrder;
-            query.CurrentPage = queryResult.CurrentPage;
-            query.HasNextPage = queryResult.HasNextPage;
-            query.HasPreviousPage = queryResult.HasPreviousPage;
+            var vendors = this.mapper.Map<VendorsQueryModel>(queryResult);
 
-            return View(query);
+            return View(vendors);
         }
 
         public IActionResult Details(int id, string sortOrder, string searchString, int currentPage)
@@ -71,25 +69,16 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
-            var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
+            var vendorDetails = this.vendorService.Details(id, sortOrder, searchString, currentPage);
 
-            if (vendor == null)
+            if (vendorDetails == null)
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            return View(new VendorEditServiceModel 
-            {
-                Id = vendor.Id,
-                Name = vendor.Name,
-                Vat = vendor.Vat,
-                Email = vendor.Email,
-                Telephone = vendor.Telephone,
-                Address = vendor.Address,
-                CurrentPage = vendor.CurrentPage,
-                SearchString = vendor.SearchString,
-                SortOrder = vendor.SortOrder
-            });
+            var vendor = this.mapper.Map<VendorEditServiceModel>(vendorDetails);
+
+            return View(vendor);
         }
 
         [HttpPost]
@@ -107,19 +96,9 @@ namespace ITAssetManager.Web.Controllers
 
             this.vendorService.Update(vendorModel);
 
-            return RedirectToAction(nameof(Details), 
-                new VendorDetailsServiceModel 
-                {
-                    Id = vendorModel.Id,
-                    Name = vendorModel.Name,
-                    Vat = vendorModel.Vat,
-                    Telephone = vendorModel.Telephone,
-                    Email = vendorModel.Email,
-                    Address = vendorModel.Address,
-                    SearchString = vendorModel.SearchString,
-                    SortOrder = vendorModel.SortOrder,
-                    CurrentPage = vendorModel.CurrentPage
-                });
+            var vendor = this.mapper.Map<VendorDetailsServiceModel>(vendorModel);
+
+            return RedirectToAction(nameof(Details), vendor);
         }
     }
 }

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ITAssetManager.Data\ITAssetManager.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\" />
+  </ItemGroup>
+
 </Project>
