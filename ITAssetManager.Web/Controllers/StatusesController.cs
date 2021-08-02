@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Web.Models.Statuses;
+﻿using AutoMapper;
+using ITAssetManager.Web.Models.Statuses;
 using ITAssetManager.Web.Services.Statuses;
 using ITAssetManager.Web.Services.Statuses.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,10 +13,12 @@ namespace ITAssetManager.Web.Controllers
     public class StatusesController : Controller
     {
         private readonly IStatusService statusService;
+        private readonly IMapper mapper;
 
-        public StatusesController(IStatusService statusService)
+        public StatusesController(IStatusService statusService, IMapper mapper)
         {
             this.statusService = statusService;
+            this.mapper = mapper;
         }
 
         public IActionResult Add() => View();
@@ -42,14 +45,9 @@ namespace ITAssetManager.Web.Controllers
         {
             var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
 
-            query.Statuses = queryResult.Statuses;
-            query.SearchString = queryResult.SearchString;
-            query.SortOrder = queryResult.SortOrder;
-            query.CurrentPage = queryResult.CurrentPage;
-            query.HasPreviousPage = queryResult.HasPreviousPage;
-            query.HasNextPage = queryResult.HasNextPage;
+            var statuses = this.mapper.Map<StatusesQueryModel>(queryResult);
 
-            return View(query);
+            return View(statuses);
         }
 
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
