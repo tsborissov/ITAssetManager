@@ -5,6 +5,7 @@ using ITAssetManager.Web.Models.Brands;
 using ITAssetManager.Web.Models.Categories;
 using ITAssetManager.Web.Models.Statuses;
 using ITAssetManager.Web.Models.Vendors;
+using ITAssetManager.Web.Services.AssetModels.Models;
 using ITAssetManager.Web.Services.Assets.Models;
 using ITAssetManager.Web.Services.Brands.Models;
 using ITAssetManager.Web.Services.Categories.Models;
@@ -27,6 +28,7 @@ namespace ITAssetManager.Web.Infrastructure
             this.CreateMap<CategoryQueryServiceModel, CategoriesQueryModel>();
             this.CreateMap<BrandAddFormServiceModel, Brand>();
             this.CreateMap<BrandQueryServiceModel, BrandsQueryModel>();
+            this.CreateMap<AssetModelsAddFormServiceModel, AssetModel>();
         }
     }
 }

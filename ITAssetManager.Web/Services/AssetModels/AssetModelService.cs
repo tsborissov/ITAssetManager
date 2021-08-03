@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.AssetModels.Models;
 using System;
@@ -12,21 +13,19 @@ namespace ITAssetManager.Web.Services.AssetModels
     public class AssetModelService : IAssetModelService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
 
-        public AssetModelService(AppDbContext data)
-            => this.data = data;
+        public AssetModelService(AppDbContext data, IMapper mapper)
+        {
+            this.data = data;
+            this.mapper = mapper;
+        }
 
         public void Add(AssetModelsAddFormServiceModel assetModel)
         {
-            this.data.AssetModels.Add(
-                new AssetModel
-                {
-                    BrandId = assetModel.BrandId,
-                    CategoryId = assetModel.CategoryId,
-                    Name = assetModel.Name,
-                    ImageUrl = assetModel.ImageUrl,
-                    Details = assetModel.Details
-                });
+            var assetModelData = this.mapper.Map<AssetModel>(assetModel);
+
+            this.data.AssetModels.Add(assetModelData);
 
             this.data.SaveChanges();
         }

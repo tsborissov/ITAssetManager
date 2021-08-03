@@ -51,7 +51,7 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult All(string searchString, string sortOrder, int currentPage)
+        public IActionResult All(string searchString, int currentPage)
         {
             var queryResult = this.assetModelService.All(searchString, currentPage);
 
