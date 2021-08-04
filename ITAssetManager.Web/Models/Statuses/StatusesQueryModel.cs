@@ -1,5 +1,4 @@
-﻿using ITAssetManager.Web.Services.Statuses;
-using ITAssetManager.Web.Services.Statuses.Models;
+﻿using ITAssetManager.Web.Services.Statuses.Models;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Models.Statuses

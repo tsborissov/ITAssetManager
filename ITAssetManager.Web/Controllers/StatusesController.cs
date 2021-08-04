@@ -89,7 +89,7 @@ namespace ITAssetManager.Web.Controllers
             });
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.statusService.IsExistingStatus(id))
             {
@@ -103,7 +103,12 @@ namespace ITAssetManager.Web.Controllers
 
             this.statusService.Delete(id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = sortOrder,
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
         }
     }
 }
