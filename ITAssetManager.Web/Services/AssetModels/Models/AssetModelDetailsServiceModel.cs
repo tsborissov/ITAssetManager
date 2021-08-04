@@ -14,6 +14,8 @@
 
         public string Details { get; init; }
 
+        public bool IsInUse { get; init; }
+
         public string SearchString { get; set; }
 
         public string SortOrder { get; set; }

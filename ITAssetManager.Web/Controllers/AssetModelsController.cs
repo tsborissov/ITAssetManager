@@ -150,5 +150,14 @@ namespace ITAssetManager.Web.Controllers
 
             return RedirectToAction(nameof(All));
         }
+
+        [Authorize(Roles = AdministratorRoleName)]
+
+        public IActionResult Delete(int id)
+        {
+            this.assetModelService.Delete(id);
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }

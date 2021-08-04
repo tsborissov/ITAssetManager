@@ -63,14 +63,14 @@ namespace ITAssetManager.Web.Services.AssetModels
             var assetModels = assetModelsQuery
                 .Skip((currentPage - 1) * ModelsPerPage)
                 .Take(ModelsPerPage)
-                .Select(m => new AssetModelListingServiceModel
+                .Select(am => new AssetModelListingServiceModel
                 {
-                    Id = m.Id,
-                    Category = m.Category.Name,
-                    Brand = m.Brand.Name,
-                    Name = m.Name,
-                    Details = m.Details,
-                    ImageUrl = m.ImageUrl
+                    Id = am.Id,
+                    Category = am.Category.Name,
+                    Brand = am.Brand.Name,
+                    Name = am.Name,
+                    Details = am.Details,
+                    ImageUrl = am.ImageUrl,
                 })
                 .ToList();
 
@@ -88,16 +88,17 @@ namespace ITAssetManager.Web.Services.AssetModels
         {
             return this.data
                 .AssetModels
-                .Where(m => m.Id == id)
-                .Select(m => 
+                .Where(am => am.Id == id)
+                .Select(am =>
                     new AssetModelDetailsServiceModel
                     {
-                        Id = m.Id,
-                        Brand = m.Brand.Name,
-                        Category = m.Category.Name,
-                        Name = m.Name,
-                        Details = m.Details,
-                        ImageUrl = m.ImageUrl,
+                        Id = am.Id,
+                        Brand = am.Brand.Name,
+                        Category = am.Category.Name,
+                        Name = am.Name,
+                        Details = am.Details,
+                        ImageUrl = am.ImageUrl,
+                        IsInUse = am.Assets.Any()
                     })
                 .FirstOrDefault();
         }
@@ -115,6 +116,17 @@ namespace ITAssetManager.Web.Services.AssetModels
             targetAssetModel.ImageUrl = assetModel.ImageUrl;
             targetAssetModel.Name = assetModel.Name;
 
+            this.data.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var targetAssetModel = this.data
+                .AssetModels
+                .Where(am => am.Id == id)
+                .FirstOrDefault();
+
+            this.data.AssetModels.Remove(targetAssetModel);
             this.data.SaveChanges();
         }
 
@@ -148,5 +160,12 @@ namespace ITAssetManager.Web.Services.AssetModels
 
         public bool IsExistingModel(int id)
             => this.data.AssetModels.Any(m => m.Id == id);
+
+        public bool IsInUse(int id)
+            => this.data
+                .AssetModels
+                .Where(am => am.Id == id)
+                .SelectMany(am => am.Assets)
+                .Any();
     }
 }

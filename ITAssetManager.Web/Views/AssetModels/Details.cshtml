@@ -52,6 +52,21 @@
                                 Edit
                             </a>
                         </div>
+                        @if (!Model.IsInUse)
+                        {
+                            ViewData["DataTarget"] = "Model";
+                            ViewData["TargetId"] = Model.Id;
+                            ViewData["SearchString"] = Model.SearchString;
+                            ViewData["SortOrder"] = Model.SortOrder;
+                            ViewData["CurrentPage"] = Model.CurrentPage;
+
+                            <div class="button-holder">
+                                <button type="button" class="btn btn-danger float-md-right" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
+                                    Delete
+                                </button>
+                            </div>
+                            <partial name="_DeleteConfirmationPartial" />
+                        }
                     }
                 </div>
             </div>

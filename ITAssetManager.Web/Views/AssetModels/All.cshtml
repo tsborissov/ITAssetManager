@@ -25,11 +25,15 @@
                         <img class="card-img-top" src="@assetModel.ImageUrl" alt="@assetModel.Category @assetModel.Brand - (@assetModel.Name)">
                         <div class="card-body text-center">
                             <h5 class="card-title text-center">@assetModel.Brand  @assetModel.Name</h5>
-                            <a asp-action="Details" 
-                               asp-route-id="@assetModel.Id"
-                               asp-route-searchString="@Model.SearchString"
-                               asp-route-currentPage="@Model.CurrentPage"
-                               class="btn btn-primary">Details</a>
+                            <div class="button-holder">
+                                <a asp-action="Details"
+                                   asp-route-id="@assetModel.Id"
+                                   asp-route-searchString="@Model.SearchString"
+                                   asp-route-currentPage="@Model.CurrentPage"
+                                   class="btn btn-primary">
+                                    Details
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

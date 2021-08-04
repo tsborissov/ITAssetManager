@@ -13,6 +13,8 @@ namespace ITAssetManager.Web.Services.AssetModels
 
         void Update(AssetModelEditFormServiceModel vendorModel);
 
+        void Delete(int id);
+
         IEnumerable<BrandDropdownServiceModel> GetBrands();
 
         IEnumerable<CategoryDropdownServiceModel> GetCategories();
@@ -22,5 +24,7 @@ namespace ITAssetManager.Web.Services.AssetModels
         bool IsCategoryValid(int id);
 
         bool IsExistingModel(int id);
+
+        bool IsInUse(int id);
     }
 }
