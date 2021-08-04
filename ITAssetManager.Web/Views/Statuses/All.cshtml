@@ -57,7 +57,7 @@
                                 ViewData["CurrentPage"] = Model.CurrentPage;
 
                                 <div class="button-holder">
-                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@status.Id" data-id="@status.Id">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
                                         Delete
                                     </button>
                                 </div>

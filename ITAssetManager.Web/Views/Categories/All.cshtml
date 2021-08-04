@@ -50,13 +50,18 @@
                     <td>
                         @if (!category.IsInUse)
                         {
+                            ViewData["DataTarget"] = @ViewBag.Title;
+                            ViewData["TargetId"] = category.Id;
+                            ViewData["SearchString"] = Model.SearchString;
+                            ViewData["SortOrder"] = Model.SortOrder;
+                            ViewData["CurrentPage"] = Model.CurrentPage;
+
                             <div class="button-holder">
-                                <a asp-action="Delete"
-                                   asp-route-id="@category.Id"
-                                   class="btn btn-danger">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
                                     Delete
-                                </a>
+                                </button>
                             </div>
+                            <partial name="_DeleteConfirmationPartial" />
                         }
                     </td>
                 </tr>

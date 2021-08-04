@@ -98,7 +98,7 @@ namespace ITAssetManager.Web.Controllers
                 });
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.brandService.IsExistingBrand(id))
             {
@@ -112,7 +112,12 @@ namespace ITAssetManager.Web.Controllers
 
             this.brandService.Delete(id);
 
-            return RedirectToAction(nameof(All));
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = sortOrder,
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
         }
     }
 }
