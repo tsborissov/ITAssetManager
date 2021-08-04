@@ -89,8 +89,7 @@ namespace ITAssetManager.Web.Controllers
 
             this.brandService.Update(brand);
 
-            return RedirectToAction(nameof(All),
-                new
+            return RedirectToAction(nameof(All), new
                 {
                     SearchString = brand.SearchString,
                     SortOrder = brand.SortOrder,

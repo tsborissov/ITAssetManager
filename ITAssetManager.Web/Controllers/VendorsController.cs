@@ -100,5 +100,27 @@ namespace ITAssetManager.Web.Controllers
 
             return RedirectToAction(nameof(Details), vendor);
         }
+
+        public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
+        {
+            if (!this.vendorService.IsExistingVendor(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (this.vendorService.IsInUse(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            this.vendorService.Delete(id);
+
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = sortOrder,
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
+        }
     }
 }

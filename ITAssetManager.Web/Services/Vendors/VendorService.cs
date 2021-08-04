@@ -70,7 +70,8 @@ namespace ITAssetManager.Web.Services.Vendors
                 {
                     Id = v.Id,
                     Name = v.Name,
-                    Vat = v.Vat
+                    Vat = v.Vat,
+                    IsInUse = v.Assets.Any()
                 })
                 .ToList();
 
@@ -119,6 +120,17 @@ namespace ITAssetManager.Web.Services.Vendors
             this.data.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var targetVendor = this.data
+                .Vendors
+                .Where(v => v.Id == id)
+                .FirstOrDefault();
+
+            this.data.Vendors.Remove(targetVendor);
+            this.data.SaveChanges();
+        }
+
         public bool IsExistingName(string name)
             => this.data.Vendors.Any(v => v.Name == name);
 
@@ -127,5 +139,12 @@ namespace ITAssetManager.Web.Services.Vendors
 
         public bool IsExistingVendor(int id)
             => this.data.Vendors.Any(v => v.Id == id);
+
+        public bool IsInUse(int id)
+            => this.data
+            .Vendors
+            .Where(v => v.Id == id)
+            .SelectMany(v => v.Assets)
+            .Any();
     }
 }

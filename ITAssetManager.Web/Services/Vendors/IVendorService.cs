@@ -12,10 +12,14 @@ namespace ITAssetManager.Web.Services.Vendors
 
         VendorDetailsServiceModel Details(int id, string sortOrder, string searchString, int currentPage);
 
+        void Delete(int id);
+
         bool IsExistingName(string name);
 
         bool IsExistingVat(string vat);
 
         bool IsExistingVendor(int id);
+
+        bool IsInUse(int id);
     }
 }

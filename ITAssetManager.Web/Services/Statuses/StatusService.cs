@@ -109,7 +109,7 @@ namespace ITAssetManager.Web.Services.Statuses
                 .Where(s => s.Id == id)
                 .FirstOrDefault();
 
-            this.data.Remove(targetStatus);
+            this.data.Statuses.Remove(targetStatus);
             this.data.SaveChanges();
         }
 

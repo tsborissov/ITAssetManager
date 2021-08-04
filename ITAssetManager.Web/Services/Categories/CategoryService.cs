@@ -107,7 +107,7 @@ namespace ITAssetManager.Web.Services.Categories
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
-            this.data.Remove(targetCategory);
+            this.data.Categories.Remove(targetCategory);
             this.data.SaveChanges();
         }
 

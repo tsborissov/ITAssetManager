@@ -33,7 +33,8 @@
                             VAT
                         </a>
                     </th>
-                    <th></th>
+                    <th>Delete</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,6 +43,23 @@
                     <tr>
                         <td>@vendor.Name</td>
                         <td>@vendor.Vat</td>
+                        <td>
+                            @if (!vendor.IsInUse)
+                            {
+                                ViewData["DataTarget"] = @ViewBag.Title;
+                                ViewData["TargetId"] = vendor.Id;
+                                ViewData["SearchString"] = Model.SearchString;
+                                ViewData["SortOrder"] = Model.SortOrder;
+                                ViewData["CurrentPage"] = Model.CurrentPage;
+
+                                <div class="button-holder">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
+                                        Delete
+                                    </button>
+                                </div>
+                                <partial name="_DeleteConfirmationPartial" />
+                            }
+                        </td>
                         <td class="text-right">
                             <div class="button-holder">
                                 <a asp-action="Details"

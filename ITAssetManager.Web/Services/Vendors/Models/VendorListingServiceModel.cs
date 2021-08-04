@@ -7,5 +7,7 @@
         public string Name { get; init; }
 
         public string Vat { get; init; }
+
+        public bool IsInUse { get; init; }
     }
 }
