@@ -50,7 +50,7 @@
                     {
                         <th>User</th>
                         <th>Edit</th>
-                        <th>Assign/Collect</th>
+                        <th>Assign/Collect/Delete</th>
                     }
                     else
                     {
@@ -95,7 +95,7 @@
                                            asp-route-searchString="@Model.SearchString"
                                            asp-route-sortOrder="@Model.SortOrder"
                                            asp-route-currentPage="@Model.CurrentPage"
-                                           class="btn btn-danger">
+                                           class="btn btn-primary">
                                             Assign
                                         </a>
                                     </div>
@@ -113,6 +113,22 @@
                                             Collect
                                         </a>
                                     </div>
+                                }
+
+                                @if ((!asset.IsInUse) && asset.Status == "Disposed")
+                                {
+                                    ViewData["DataTarget"] = @ViewBag.Title;
+                                    ViewData["TargetId"] = asset.Id;
+                                    ViewData["SearchString"] = Model.SearchString;
+                                    ViewData["SortOrder"] = Model.SortOrder;
+                                    ViewData["CurrentPage"] = Model.CurrentPage;
+
+                                    <div class="button-holder col-md-3">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
+                                            Delete
+                                        </button>
+                                    </div>
+                                    <partial name="_DeleteConfirmationPartial" />
                                 }
                             </td>
                         }

@@ -21,6 +21,8 @@ namespace ITAssetManager.Web.Services.Assets
 
         void Update(AssetEditFormServiceModel asset);
 
+        void Delete(int id);
+
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 
         IEnumerable<AssetModelDropdownServiceModel> GetModels();
@@ -38,5 +40,7 @@ namespace ITAssetManager.Web.Services.Assets
         bool IsExistingSerialNr(string serialNr);
 
         bool IsExistingInventoryNr(string inventoryNr);
+
+        bool IsInUse(int id);
     }
 }

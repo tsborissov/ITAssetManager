@@ -161,5 +161,26 @@ namespace ITAssetManager.Web.Controllers
                 CurrentPage = assetModel.CurrentPage
             });
         }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        public IActionResult Delete(int id, string searchString, string sortOrder, int currentPage)
+        {
+            try
+            {
+                this.assetService.Delete(id);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = sortOrder,
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
+        }
     }
 }

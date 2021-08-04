@@ -101,9 +101,10 @@ namespace ITAssetManager.Web.Services.Assets
                     InventoryNr = a.InventoryNr,
                     Status = a.Status.Name,
                     User = a.AssetUsers
-                    .Where(au => au.ReturnDate == null)
-                    .Select(au => au.User.UserName)
-                    .FirstOrDefault()
+                        .Where(au => au.ReturnDate == null)
+                        .Select(au => au.User.UserName)
+                        .FirstOrDefault(),
+                    IsInUse = a.AssetUsers.Any(au => au.ReturnDate == null)
                 })
                 .ToList();
 
@@ -261,6 +262,46 @@ namespace ITAssetManager.Web.Services.Assets
             this.data.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
+
+            var targetStatusId = this.data
+                .Statuses
+                .Where(s => s.Name == "Disposed")
+                .Select(s => s.Id)
+                .FirstOrDefault();
+
+            if (targetAsset == null)
+            {
+                throw new ArgumentException("Asset does not exists!");
+            }
+
+            if (targetAsset.StatusId != targetStatusId)
+            {
+                throw new ArgumentException("An Asset with status different than 'Disposed' cannot be deleted!");
+            }
+
+            if (this.IsInUse(id))
+            {
+                throw new InvalidOperationException("Delete related records first!");
+            }
+
+            var targetUserAssets = this.data
+                .UsersAssets
+                .Where(ua => ua.AssetId == id)
+                .ToList();
+
+            this.data.UsersAssets.RemoveRange(targetUserAssets);
+            this.data.SaveChanges();
+
+            this.data.Assets.Remove(targetAsset);
+            this.data.SaveChanges();
+        }
+
         public IEnumerable<UserDropdownServiceModel> GetAllUsers()
             => this.data
                 .Users
@@ -320,5 +361,12 @@ namespace ITAssetManager.Web.Services.Assets
 
         public bool IsValidVendor(int id)
             => this.data.Vendors.Any(v => v.Id == id);
+
+        public bool IsInUse(int id)
+            => this.data
+                .Assets
+                .Where(a => a.Id == id)
+                .SelectMany(a => a.AssetUsers)
+                .Any(ua => ua.ReturnDate == null);
     }
 }
