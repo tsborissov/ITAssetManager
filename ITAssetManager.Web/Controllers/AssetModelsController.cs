@@ -1,8 +1,9 @@
-﻿using ITAssetManager.Data;
-using ITAssetManager.Web.Services.AssetModels;
+﻿using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.AssetModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using System;
 using System.Linq;
 
 using static ITAssetManager.Data.DataConstants;
@@ -13,8 +14,10 @@ namespace ITAssetManager.Web.Controllers
     {
         private readonly IAssetModelService assetModelService;
 
-        public AssetModelsController(IAssetModelService assetModelService, AppDbContext data) 
-            => this.assetModelService = assetModelService;
+        public AssetModelsController(IAssetModelService assetModelService)
+        {
+            this.assetModelService = assetModelService;
+        }
 
         public IActionResult Add() => View(
             new AssetModelsAddFormServiceModel
@@ -53,9 +56,9 @@ namespace ITAssetManager.Web.Controllers
         [Authorize]
         public IActionResult All(string searchString, int currentPage)
         {
-            var queryResult = this.assetModelService.All(searchString, currentPage);
+            var allAssetModels = this.assetModelService.All(searchString, currentPage);
 
-            return View(queryResult);
+            return View(allAssetModels);
         }
 
         [Authorize]

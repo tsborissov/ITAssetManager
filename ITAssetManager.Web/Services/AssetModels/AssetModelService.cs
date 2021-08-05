@@ -2,6 +2,7 @@
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.AssetModels.Models;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace ITAssetManager.Web.Services.AssetModels
     {
         private readonly AppDbContext data;
         private readonly IMapper mapper;
+        private readonly IMemoryCache cache; 
 
-        public AssetModelService(AppDbContext data, IMapper mapper)
+        public AssetModelService(AppDbContext data, IMapper mapper, IMemoryCache cache)
         {
             this.data = data;
             this.mapper = mapper;
+            this.cache = cache;
         }
 
         public void Add(AssetModelsAddFormServiceModel assetModel)
@@ -131,26 +134,58 @@ namespace ITAssetManager.Web.Services.AssetModels
         }
 
         public IEnumerable<BrandDropdownServiceModel> GetBrands()
-            => this.data
-                   .Brands
-                   .OrderBy(b => b.Name)
-                   .Select(b => new BrandDropdownServiceModel
-                   {
-                       Id = b.Id,
-                       Name = b.Name
-                   })
-                   .ToList();
+        {
+            const string allBrandsCacheKey = "BrandsCacheKey";
+
+            var allBrands = this.cache.Get<List<BrandDropdownServiceModel>>(allBrandsCacheKey);
+
+            if (allBrands == null)
+            {
+                allBrands = this.data
+                              .Brands
+                              .OrderBy(b => b.Name)
+                              .Select(b => new BrandDropdownServiceModel
+                              {
+                                  Id = b.Id,
+                                  Name = b.Name
+                              })
+                              .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+                this.cache.Set(allBrandsCacheKey, allBrands, cacheOptions);
+            }
+
+            return allBrands;
+        }
 
         public IEnumerable<CategoryDropdownServiceModel> GetCategories()
-            => this.data
-                    .Categories
-                    .OrderBy(c => c.Name)
-                    .Select(c => new CategoryDropdownServiceModel
-                    {
-                        Id = c.Id,
-                        Name = c.Name
-                    })
-                    .ToList();
+        {
+            const string allCategoriesCacheKey = "CategoriesCacheKey";
+
+            var allCategories = this.cache.Get<List<CategoryDropdownServiceModel>>(allCategoriesCacheKey);
+
+            if (allCategories == null)
+            {
+                allCategories = this.data
+                               .Categories
+                               .OrderBy(c => c.Name)
+                               .Select(c => new CategoryDropdownServiceModel
+                               {
+                                   Id = c.Id,
+                                   Name = c.Name
+                               })
+                               .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+                this.cache.Set(allCategoriesCacheKey, allCategories, cacheOptions);
+            }
+
+            return allCategories;
+        }
 
         public bool IsBrandValid(int id)
             => this.data.Brands.Any(b => b.Id == id);

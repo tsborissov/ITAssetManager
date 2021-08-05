@@ -1,6 +1,7 @@
 ﻿using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Assets.Models;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,13 @@ namespace ITAssetManager.Web.Services.Assets
     public class AssetService : IAssetService
     {
         private readonly AppDbContext data;
+        private readonly IMemoryCache cache; 
 
-        public AssetService(AppDbContext data)
-            => this.data = data;
+        public AssetService(AppDbContext data, IMemoryCache cache)
+        {
+            this.data = data;
+            this.cache = cache;
+        }
 
         public int Add(AssetAddFormServiceModel asset)
         {
@@ -303,49 +308,113 @@ namespace ITAssetManager.Web.Services.Assets
         }
 
         public IEnumerable<UserDropdownServiceModel> GetAllUsers()
-            => this.data
-                .Users
-                .OrderBy(u => u.UserName)
-                .Select(u => new UserDropdownServiceModel
-                {
-                    Id = u.Id,
-                    Username = u.UserName
-                })
-                .ToList();
+        {
+            const string allUsersCacheKey = "UsersCacheKey";
+
+            var allUses = this.cache.Get<List<UserDropdownServiceModel>>(allUsersCacheKey);
+
+            if (allUses == null)
+            {
+                allUses = this.data
+                           .Users
+                           .OrderBy(u => u.UserName)
+                           .Select(u => new UserDropdownServiceModel
+                           {
+                               Id = u.Id,
+                               Username = u.UserName
+                           })
+                           .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(20));
+
+                this.cache.Set(allUsersCacheKey, allUses, cacheOptions);
+            }
+
+            return allUses;
+        }
 
         public IEnumerable<AssetModelDropdownServiceModel> GetModels()
-        => this.data
-                .AssetModels
-                .OrderBy(a => a.Name)
-                .Select(a => new AssetModelDropdownServiceModel
-                {
-                    Id = a.Id,
-                    Name = a.Name
-                })
-                .ToList();
+        {
+            const string allModelsCacheKey = "ModelsCacheKey";
+
+            var allModels = this.cache.Get<List<AssetModelDropdownServiceModel>>(allModelsCacheKey);
+            
+            if (allModels == null)
+            {
+                allModels = this.data
+                           .AssetModels
+                           .OrderBy(a => a.Name)
+                           .Select(a => new AssetModelDropdownServiceModel
+                           {
+                               Id = a.Id,
+                               Name = a.Name
+                           })
+                           .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+                this.cache.Set(allModelsCacheKey, allModels, cacheOptions);
+            }
+
+            return allModels;
+        }
 
         public IEnumerable<StatusDropdownServiceModel> GetStatuses()
-        => this.data
-                .Statuses
-                .Where(s => s.Name != AssetTargetAssignStatus)
-                .OrderBy(s => s.Name)
-                .Select(s => new StatusDropdownServiceModel
-                {
-                    Id = s.Id,
-                    Name = s.Name
-                })
-                .ToList();
+        {
+            const string allStatusesCacheKey = "StatusesCacheKey";
+
+            var allStatuses = this.cache.Get<List<StatusDropdownServiceModel>>(allStatusesCacheKey);
+
+            if (allStatuses == null)
+            {
+                allStatuses = this.data
+                           .Statuses
+                           .Where(s => s.Name != AssetTargetAssignStatus)
+                           .OrderBy(s => s.Name)
+                           .Select(s => new StatusDropdownServiceModel
+                           {
+                               Id = s.Id,
+                               Name = s.Name
+                           })
+                           .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+                this.cache.Set(allStatusesCacheKey, allStatuses, cacheOptions);
+            }
+            
+            return allStatuses;
+        }
 
         public IEnumerable<VendorDropdownServiceModel> GetVendors()
-         => this.data
-                .Vendors
-                .OrderBy(v => v.Name)
-                .Select(v => new VendorDropdownServiceModel
-                {
-                    Id = v.Id,
-                    Name = v.Name
-                })
-                .ToList();
+        {
+            const string allVendorsCacheKey = "VendorsCacheKey";
+
+            var allVendors = this.cache.Get<List<VendorDropdownServiceModel>>(allVendorsCacheKey);
+            
+            if (allVendors == null)
+            {
+                allVendors = this.data
+                           .Vendors
+                           .OrderBy(v => v.Name)
+                           .Select(v => new VendorDropdownServiceModel
+                           {
+                               Id = v.Id,
+                               Name = v.Name
+                           })
+                           .ToList();
+
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
+
+                this.cache.Set(allVendorsCacheKey, allVendors, cacheOptions);
+            }
+            
+            return allVendors;
+        }
 
         public bool IsExistingInventoryNr(string inventoryNr)
             => this.data.Assets.Any(i => i.InventoryNr == inventoryNr);

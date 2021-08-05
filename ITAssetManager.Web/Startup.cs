@@ -31,8 +31,9 @@ namespace ITAssetManager.Web
                 .AddDbContext<Data.AppDbContext>(options => options
                     .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services
-                .AddDatabaseDeveloperPageExceptionFilter();
+            services.AddMemoryCache();
+
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services
                 .AddDefaultIdentity<ApplicationUser>(options => 
