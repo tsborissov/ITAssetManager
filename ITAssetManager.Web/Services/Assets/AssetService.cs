@@ -1,4 +1,5 @@
-﻿using ITAssetManager.Data;
+﻿using AutoMapper;
+using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Assets.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -13,28 +14,19 @@ namespace ITAssetManager.Web.Services.Assets
     public class AssetService : IAssetService
     {
         private readonly AppDbContext data;
+        private readonly IMapper mapper;
         private readonly IMemoryCache cache; 
 
-        public AssetService(AppDbContext data, IMemoryCache cache)
+        public AssetService(AppDbContext data, IMapper mapper, IMemoryCache cache)
         {
             this.data = data;
+            this.mapper = mapper;
             this.cache = cache;
         }
 
-        public int Add(AssetAddFormServiceModel asset)
+        public int Add(AssetAddFormServiceModel assetModel)
         {
-            var assetData = new Asset
-            {
-                AssetModelId = asset.AssetModelId,
-                InventoryNr = asset.InventoryNr,
-                InvoiceNr = asset.InvoiceNr,
-                Price = asset.Price,
-                PurchaseDate = asset.PurchaseDate,
-                SerialNr = asset.SerialNr,
-                StatusId = asset.StatusId,
-                VendorId = asset.VendorId,
-                WarranyExpirationDate = asset.WarranyExpirationDate
-            };
+            var assetData = this.mapper.Map<Asset>(assetModel);
 
             this.data.Assets.Add(assetData);
             this.data.SaveChanges();
@@ -405,6 +397,7 @@ namespace ITAssetManager.Web.Services.Assets
                                Id = v.Id,
                                Name = v.Name
                            })
+
                            .ToList();
 
                 var cacheOptions = new MemoryCacheEntryOptions()

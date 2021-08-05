@@ -22,6 +22,7 @@ namespace ITAssetManager.Web.Infrastructure
             this.CreateMap<VendorQueryServiceModel, VendorsQueryModel>();
             this.CreateMap<VendorAddFormServiceModel, Vendor>();
             this.CreateMap<AssetsQueryServiceModel, AssetsQueryModel>();
+            this.CreateMap<AssetAddFormServiceModel, Asset>();
             this.CreateMap<StatusAddFormServiceModel, Status>();
             this.CreateMap<StatusQueryServiceModel, StatusesQueryModel>();
             this.CreateMap<CategoryAddFormServiceModel, Category>();
