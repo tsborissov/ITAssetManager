@@ -1,4 +1,5 @@
 ﻿using ITAssetManager.Web.Services.Assets.Models;
+using System;
 using System.Collections.Generic;
 
 namespace ITAssetManager.Web.Services.Assets
@@ -13,9 +14,9 @@ namespace ITAssetManager.Web.Services.Assets
 
         void Assign(string userId, int assetId);
 
-        AssetCollectServiceModel UserAssetById(int assetId, string searchString, string sortOrder, int currentPage);
+        AssetCollectServiceModel UserAssetById(int id);
 
-        void Collect(string userId, int assetId);
+        void Collect(string userId, int assetId, DateTime returnDate);
 
         AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage);
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ITAssetManager.Web.Services.Assets.Models
 {
@@ -13,7 +14,11 @@ namespace ITAssetManager.Web.Services.Assets.Models
         public string InventoryNr { get; init; }
 
         [Display(Name = "Date Assigned")]
-        public string AssignDate { get; set; }
+        public DateTime AssignDate { get; set; }
+
+        [Required]
+        [Display(Name = "Return Date")]
+        public DateTime ReturnDate { get; set; }
 
         public string UserId { get; set; }
 

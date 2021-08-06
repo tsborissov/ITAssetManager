@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Assets.Models;
@@ -162,30 +163,18 @@ namespace ITAssetManager.Web.Services.Assets
             this.data.SaveChanges();
         }
 
-        public AssetCollectServiceModel UserAssetById(int assetId, string searchString, string sortOrder, int currentPage)
+        public AssetCollectServiceModel UserAssetById(int id)
         {
             var targetUserAsset = this.data
                 .UsersAssets
-                .Where(ua => ua.AssetId == assetId && ua.ReturnDate == null)
-                .Select(ua => new AssetCollectServiceModel
-                {
-                    Id = ua.AssetId,
-                    Model = ua.Asset.AssetModel.Name,
-                    SerialNr = ua.Asset.SerialNr,
-                    InventoryNr = ua.Asset.InventoryNr,
-                    AssignDate = ua.AssignDate.ToString("dd.MM.yyyy"),
-                    UserId = ua.UserId,
-                    UserName = ua.User.UserName,
-                    SearchString = searchString,
-                    SortOrder = sortOrder,
-                    CurrentPage = currentPage
-                })
+                .Where(ua => ua.AssetId == id && ua.ReturnDate == null)
+                .ProjectTo<AssetCollectServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
             return targetUserAsset;
         }
 
-        public void Collect(string userId, int assetId)
+        public void Collect(string userId, int assetId, DateTime returnDate)
         {
             var targetUserAsset = this.data
                 .UsersAssets
@@ -204,8 +193,8 @@ namespace ITAssetManager.Web.Services.Assets
                 .FirstOrDefault();
 
             targetAsset.StatusId = targetStatusId;
+            targetUserAsset.ReturnDate = returnDate.ToUniversalTime();
 
-            targetUserAsset.ReturnDate = DateTime.UtcNow;
             this.data.SaveChanges();
         }
 
@@ -214,24 +203,12 @@ namespace ITAssetManager.Web.Services.Assets
             var assetData = this.data
                 .Assets
                 .Where(a => a.Id == id)
-                .Select(a => new AssetEditFormServiceModel
-                {
-                    Id = a.Id,
-                    AssetModelId = a.AssetModelId,
-                    SerialNr = a.SerialNr,
-                    InventoryNr = a.InventoryNr,
-                    StatusId = a.StatusId,
-                    VendorId = a.VendorId,
-                    InvoiceNr = a.InvoiceNr,
-                    Price = a.Price,
-                    PurchaseDate = a.PurchaseDate,
-                    WarranyExpirationDate = a.WarranyExpirationDate,
-                    SearchString = searchString,
-                    SortOrder = sortOrder,
-                    CurrentPage = currentPage
-                })
+                .ProjectTo<AssetEditFormServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
+            assetData.SearchString = searchString;
+            assetData.SortOrder = sortOrder;
+            assetData.CurrentPage = currentPage;
             assetData.Models = this.GetModels();
             assetData.Statuses = this.GetStatuses();
             assetData.Vendors = this.GetVendors();

@@ -114,14 +114,36 @@ namespace ITAssetManager.Web.Controllers
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Collect(int id, string searchString, string sortOrder, int currentPage)
         {
-            return View(this.assetService.UserAssetById(id, searchString, sortOrder, currentPage));
+            var assetQuery = this.assetService.UserAssetById(id);
+
+            assetQuery.ReturnDate = DateTime.Now;
+            assetQuery.SearchString = searchString;
+            assetQuery.SortOrder = sortOrder;
+            assetQuery.CurrentPage = currentPage;
+
+            return View(assetQuery);
         }
 
         [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Collect(AssetCollectServiceModel assetModel)
         {
-            this.assetService.Collect(assetModel.UserId, assetModel.Id);
+            if (assetModel.ReturnDate < assetModel.AssignDate)
+            {
+                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), "'Return date' cannot be before 'Assign date'!");
+            }
+
+            if (assetModel.ReturnDate > DateTime.Now)
+            {
+                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), "'Return date' cannot be in the future!");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return View(assetModel);
+            }
+
+            this.assetService.Collect(assetModel.UserId, assetModel.Id, assetModel.ReturnDate);
 
             return RedirectToAction(nameof(All), new
             {
