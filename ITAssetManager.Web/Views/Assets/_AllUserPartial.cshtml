@@ -1,0 +1,44 @@
+﻿<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">
+                <a asp-action="All"
+                   asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
+                   asp-route-searchString="@Model.SearchString">
+                    Brand
+                </a>
+            </th>
+            <th>
+                <a asp-action="All"
+                   asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
+                   asp-route-searchString="@Model.SearchString">
+                    Model
+                </a>
+            </th>
+            <th>SerialNr</th>
+            <th>InventoryNr</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var asset in Model.Assets)
+        {
+            <tr>
+                <td>@asset.Brand</td>
+                <td>@asset.Model</td>
+                <td>@asset.SerialNr</td>
+                <td>@asset.InventoryNr</td>
+                <td>
+                    <div class="button-holder col-md-3">
+                        <a asp-controller="AssetModels"
+                           asp-action="Details"
+                           asp-route-id="@asset.ModelId"
+                           class="btn btn-primary">
+                            Details
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

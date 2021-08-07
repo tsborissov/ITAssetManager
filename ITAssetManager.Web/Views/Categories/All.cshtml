@@ -26,45 +26,45 @@
                             Name
                         </a>
                     </th>
-                    <th>Edit</th>
                     <th>Delete</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var category in Model.Categories)
                 {
-                <tr>
-                    <td>@category.Name</td>
-                    <td>
-                        <div class="button-holder">
-                            <a asp-action="Edit"
-                               asp-route-id="@category.Id"
-                               asp-route-sortOrder="@Model.SortOrder"
-                               asp-route-searchString="@Model.SearchString"
-                               asp-route-currentPage="@Model.CurrentPage"
-                               class="btn btn-warning">
-                                Edit
-                            </a>
-                        </div>
-                    </td>
-                    <td>
-                        @if (!category.IsInUse)
-                        {
-                            ViewData["DataTarget"] = @ViewBag.Title;
-                            ViewData["TargetId"] = category.Id;
-                            ViewData["SearchString"] = Model.SearchString;
-                            ViewData["SortOrder"] = Model.SortOrder;
-                            ViewData["CurrentPage"] = Model.CurrentPage;
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>
+                            @if (!category.IsInUse)
+                            {
+                                ViewData["DataTarget"] = @ViewBag.Title;
+                                ViewData["TargetId"] = category.Id;
+                                ViewData["SearchString"] = Model.SearchString;
+                                ViewData["SortOrder"] = Model.SortOrder;
+                                ViewData["CurrentPage"] = Model.CurrentPage;
 
+                                <div class="button-holder">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
+                                        Delete
+                                    </button>
+                                </div>
+                                <partial name="_DeleteConfirmationPartial" />
+                            }
+                        </td>
+                        <td>
                             <div class="button-holder">
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
-                                    Delete
-                                </button>
+                                <a asp-action="Edit"
+                                   asp-route-id="@category.Id"
+                                   asp-route-sortOrder="@Model.SortOrder"
+                                   asp-route-searchString="@Model.SearchString"
+                                   asp-route-currentPage="@Model.CurrentPage"
+                                   class="btn btn-warning">
+                                    Edit
+                                </a>
                             </div>
-                            <partial name="_DeleteConfirmationPartial" />
-                        }
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>

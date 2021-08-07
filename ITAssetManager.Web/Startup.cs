@@ -1,4 +1,5 @@
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Areas.UserRolesAdmin.Services.Roles;
 using ITAssetManager.Web.Infrastructure;
 using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.Assets;
@@ -61,7 +62,8 @@ namespace ITAssetManager.Web
                 .AddTransient<IVendorService, VendorService>()
                 .AddTransient<IAssetModelService, AssetModelService>()
                 .AddTransient<IAssetService, AssetService>()
-                .AddTransient<IStatisticsService, StatisticsService>();
+                .AddTransient<IStatisticsService, StatisticsService>()
+                .AddTransient<IRoleService, RoleService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -87,6 +89,7 @@ namespace ITAssetManager.Web
                 .UseAuthorization()
                 .UseEndpoints(endpoints =>
                 {
+                    endpoints.MapDefaultAreaRoute();
                     endpoints.MapDefaultControllerRoute();
                     endpoints.MapRazorPages();
                 });

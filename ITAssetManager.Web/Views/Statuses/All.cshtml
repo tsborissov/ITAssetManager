@@ -26,8 +26,8 @@
                             Name
                         </a>
                     </th>
-                    <th>Edit</th>
                     <th>Delete</th>
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,18 +35,6 @@
                 {
                     <tr>
                         <td>@status.Name</td>
-                        <td>
-                            <div class="button-holder">
-                                <a asp-action="Edit"
-                                   asp-route-id="@status.Id"
-                                   asp-route-searchString="@Model.SearchString"
-                                   asp-route-sortOrder="@Model.SortOrder"
-                                   asp-route-currentPage="@Model.CurrentPage"
-                                   class="btn btn-warning">
-                                    Edit
-                                </a>
-                            </div>
-                        </td>
                         <td>
                             @if (!status.IsInUse)
                             {
@@ -63,6 +51,19 @@
                                 </div>
                                 <partial name="_DeleteConfirmationPartial" />
                             }
+                        </td>
+                        
+                        <td>
+                            <div class="button-holder">
+                                <a asp-action="Edit"
+                                   asp-route-id="@status.Id"
+                                   asp-route-searchString="@Model.SearchString"
+                                   asp-route-sortOrder="@Model.SortOrder"
+                                   asp-route-currentPage="@Model.CurrentPage"
+                                   class="btn btn-warning">
+                                    Edit
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 }

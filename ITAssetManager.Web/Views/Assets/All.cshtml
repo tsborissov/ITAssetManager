@@ -20,135 +20,15 @@
 </div>
 <div class="row">
     <div class="col-12">
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">
-                        <a asp-action="All"
-                           asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
-                           asp-route-searchString="@Model.SearchString">
-                            Brand
-                        </a>
-                    </th>
-                    <th>
-                        <a asp-action="All"
-                           asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
-                           asp-route-searchString="@Model.SearchString">
-                            Model
-                        </a>
-                    </th>
-                    <th>
-                        <a asp-action="All"
-                           asp-route-sortOrder="@(Model.SortOrder == "status" ? "status_desc" : "status")"
-                           asp-route-searchString="@Model.SearchString">
-                            Status
-                        </a>
-                    </th>
-                    <th>SerialNr</th>
-                    <th>InventoryNr</th>
-                    @if (User.IsAdmin())
-                    {
-                        <th>User</th>
-                        <th>Edit</th>
-                        <th>Assign/Collect/Delete</th>
-                    }
-                    else
-                    {
-                        <th>User</th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var asset in Model.Assets)
-                {
-                    <tr>
-                        <td>@asset.Brand</td>
-                        <td>@asset.Model</td>
-                        <td>@asset.Status</td>
-                        <td>@asset.SerialNr</td>
-                        <td>@asset.InventoryNr</td>
 
-                        @if (User.IsAdmin())
-                        {
-                            <td>@asset.User</td>
-                            <td>
-                                @if (asset.Status != "In Use")
-                                {
-                                    <div class="button-holder col-md-3">
-                                        <a asp-action="Edit"
-                                           asp-route-id="@asset.Id"
-                                           asp-route-searchString="@Model.SearchString"
-                                           asp-route-sortOrder="@Model.SortOrder"
-                                           asp-route-currentPage="@Model.CurrentPage"
-                                           class="btn btn-warning">
-                                            Edit
-                                        </a>
-                                    </div>
-                                }
-                            </td>
-                            <td>
-                                @if (asset.User == null && asset.Status == "In Stock")
-                                {
-                                    <div class="button-holder col-md-3">
-                                        <a asp-action="Assign"
-                                           asp-route-id="@asset.Id"
-                                           asp-route-searchString="@Model.SearchString"
-                                           asp-route-sortOrder="@Model.SortOrder"
-                                           asp-route-currentPage="@Model.CurrentPage"
-                                           class="btn btn-primary">
-                                            Assign
-                                        </a>
-                                    </div>
-                                }
-
-                                @if (asset.User != null)
-                                {
-                                    <div class="button-holder col-md-3">
-                                        <a asp-action="Collect"
-                                           asp-route-id="@asset.Id"
-                                           asp-route-searchString="@Model.SearchString"
-                                           asp-route-sortOrder="@Model.SortOrder"
-                                           asp-route-currentPage="@Model.CurrentPage"
-                                           class="btn btn-success">
-                                            Collect
-                                        </a>
-                                    </div>
-                                }
-
-                                @if ((!asset.IsInUse) && asset.Status == "Disposed")
-                                {
-                                    ViewData["DataTarget"] = @ViewBag.Title;
-                                    ViewData["TargetId"] = asset.Id;
-                                    ViewData["SearchString"] = Model.SearchString;
-                                    ViewData["SortOrder"] = Model.SortOrder;
-                                    ViewData["CurrentPage"] = Model.CurrentPage;
-
-                                    <div class="button-holder col-md-3">
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
-                                            Delete
-                                        </button>
-                                    </div>
-                                    <partial name="_DeleteConfirmationPartial" />
-                                }
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <div class="button-holder col-md-3">
-                                    <a asp-controller="AssetModels"
-                                       asp-action="Details"
-                                       asp-route-id="@asset.ModelId"
-                                       class="btn btn-primary">
-                                        Details
-                                    </a>
-                                </div>
-                            </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
+        @if (User.IsAdmin())
+        {
+            <partial name="_AllAdministratorPartial" model="@Model" />
+        }
+        else
+        {
+            <partial name="_AllUserPartial" model="@Model" />
+        }
 
         @if (!Model.Assets.Any())
         {
