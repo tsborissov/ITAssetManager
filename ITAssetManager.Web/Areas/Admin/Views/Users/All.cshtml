@@ -1,1 +1,96 @@
-﻿
+﻿@model ICollection<UserListingServiceModel>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th>Is Admin</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.UserName</td>
+                        <td>@(user.IsAdmin ? "Yes" : "No")</td>
+                        <td>
+                            @if (user.IsAdmin)
+                            {
+                                <div class="button-holder">
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#MakeAdmin_@user.Id" data-id="@user.Id">
+                                        Remove Admin
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" id="MakeAdmin_@user.Id" tabindex="-1" role="dialog" aria-labelledby="MakeAdmin_@user.Id" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Please confirm!</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Administrator role will be removed for '@user.UserName'!
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                                                <a asp-area="Admin"
+                                                   asp-controller="Users"
+                                                   asp-action="RemoveAdmin"
+                                                   asp-route-id="@user.Id"
+                                                   class="btn btn-primary">Confirm</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="button-holder">
+                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#MakeAdmin_@user.Id" data-id="@user.Id">
+                                        Make Admin
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" id="MakeAdmin_@user.Id" tabindex="-1" role="dialog" aria-labelledby="MakeAdmin_@user.Id" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Please confirm!</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                '@user.UserName' will become Administrator!
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                                                <a asp-area="Admin"
+                                                   asp-controller="Users"
+                                                   asp-action="AddAdmin"
+                                                   asp-route-id="@user.Id"
+                                                   class="btn btn-primary">Confirm</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

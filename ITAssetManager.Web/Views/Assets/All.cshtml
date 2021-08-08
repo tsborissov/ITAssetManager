@@ -23,11 +23,11 @@
 
         @if (User.IsAdmin())
         {
-            <partial name="_AllAdministratorPartial" model="@Model" />
+            <partial name="_AllForAdministratorPartial" model="@Model" />
         }
         else
         {
-            <partial name="_AllUserPartial" model="@Model" />
+            <partial name="_AllForUserPartial" model="@Model" />
         }
 
         @if (!Model.Assets.Any())

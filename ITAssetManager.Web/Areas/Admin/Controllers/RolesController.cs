@@ -7,10 +7,8 @@ namespace ITAssetManager.Web.Areas.Admin.Controllers
     {
         private readonly IRoleService roleService;
 
-        public RolesController(IRoleService roleService)
-        {
-            this.roleService = roleService;
-        }
+        public RolesController(IRoleService roleService) 
+            => this.roleService = roleService;
 
         public IActionResult All()
         {
