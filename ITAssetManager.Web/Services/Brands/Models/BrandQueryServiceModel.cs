@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.Brands.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<BrandListingServiceModel> Brands { get; init; }
+        public ICollection<BrandListingServiceModel> Brands { get; init; }
     }
 }

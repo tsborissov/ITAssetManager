@@ -36,6 +36,18 @@
         </nav>
     </header>
     <div class="container">
+        @if (TempData.ContainsKey(DataConstants.SuccessMessageKey))
+        {
+            <div class="alert alert-success text-center" role="alert">
+                @TempData[DataConstants.SuccessMessageKey]
+            </div>
+        }
+        @if (TempData.ContainsKey(DataConstants.ErrorMessageKey))
+        {
+            <div class="alert alert-danger text-center" role="alert">
+                @TempData[DataConstants.ErrorMessageKey]
+            </div>
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

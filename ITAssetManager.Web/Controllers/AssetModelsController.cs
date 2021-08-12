@@ -2,8 +2,6 @@
 using ITAssetManager.Web.Services.AssetModels.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
-using System;
 using System.Linq;
 
 using static ITAssetManager.Data.DataConstants;

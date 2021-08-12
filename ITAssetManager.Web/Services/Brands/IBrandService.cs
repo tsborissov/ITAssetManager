@@ -6,13 +6,13 @@ namespace ITAssetManager.Web.Services.Brands
     {
         BrandQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(BrandAddFormServiceModel brandModel);
+        string Add(BrandAddFormServiceModel brandModel);
 
         BrandEditServiceModel Details(int id);
 
-        void Update(BrandEditServiceModel brand);
+        int Update(BrandEditServiceModel brand);
 
-        void Delete(int id);
+        string Delete(int id);
 
         bool IsExistingBrand(int id);
 

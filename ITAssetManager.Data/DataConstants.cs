@@ -5,6 +5,11 @@
         public const string AdministratorRoleName = "Administrator";
         public const string UserRoleName = "User";
 
+        public const string AdministratorUsername = "admin@email.com";
+
+        public const string SuccessMessageKey = "SuccessMessageKey";
+        public const string ErrorMessageKey = "ErrorMessageKey";
+
         public const int ItemsPerPage = 5;
         public const int ModelsPerPage = 3;
 

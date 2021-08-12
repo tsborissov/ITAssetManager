@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITAssetManager.Data", "ITAs
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITAssetManager.Web", "ITAssetManager.Web\ITAssetManager.Web.csproj", "{B0B78974-0A1F-4A5B-AB05-56A6853E3545}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITAssetManager.Test", "ITAssetManager.Test\ITAssetManager.Test.csproj", "{026361AB-7DD7-4602-84E0-CD9C302127FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B0B78974-0A1F-4A5B-AB05-56A6853E3545}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0B78974-0A1F-4A5B-AB05-56A6853E3545}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0B78974-0A1F-4A5B-AB05-56A6853E3545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{026361AB-7DD7-4602-84E0-CD9C302127FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{026361AB-7DD7-4602-84E0-CD9C302127FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{026361AB-7DD7-4602-84E0-CD9C302127FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{026361AB-7DD7-4602-84E0-CD9C302127FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

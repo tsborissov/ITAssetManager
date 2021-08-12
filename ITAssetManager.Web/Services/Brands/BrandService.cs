@@ -20,12 +20,14 @@ namespace ITAssetManager.Web.Services.Brands
             this.mapper = mapper;
         }
 
-        public void Add(BrandAddFormServiceModel brandModel)
+        public string Add(BrandAddFormServiceModel brandModel)
         {
             var brand = this.mapper.Map<Brand>(brandModel);
 
-            this.data.Brands.Add(brand);
+            var result = this.data.Brands.Add(brand);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public BrandQueryServiceModel All(string searchString, string sortOrder, int currentPage)
@@ -97,7 +99,7 @@ namespace ITAssetManager.Web.Services.Brands
                 })
                 .FirstOrDefault();
 
-        public void Update(BrandEditServiceModel brand)
+        public int Update(BrandEditServiceModel brand)
         {
             var targetBrand = this.data
                 .Brands
@@ -105,18 +107,21 @@ namespace ITAssetManager.Web.Services.Brands
                 .FirstOrDefault();
 
             targetBrand.Name = brand.Name;
-            this.data.SaveChanges();
+
+            return this.data.SaveChanges();
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
             var targetBrand = this.data
                 .Brands
                 .Where(b => b.Id == id)
                 .FirstOrDefault();
 
-            this.data.Brands.Remove(targetBrand);
+            var result = this.data.Brands.Remove(targetBrand);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public bool IsExistingBrand(int id)

@@ -36,7 +36,14 @@ namespace ITAssetManager.Web.Controllers
                 return View(brandModel);
             }
 
-            this.brandService.Add(brandModel);
+            var brandAdded = this.brandService.Add(brandModel);
+
+            TempData[SuccessMessageKey] = $"New Brand '{brandAdded}' added.";
+
+            if (brandAdded == null)
+            {
+                TempData[ErrorMessageKey] = "There was an error adding new brand.";
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -62,11 +69,6 @@ namespace ITAssetManager.Web.Controllers
 
             var targetBrand = this.brandService.Details(id);
 
-            if (targetBrand == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-
             targetBrand.SearchString = searchString;
             targetBrand.SortOrder = sortOrder;
             targetBrand.CurrentPage = currentPage;
@@ -87,7 +89,12 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.brandService.Update(brand);
+            var result = this.brandService.Update(brand);
+
+            if (result > 0)
+            {
+                TempData[SuccessMessageKey] = $"Brand '{brand.Name}' successfully updated.";
+            }
 
             return RedirectToAction(nameof(All), new
                 {
@@ -109,7 +116,14 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.brandService.Delete(id);
+            var deletedBrandName = this.brandService.Delete(id);
+
+            TempData[SuccessMessageKey] = $"Brand '{deletedBrandName}' successfully deleted.";
+
+            if (deletedBrandName == null)
+            {
+                TempData[ErrorMessageKey] = $"There was an error deleting Brand with ID {id}.";
+            }
 
             return RedirectToAction(nameof(All), new
             {
