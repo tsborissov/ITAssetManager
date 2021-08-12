@@ -36,7 +36,14 @@ namespace ITAssetManager.Web.Controllers
                 return View(categoryModel);
             }
 
-            this.categoryService.Add(categoryModel);
+            var categoryAdded = this.categoryService.Add(categoryModel);
+
+            TempData[SuccessMessageKey] = $"New Category '{categoryAdded}' created.";
+
+            if (categoryAdded == null)
+            {
+                TempData[ErrorMessageKey] = "There was an error adding new category!";
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -69,6 +76,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetCategory);
         }
 
+
         [HttpPost]
         public IActionResult Edit(CategoryEditServiceModel category)
         {
@@ -82,7 +90,12 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.categoryService.Update(category);
+            var result = this.categoryService.Update(category);
+
+            if (result > 0)
+            {
+                TempData[SuccessMessageKey] = "Category successfully updated.";
+            }
 
             return RedirectToAction(nameof(All), new
             {
@@ -104,7 +117,14 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.categoryService.Delete(id);
+            var deletedCategoryName = this.categoryService.Delete(id);
+
+            TempData[SuccessMessageKey] = $"Category '{deletedCategoryName}' successfully deleted.";
+
+            if (deletedCategoryName == null)
+            {
+                TempData[ErrorMessageKey] = $"There was an error deleting Category with ID {id}.";
+            }
 
             return RedirectToAction(nameof(All), new
             {

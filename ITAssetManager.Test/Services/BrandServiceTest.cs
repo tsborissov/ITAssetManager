@@ -6,6 +6,7 @@ using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Brands.Models;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System;
 using Xunit;
 
 namespace ITAssetManager.Test.Services
@@ -23,11 +24,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());
@@ -51,11 +52,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());
@@ -81,11 +82,11 @@ namespace ITAssetManager.Test.Services
             brand.AssetModels.Add(new AssetModel { Id = 1 });
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());
@@ -109,11 +110,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());
@@ -141,11 +142,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandModel = new BrandEditServiceModel
@@ -178,11 +179,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());
@@ -206,7 +207,7 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
@@ -238,11 +239,11 @@ namespace ITAssetManager.Test.Services
             };
 
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase("TetsDbContext");
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
 
             var dbContext = new AppDbContext(optionsBuilder.Options);
 
-            dbContext.Add(brand);
+            dbContext.Brands.Add(brand);
             dbContext.SaveChanges();
 
             var brandService = new BrandService(dbContext, Mock.Of<IMapper>());

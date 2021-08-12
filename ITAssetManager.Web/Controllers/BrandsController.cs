@@ -38,11 +38,11 @@ namespace ITAssetManager.Web.Controllers
 
             var brandAdded = this.brandService.Add(brandModel);
 
-            TempData[SuccessMessageKey] = $"New Brand '{brandAdded}' added.";
+            TempData[SuccessMessageKey] = $"New Brand '{brandAdded}' created.";
 
             if (brandAdded == null)
             {
-                TempData[ErrorMessageKey] = "There was an error adding new brand.";
+                TempData[ErrorMessageKey] = "There was an error adding new brand!";
             }
 
             return RedirectToAction(nameof(All));
@@ -93,7 +93,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (result > 0)
             {
-                TempData[SuccessMessageKey] = $"Brand '{brand.Name}' successfully updated.";
+                TempData[SuccessMessageKey] = "Brand successfully updated.";
             }
 
             return RedirectToAction(nameof(All), new

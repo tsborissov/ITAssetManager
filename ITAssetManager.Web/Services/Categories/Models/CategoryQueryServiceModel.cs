@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.Categories.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<CategoryListingServiceModel> Categories { get; init; }
+        public ICollection<CategoryListingServiceModel> Categories { get; init; }
     }
 }

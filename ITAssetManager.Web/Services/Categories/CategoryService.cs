@@ -20,12 +20,14 @@ namespace ITAssetManager.Web.Services.Categories
             this.mapper = mapper;
         }
 
-        public void Add(CategoryAddFormServiceModel categoryModel)
+        public string Add(CategoryAddFormServiceModel categoryModel)
         {
             var category = this.mapper.Map<Category>(categoryModel);
 
-            this.data.Categories.Add(category);
+            var result = this.data.Categories.Add(category);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public CategoryQueryServiceModel All(string searchString, string sortOrder, int currentPage)
@@ -92,23 +94,26 @@ namespace ITAssetManager.Web.Services.Categories
                 })
                 .FirstOrDefault();
 
-        public void Update(CategoryEditServiceModel category)
+        public int Update(CategoryEditServiceModel category)
         {
             var targetCategory = this.data.Categories.Find(category.Id);
 
             targetCategory.Name = category.Name;
-            this.data.SaveChanges();
+            
+            return this.data.SaveChanges();
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
             var targetCategory = this.data
                 .Categories
                 .Where(c => c.Id == id)
                 .FirstOrDefault();
 
-            this.data.Categories.Remove(targetCategory);
+            var result = this.data.Categories.Remove(targetCategory);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public bool IsExistingCategory(int id)

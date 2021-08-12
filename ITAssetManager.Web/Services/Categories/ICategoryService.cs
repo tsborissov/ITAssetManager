@@ -6,13 +6,13 @@ namespace ITAssetManager.Web.Services.Categories
     {
         CategoryQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(CategoryAddFormServiceModel categoryModel);
+        string Add(CategoryAddFormServiceModel categoryModel);
 
         CategoryEditServiceModel Details(int id);
 
-        void Update(CategoryEditServiceModel category);
+        int Update(CategoryEditServiceModel category);
 
-        void Delete(int id);
+        string Delete(int id);
 
         bool IsExistingCategory(int id);
 
