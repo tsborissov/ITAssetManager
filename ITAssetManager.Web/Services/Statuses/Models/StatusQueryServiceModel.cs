@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.Statuses.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<StatusListingServiceModel> Statuses { get; set; }
+        public ICollection<StatusListingServiceModel> Statuses { get; set; }
     }
 }

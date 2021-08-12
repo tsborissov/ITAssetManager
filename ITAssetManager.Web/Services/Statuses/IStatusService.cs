@@ -6,13 +6,13 @@ namespace ITAssetManager.Web.Services.Statuses
     {
         StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
-        void Add(StatusAddFormServiceModel statusModel);
+        string Add(StatusAddFormServiceModel statusModel);
 
         StatusEditServiceModel Details(int id);
 
-        void Update(StatusEditServiceModel status);
+        int Update(StatusEditServiceModel status);
 
-        void Delete(int id);
+        string Delete(int id);
 
         bool IsExistingStatus(int id);
 

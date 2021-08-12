@@ -20,12 +20,14 @@ namespace ITAssetManager.Web.Services.Statuses
             this.mapper = mapper;
         }
 
-        public void Add(StatusAddFormServiceModel statusModel)
+        public string Add(StatusAddFormServiceModel statusModel)
         {
             var status = this.mapper.Map<Status>(statusModel);
 
-            this.data.Statuses.Add(status);
+            var result = this.data.Statuses.Add(status);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public StatusQueryServiceModel All(string searchString, string sortOrder, int currentPage)
@@ -91,7 +93,7 @@ namespace ITAssetManager.Web.Services.Statuses
                 })
                 .FirstOrDefault();
 
-        public void Update(StatusEditServiceModel status)
+        public int Update(StatusEditServiceModel status)
         {
             var targetStatus = this.data
                 .Statuses
@@ -99,18 +101,21 @@ namespace ITAssetManager.Web.Services.Statuses
                 .FirstOrDefault();
 
             targetStatus.Name = status.Name;
-            this.data.SaveChanges();
+
+            return this.data.SaveChanges();
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
             var targetStatus = this.data
                 .Statuses
                 .Where(s => s.Id == id)
                 .FirstOrDefault();
 
-            this.data.Statuses.Remove(targetStatus);
+            var result = this.data.Statuses.Remove(targetStatus);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public bool IsExistingName(string name)

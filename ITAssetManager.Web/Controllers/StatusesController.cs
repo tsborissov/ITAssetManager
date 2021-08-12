@@ -36,7 +36,9 @@ namespace ITAssetManager.Web.Controllers
                 return View(statusModel);
             }
 
-            this.statusService.Add(statusModel);
+            var statusAdded = this.statusService.Add(statusModel);
+
+            TempData[SuccessMessageKey] = $"New Status '{statusAdded}' created.";
 
             return RedirectToAction(nameof(All));
         }
@@ -79,7 +81,12 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.statusService.Update(status);
+            var result = this.statusService.Update(status);
+
+            if (result > 0)
+            {
+                TempData[SuccessMessageKey] = "Status successfully updated.";
+            }
 
             return RedirectToAction(nameof(All), new 
             {
@@ -101,7 +108,14 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.statusService.Delete(id);
+            var deletedStatusName = this.statusService.Delete(id);
+
+            TempData[SuccessMessageKey] = $"Status '{deletedStatusName}' successfully deleted.";
+
+            if (deletedStatusName == null)
+            {
+                TempData[ErrorMessageKey] = $"There was an error deleting Status with ID {id}.";
+            }
 
             return RedirectToAction(nameof(All), new
             {
