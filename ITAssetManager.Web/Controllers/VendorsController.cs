@@ -41,7 +41,9 @@ namespace ITAssetManager.Web.Controllers
                 return View(vendorModel);
             }
 
-            this.vendorService.Add(vendorModel);
+            var vendorAdded = this.vendorService.Add(vendorModel);
+
+            TempData[SuccessMessageKey] = $"New Vendor '{vendorAdded}' created.";
 
             return RedirectToAction(nameof(All));
         }
@@ -94,7 +96,12 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.vendorService.Update(vendorModel);
+            var result = this.vendorService.Update(vendorModel);
+
+            if (result > 0)
+            {
+                TempData[SuccessMessageKey] = "Vendor successfully updated.";
+            }
 
             var vendor = this.mapper.Map<VendorDetailsServiceModel>(vendorModel);
 
@@ -113,7 +120,14 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.vendorService.Delete(id);
+            var deletedVendorName = this.vendorService.Delete(id);
+
+            TempData[SuccessMessageKey] = $"Vendor '{deletedVendorName}' successfully deleted.";
+
+            if (deletedVendorName == null)
+            {
+                TempData[ErrorMessageKey] = $"There was an error deleting Vendor with ID {id}.";
+            }
 
             return RedirectToAction(nameof(All), new
             {

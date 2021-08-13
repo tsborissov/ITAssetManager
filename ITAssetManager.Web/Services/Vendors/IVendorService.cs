@@ -4,15 +4,15 @@ namespace ITAssetManager.Web.Services.Vendors
 {
     public interface IVendorService
     {
-        int Add(VendorAddFormServiceModel vendorModel);
+        string Add(VendorAddFormServiceModel vendorModel);
 
-        void Update(VendorEditServiceModel vendorModel);
+        int Update(VendorEditServiceModel vendorModel);
 
         VendorQueryServiceModel All(string searchString, string sortOrder, int currentPage);
 
         VendorDetailsServiceModel Details(int id, string sortOrder, string searchString, int currentPage);
 
-        void Delete(int id);
+        string Delete(int id);
 
         bool IsExistingName(string name);
 

@@ -20,14 +20,14 @@ namespace ITAssetManager.Web.Services.Vendors
             this.mapper = mapper;
         }
 
-        public int Add(VendorAddFormServiceModel vendorModel)
+        public string Add(VendorAddFormServiceModel vendorModel)
         {
             var vendor = this.mapper.Map<Vendor>(vendorModel);
 
-            this.data.Vendors.Add(vendor);
+            var result = this.data.Vendors.Add(vendor);
             this.data.SaveChanges();
 
-            return vendor.Id;
+            return result.Entity.Name;
         }
 
         public VendorQueryServiceModel All(string searchString, string sortOrder, int currentPage)
@@ -104,7 +104,7 @@ namespace ITAssetManager.Web.Services.Vendors
                 })
                 .FirstOrDefault();
 
-        public void Update(VendorEditServiceModel vendorModel)
+        public int Update(VendorEditServiceModel vendorModel)
         {
             var targetVendor = this.data
                 .Vendors
@@ -117,18 +117,20 @@ namespace ITAssetManager.Web.Services.Vendors
             targetVendor.Email = vendorModel.Email;
             targetVendor.Address = vendorModel.Address;
 
-            this.data.SaveChanges();
+            return this.data.SaveChanges();
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
             var targetVendor = this.data
                 .Vendors
                 .Where(v => v.Id == id)
                 .FirstOrDefault();
 
-            this.data.Vendors.Remove(targetVendor);
+            var result = this.data.Vendors.Remove(targetVendor);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public bool IsExistingName(string name)
