@@ -46,7 +46,14 @@ namespace ITAssetManager.Web.Controllers
                 return View(assetModel);
             }
 
-            this.assetModelService.Add(assetModel);
+            var modelAdded = this.assetModelService.Add(assetModel);
+
+            TempData[SuccessMessageKey] = $"New Model '{modelAdded}' created.";
+
+            if (modelAdded == null)
+            {
+                TempData[ErrorMessageKey] = "There was an error adding new model!";
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -147,7 +154,12 @@ namespace ITAssetManager.Web.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            this.assetModelService.Update(assetModel);
+            var result = this.assetModelService.Update(assetModel);
+
+            if (result > 0)
+            {
+                TempData[SuccessMessageKey] = "Model data successfully updated.";
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -156,7 +168,14 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult Delete(int id)
         {
-            this.assetModelService.Delete(id);
+            var deletedModelName = this.assetModelService.Delete(id);
+
+            TempData[SuccessMessageKey] = $"Model '{deletedModelName}' successfully deleted.";
+
+            if (deletedModelName == null)
+            {
+                TempData[ErrorMessageKey] = $"There was an error deleting Model with ID {id}.";
+            }
 
             return RedirectToAction(nameof(All));
         }

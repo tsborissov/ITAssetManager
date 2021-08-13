@@ -24,13 +24,15 @@ namespace ITAssetManager.Web.Services.AssetModels
             this.cache = cache;
         }
 
-        public void Add(AssetModelsAddFormServiceModel assetModel)
+        public string Add(AssetModelsAddFormServiceModel assetModel)
         {
             var assetModelData = this.mapper.Map<AssetModel>(assetModel);
 
-            this.data.AssetModels.Add(assetModelData);
+            var result = this.data.AssetModels.Add(assetModelData);
 
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public AssetModelQueryServiceModel All(string searchString, int currentPage)
@@ -106,7 +108,7 @@ namespace ITAssetManager.Web.Services.AssetModels
                 .FirstOrDefault();
         }
 
-        public void Update(AssetModelEditFormServiceModel assetModel)
+        public int Update(AssetModelEditFormServiceModel assetModel)
         {
             var targetAssetModel = this.data
                 .AssetModels
@@ -119,18 +121,20 @@ namespace ITAssetManager.Web.Services.AssetModels
             targetAssetModel.ImageUrl = assetModel.ImageUrl;
             targetAssetModel.Name = assetModel.Name;
 
-            this.data.SaveChanges();
+            return this.data.SaveChanges();
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
             var targetAssetModel = this.data
                 .AssetModels
                 .Where(am => am.Id == id)
                 .FirstOrDefault();
 
-            this.data.AssetModels.Remove(targetAssetModel);
+            var result = this.data.AssetModels.Remove(targetAssetModel);
             this.data.SaveChanges();
+
+            return result.Entity.Name;
         }
 
         public IEnumerable<BrandDropdownServiceModel> GetBrands()

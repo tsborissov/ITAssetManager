@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.AssetModels.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<AssetModelListingServiceModel> AssetModels { get; init; }
+        public ICollection<AssetModelListingServiceModel> AssetModels { get; init; }
     }
 }

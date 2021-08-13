@@ -5,15 +5,15 @@ namespace ITAssetManager.Web.Services.AssetModels
 {
     public interface IAssetModelService
     {
-        void Add(AssetModelsAddFormServiceModel assetModel);
+        string Add(AssetModelsAddFormServiceModel assetModel);
 
         AssetModelQueryServiceModel All(string searchString, int currentPage);
 
         AssetModelDetailsServiceModel Details(int id);
 
-        void Update(AssetModelEditFormServiceModel vendorModel);
+        int Update(AssetModelEditFormServiceModel vendorModel);
 
-        void Delete(int id);
+        string Delete(int id);
 
         IEnumerable<BrandDropdownServiceModel> GetBrands();
 
