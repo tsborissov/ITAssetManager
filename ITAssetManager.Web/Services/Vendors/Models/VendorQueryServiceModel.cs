@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.Vendors.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<VendorListingServiceModel> Vendors { get; init; }
+        public ICollection<VendorListingServiceModel> Vendors { get; init; }
     }
 }
