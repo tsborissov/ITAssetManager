@@ -25,14 +25,14 @@ namespace ITAssetManager.Web.Services.Assets
             this.cache = cache;
         }
 
-        public int Add(AssetAddFormServiceModel assetModel)
+        public bool Add(AssetAddFormServiceModel assetModel)
         {
             var assetData = this.mapper.Map<Asset>(assetModel);
 
             this.data.Assets.Add(assetData);
-            this.data.SaveChanges();
+            var result = this.data.SaveChanges();
 
-            return assetData.Id;
+            return result > 0;
         }
 
         public AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId)
@@ -137,7 +137,7 @@ namespace ITAssetManager.Web.Services.Assets
             return targetAsset;
         }
 
-        public void Assign(string userId, int assetId)
+        public bool Assign(string userId, int assetId)
         {
             var userAsset = new UserAsset
             {
@@ -160,7 +160,9 @@ namespace ITAssetManager.Web.Services.Assets
             targetAsset.StatusId = targetStatusId;
 
             this.data.UsersAssets.Add(userAsset);
-            this.data.SaveChanges();
+            var result = this.data.SaveChanges();
+
+            return result > 0;
         }
 
         public AssetCollectServiceModel UserAssetById(int id)
@@ -174,7 +176,7 @@ namespace ITAssetManager.Web.Services.Assets
             return targetUserAsset;
         }
 
-        public void Collect(string userId, int assetId, DateTime returnDate)
+        public bool Collect(string userId, int assetId, DateTime returnDate)
         {
             var targetUserAsset = this.data
                 .UsersAssets
@@ -195,7 +197,9 @@ namespace ITAssetManager.Web.Services.Assets
             targetAsset.StatusId = targetStatusId;
             targetUserAsset.ReturnDate = returnDate.ToUniversalTime();
 
-            this.data.SaveChanges();
+            var result = this.data.SaveChanges();
+
+            return result > 0;
         }
 
         public AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage)
@@ -216,7 +220,7 @@ namespace ITAssetManager.Web.Services.Assets
             return assetData;
         }
 
-        public void Update(AssetEditFormServiceModel asset)
+        public bool Update(AssetEditFormServiceModel asset)
         {
             var targetAsset = this.data
                 .Assets
@@ -233,7 +237,9 @@ namespace ITAssetManager.Web.Services.Assets
             targetAsset.PurchaseDate = asset.PurchaseDate;
             targetAsset.WarranyExpirationDate = asset.WarranyExpirationDate;
 
-            this.data.SaveChanges();
+            var result = this.data.SaveChanges();
+
+            return result > 0;
         }
 
         public void Delete(int id)
@@ -256,7 +262,7 @@ namespace ITAssetManager.Web.Services.Assets
 
             if (targetAsset.StatusId != targetStatusId)
             {
-                throw new ArgumentException("An Asset with status different than 'Disposed' cannot be deleted!");
+                throw new InvalidOperationException("An Asset with status different than 'Disposed' cannot be deleted!");
             }
 
             if (this.IsInUse(id))

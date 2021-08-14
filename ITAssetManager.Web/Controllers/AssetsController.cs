@@ -70,7 +70,16 @@ namespace ITAssetManager.Web.Controllers
                 return View(assetModel);
             }
 
-            this.assetService.Add(assetModel);
+            var isAssetAdded = this.assetService.Add(assetModel);
+
+            if (isAssetAdded)
+            {
+                TempData[SuccessMessageKey] = "New Asset created.";
+            }
+            else
+            {
+                TempData[ErrorMessageKey] = "There was an error creating new asset!";
+            }
 
             return RedirectToAction(nameof(All));
         }
@@ -101,7 +110,16 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Assign(AssetAssignServiceModel assetModel)
         {
-            this.assetService.Assign(assetModel.UserId, assetModel.Id);
+            var isAssetAssigned = this.assetService.Assign(assetModel.UserId, assetModel.Id);
+
+            if (isAssetAssigned)
+            {
+                TempData[SuccessMessageKey] = "Asset successfully assigned.";
+            }
+            else
+            {
+                TempData[ErrorMessageKey] = "There was an error assignig asset!";
+            }
 
             return RedirectToAction(nameof(All), new 
                 {
@@ -143,7 +161,16 @@ namespace ITAssetManager.Web.Controllers
                 return View(assetModel);
             }
 
-            this.assetService.Collect(assetModel.UserId, assetModel.Id, assetModel.ReturnDate);
+            var isAssetCollected = this.assetService.Collect(assetModel.UserId, assetModel.Id, assetModel.ReturnDate);
+
+            if (isAssetCollected)
+            {
+                TempData[SuccessMessageKey] = "Asset successfully collected.";
+            }
+            else
+            {
+                TempData[ErrorMessageKey] = "There was an error collecting asset!";
+            }
 
             return RedirectToAction(nameof(All), new
             {
@@ -174,7 +201,16 @@ namespace ITAssetManager.Web.Controllers
                 return View(assetModel);
             }
 
-            this.assetService.Update(assetModel);
+            var isAssetUpdated = this.assetService.Update(assetModel);
+
+            if (isAssetUpdated)
+            {
+                TempData[SuccessMessageKey] = "Asset successfully updated.";
+            }
+            else
+            {
+                TempData[ErrorMessageKey] = "There was an error updating asset!";
+            }
 
             return RedirectToAction(nameof(All), new
             {

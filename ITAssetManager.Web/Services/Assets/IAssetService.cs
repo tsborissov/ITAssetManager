@@ -6,21 +6,21 @@ namespace ITAssetManager.Web.Services.Assets
 {
     public interface IAssetService
     {
-        int Add(AssetAddFormServiceModel vendorModel);
+        bool Add(AssetAddFormServiceModel vendorModel);
 
         AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId);
 
         AssetAssignServiceModel AssignById(int id, string searchString, string sortOrder, int currentPage);
 
-        void Assign(string userId, int assetId);
+        bool Assign(string userId, int assetId);
 
         AssetCollectServiceModel UserAssetById(int id);
 
-        void Collect(string userId, int assetId, DateTime returnDate);
+        bool Collect(string userId, int assetId, DateTime returnDate);
 
         AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage);
 
-        void Update(AssetEditFormServiceModel asset);
+        bool Update(AssetEditFormServiceModel asset);
 
         void Delete(int id);
 
