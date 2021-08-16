@@ -23,10 +23,10 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        public IActionResult Add() => View(new AssetAddFormServiceModel 
+        public IActionResult Add() => View(new AssetAddFormServiceModel
         {
             Statuses = this.assetService.GetStatuses(),
-            Models= this.assetService.GetModels(),
+            Models = this.assetService.GetModels(),
             Vendors = this.assetService.GetVendors(),
             PurchaseDate = DateTime.Now.Date,
             WarranyExpirationDate = DateTime.Now.Date.AddYears(5)
@@ -60,13 +60,13 @@ namespace ITAssetManager.Web.Controllers
             {
                 this.ModelState.AddModelError(nameof(assetModel.InventoryNr), "Inventory number already exists!");
             }
-            
+
             if (!this.ModelState.IsValid)
             {
                 assetModel.Models = this.assetService.GetModels();
                 assetModel.Statuses = this.assetService.GetStatuses();
                 assetModel.Vendors = this.assetService.GetVendors();
-                
+
                 return View(assetModel);
             }
 
@@ -100,7 +100,12 @@ namespace ITAssetManager.Web.Controllers
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Assign(int id, string searchString, string sortOrder, int currentPage)
         {
-            var targetAsset = this.assetService.AssignById(id, searchString, sortOrder, currentPage);
+            if (!this.assetService.IsValidAsset(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var targetAsset = this.assetService.GetById(id, searchString, sortOrder, currentPage);
             targetAsset.AllUsers = this.assetService.GetAllUsers();
 
             return View(targetAsset);
@@ -110,6 +115,16 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Assign(AssetAssignServiceModel assetModel)
         {
+            if (!this.assetService.IsValidAsset(assetModel.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (!this.assetService.IsValidUser(assetModel.UserId))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             var isAssetAssigned = this.assetService.Assign(assetModel.UserId, assetModel.Id);
 
             if (isAssetAssigned)
@@ -121,18 +136,23 @@ namespace ITAssetManager.Web.Controllers
                 TempData[ErrorMessageKey] = "There was an error assignig asset!";
             }
 
-            return RedirectToAction(nameof(All), new 
-                {
-                    SortOrder = assetModel.SortOrder,
-                    SearchString = assetModel.SearchString,
-                    CurrentPage = assetModel.CurrentPage
-                });
+            return RedirectToAction(nameof(All), new
+            {
+                SortOrder = assetModel.SortOrder,
+                SearchString = assetModel.SearchString,
+                CurrentPage = assetModel.CurrentPage
+            });
         }
 
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Collect(int id, string searchString, string sortOrder, int currentPage)
         {
-            var assetQuery = this.assetService.UserAssetById(id);
+            if (!this.assetService.IsValidAsset(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var assetQuery = this.assetService.GetUserAssetById(id);
 
             assetQuery.ReturnDate = DateTime.Now;
             assetQuery.SearchString = searchString;
@@ -146,6 +166,16 @@ namespace ITAssetManager.Web.Controllers
         [HttpPost]
         public IActionResult Collect(AssetCollectServiceModel assetModel)
         {
+            if (!this.assetService.IsValidAsset(assetModel.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (!this.assetService.IsValidUser(assetModel.UserId))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             if (assetModel.ReturnDate < assetModel.AssignDate)
             {
                 this.ModelState.AddModelError(nameof(assetModel.ReturnDate), "'Return date' cannot be before 'Assign date'!");
@@ -183,6 +213,11 @@ namespace ITAssetManager.Web.Controllers
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
+            if (!this.assetService.IsValidAsset(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             var targetAsset = this.assetService.EditById(id, searchString, sortOrder, currentPage);
 
             return View(targetAsset);
@@ -223,15 +258,22 @@ namespace ITAssetManager.Web.Controllers
         [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Delete(int id, string searchString, string sortOrder, int currentPage)
         {
-            try
-            {
-                this.assetService.Delete(id);
-            }
-            catch (Exception)
+            if (!this.assetService.IsValidAsset(id) || 
+                this.assetService.IsInUse(id))
             {
                 return RedirectToAction("Error", "Home");
             }
 
+            var isDeleted = this.assetService.Delete(id);
+
+            if (isDeleted)
+            {
+                TempData[SuccessMessageKey] = "Asset successfully deleted.";
+            }
+            else
+            {
+                TempData[ErrorMessageKey] = "There was an error deleting asset!";
+            }
 
             return RedirectToAction(nameof(All), new
             {

@@ -16,7 +16,7 @@ namespace ITAssetManager.Web.Services.Assets
     {
         private readonly AppDbContext data;
         private readonly IMapper mapper;
-        private readonly IMemoryCache cache; 
+        private readonly IMemoryCache cache;
 
         public AssetService(AppDbContext data, IMapper mapper, IMemoryCache cache)
         {
@@ -58,7 +58,7 @@ namespace ITAssetManager.Web.Services.Assets
                         a.Status.Name.ToLower().Contains(searchString.ToLower()) ||
                         a.AssetUsers.Any(au => au.User.UserName.ToLower()
                             .Contains(
-                                searchString.ToLower()) && 
+                                searchString.ToLower()) &&
                                 au.Asset.Status.Name == "In Use" &&
                                 au.ReturnDate == null));
             }
@@ -117,7 +117,7 @@ namespace ITAssetManager.Web.Services.Assets
             };
         }
 
-        public AssetAssignServiceModel AssignById(int id, string searchString, string sortOrder, int currentPage)
+        public AssetAssignServiceModel GetById(int id, string searchString, string sortOrder, int currentPage)
         {
             var targetAsset = this.data
                 .Assets
@@ -154,7 +154,7 @@ namespace ITAssetManager.Web.Services.Assets
             var targetStatusId = this.data
                 .Statuses
                 .Where(s => s.Name == AssetTargetAssignStatus)
-                .Select(s => s.Id )
+                .Select(s => s.Id)
                 .FirstOrDefault();
 
             targetAsset.StatusId = targetStatusId;
@@ -165,7 +165,7 @@ namespace ITAssetManager.Web.Services.Assets
             return result > 0;
         }
 
-        public AssetCollectServiceModel UserAssetById(int id)
+        public AssetCollectServiceModel GetUserAssetById(int id)
         {
             var targetUserAsset = this.data
                 .UsersAssets
@@ -204,20 +204,20 @@ namespace ITAssetManager.Web.Services.Assets
 
         public AssetEditFormServiceModel EditById(int id, string searchString, string sortOrder, int currentPage)
         {
-            var assetData = this.data
+            var targetAsset = this.data
                 .Assets
                 .Where(a => a.Id == id)
                 .ProjectTo<AssetEditFormServiceModel>(this.mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
-            assetData.SearchString = searchString;
-            assetData.SortOrder = sortOrder;
-            assetData.CurrentPage = currentPage;
-            assetData.Models = this.GetModels();
-            assetData.Statuses = this.GetStatuses();
-            assetData.Vendors = this.GetVendors();
+            targetAsset.SearchString = searchString;
+            targetAsset.SortOrder = sortOrder;
+            targetAsset.CurrentPage = currentPage;
+            targetAsset.Models = this.GetModels();
+            targetAsset.Statuses = this.GetStatuses();
+            targetAsset.Vendors = this.GetVendors();
 
-            return assetData;
+            return targetAsset;
         }
 
         public bool Update(AssetEditFormServiceModel asset)
@@ -242,34 +242,8 @@ namespace ITAssetManager.Web.Services.Assets
             return result > 0;
         }
 
-        public void Delete(int id)
+        public bool Delete(int id)
         {
-            var targetAsset = this.data
-                .Assets
-                .Where(a => a.Id == id)
-                .FirstOrDefault();
-
-            var targetStatusId = this.data
-                .Statuses
-                .Where(s => s.Name == "Disposed")
-                .Select(s => s.Id)
-                .FirstOrDefault();
-
-            if (targetAsset == null)
-            {
-                throw new ArgumentException("Asset does not exists!");
-            }
-
-            if (targetAsset.StatusId != targetStatusId)
-            {
-                throw new InvalidOperationException("An Asset with status different than 'Disposed' cannot be deleted!");
-            }
-
-            if (this.IsInUse(id))
-            {
-                throw new InvalidOperationException("Delete related records first!");
-            }
-
             var targetUserAssets = this.data
                 .UsersAssets
                 .Where(ua => ua.AssetId == id)
@@ -278,8 +252,15 @@ namespace ITAssetManager.Web.Services.Assets
             this.data.UsersAssets.RemoveRange(targetUserAssets);
             this.data.SaveChanges();
 
+            var targetAsset = this.data
+                .Assets
+                .Where(a => a.Id == id)
+                .FirstOrDefault();
+
             this.data.Assets.Remove(targetAsset);
-            this.data.SaveChanges();
+            var result = this.data.SaveChanges();
+
+            return result > 0;
         }
 
         public IEnumerable<UserDropdownServiceModel> GetAllUsers()
@@ -314,7 +295,7 @@ namespace ITAssetManager.Web.Services.Assets
             const string allModelsCacheKey = "ModelsCacheKey";
 
             var allModels = this.cache.Get<List<AssetModelDropdownServiceModel>>(allModelsCacheKey);
-            
+
             if (allModels == null)
             {
                 allModels = this.data
@@ -360,7 +341,7 @@ namespace ITAssetManager.Web.Services.Assets
 
                 this.cache.Set(allStatusesCacheKey, allStatuses, cacheOptions);
             }
-            
+
             return allStatuses;
         }
 
@@ -369,7 +350,7 @@ namespace ITAssetManager.Web.Services.Assets
             const string allVendorsCacheKey = "VendorsCacheKey";
 
             var allVendors = this.cache.Get<List<VendorDropdownServiceModel>>(allVendorsCacheKey);
-            
+
             if (allVendors == null)
             {
                 allVendors = this.data
@@ -388,9 +369,15 @@ namespace ITAssetManager.Web.Services.Assets
 
                 this.cache.Set(allVendorsCacheKey, allVendors, cacheOptions);
             }
-            
+
             return allVendors;
         }
+
+        public bool IsValidAsset(int id)
+            => this.data.Assets.Any(a => a.Id == id);
+
+        public bool IsValidUser(string id)
+            => this.data.Users.Any(u => u.Id == id);
 
         public bool IsExistingInventoryNr(string inventoryNr)
             => this.data.Assets.Any(i => i.InventoryNr == inventoryNr);

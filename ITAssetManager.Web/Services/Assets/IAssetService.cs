@@ -10,11 +10,11 @@ namespace ITAssetManager.Web.Services.Assets
 
         AssetsQueryServiceModel All(string searchString, string sortOrder, int currentPage, string userId);
 
-        AssetAssignServiceModel AssignById(int id, string searchString, string sortOrder, int currentPage);
+        AssetAssignServiceModel GetById(int id, string searchString, string sortOrder, int currentPage);
 
         bool Assign(string userId, int assetId);
 
-        AssetCollectServiceModel UserAssetById(int id);
+        AssetCollectServiceModel GetUserAssetById(int id);
 
         bool Collect(string userId, int assetId, DateTime returnDate);
 
@@ -22,7 +22,7 @@ namespace ITAssetManager.Web.Services.Assets
 
         bool Update(AssetEditFormServiceModel asset);
 
-        void Delete(int id);
+        bool Delete(int id);
 
         IEnumerable<StatusDropdownServiceModel> GetStatuses();
 
@@ -31,6 +31,10 @@ namespace ITAssetManager.Web.Services.Assets
         IEnumerable<VendorDropdownServiceModel> GetVendors();
 
         IEnumerable<UserDropdownServiceModel> GetAllUsers();
+
+        bool IsValidAsset(int id);
+
+        bool IsValidUser(string id);
 
         bool IsValidModel(int id);
 

@@ -14,6 +14,6 @@ namespace ITAssetManager.Web.Services.Assets.Models
 
         public bool HasNextPage { get; set; }
 
-        public IEnumerable<AssetListingServiceModel> Assets { get; set; } = new HashSet<AssetListingServiceModel>();
+        public ICollection<AssetListingServiceModel> Assets { get; set; } = new HashSet<AssetListingServiceModel>();
     }
 }
