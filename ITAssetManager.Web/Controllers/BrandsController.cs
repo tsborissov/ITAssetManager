@@ -9,7 +9,6 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
     public class BrandsController : Controller
     {
         private readonly IBrandService brandService;
@@ -21,8 +20,10 @@ namespace ITAssetManager.Web.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View();
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(BrandAddFormServiceModel brandModel)
         {
@@ -48,6 +49,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult All(BrandsQueryModel query)
         {
             var queryResult = this.brandService.All(
@@ -60,6 +62,7 @@ namespace ITAssetManager.Web.Controllers
             return View(brands);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string searchString, string sortOrder, int currentPage)
         {
             if (!this.brandService.IsExistingBrand(id))
@@ -76,6 +79,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetBrand);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(BrandEditServiceModel brand)
         {
@@ -104,6 +108,7 @@ namespace ITAssetManager.Web.Controllers
                 });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.brandService.IsExistingBrand(id))

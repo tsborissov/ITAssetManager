@@ -5,10 +5,10 @@ using MyTested.AspNetCore.Mvc;
 using Shouldly;
 using Xunit;
 using System.Linq;
-
-using static ITAssetManager.Data.DataConstants;
 using ITAssetManager.Web.Models.Statuses;
 using System.Collections.Generic;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Test.Controllers
 {
