@@ -9,7 +9,6 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
     public class CategoriesController : Controller
     {
         private readonly ICategoryService categoryService;
@@ -21,8 +20,10 @@ namespace ITAssetManager.Web.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View();
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(CategoryAddFormServiceModel categoryModel)
         {
@@ -48,6 +49,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult All(CategoriesQueryModel query)
         {
             var queryResult = this.categoryService.All(
@@ -60,6 +62,7 @@ namespace ITAssetManager.Web.Controllers
             return View(categories);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.categoryService.IsExistingCategory(id))
@@ -76,7 +79,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetCategory);
         }
 
-
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(CategoryEditServiceModel category)
         {
@@ -105,6 +108,7 @@ namespace ITAssetManager.Web.Controllers
             });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.categoryService.IsExistingCategory(id))
