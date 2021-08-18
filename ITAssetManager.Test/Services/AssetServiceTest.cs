@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using System;
+using System.Collections.Generic;
 using Xunit;
+
+using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Test.Services
 {
@@ -32,6 +35,7 @@ namespace ITAssetManager.Test.Services
             {
                 cfg.AddProfile(new MappingProfile());
             });
+
             var mapper = mockMapper.CreateMapper();
 
             var assetService = new AssetService(dbContext, mapper, Mock.Of<IMemoryCache>());
@@ -119,6 +123,132 @@ namespace ITAssetManager.Test.Services
             Assert.Equal(id, result.Id);
         }
 
+        [Theory]
+        [InlineData(1, 1, "UserId")]
+        public void AssignShouldChangeTargetStatusAndReturnTrue(int assetId, int statusId, string userId)
+        {
+            //Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            var dbContext = new AppDbContext(optionsBuilder.Options);
+
+            var asset = new Asset
+            {
+                Id = assetId
+            };
+
+            var status = new Status
+            {
+                Id = statusId,
+                Name = AssetTargetAssignStatus
+            };
+            
+            dbContext.Assets.Add(asset);
+            dbContext.Statuses.Add(status);
+            dbContext.SaveChanges();
+
+            var assetService = new AssetService(dbContext, Mock.Of<IMapper>(), Mock.Of<IMemoryCache>());
+
+            //Act
+            var result = assetService.Assign(userId, assetId);
+
+            //Assert
+            Assert.True(result);
+            Assert.Equal(statusId, asset.StatusId);
+        }
+
+        [Theory]
+        [InlineData(1, "UserId")]
+        public void GetUserAssetByIdShouldReturnCorrectModel(int assetId, string userId)
+        {
+            //Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            var dbContext = new AppDbContext(optionsBuilder.Options);
+
+            var userAsset = new UserAsset
+            {
+                AssetId = assetId,
+                Asset = new Asset 
+                {
+                    Id = assetId,
+                    AssetModelId = 1,
+                    AssetModel = new AssetModel 
+                    {
+                        Id = 1,
+                        Name = "TestModel"
+                    }
+                },
+                UserId = userId,
+                User = new ApplicationUser 
+                {
+                    Id = userId,
+                    UserName = "user@email.com"
+                },
+                AssignDate = DateTime.UtcNow
+            };
+
+            dbContext.UsersAssets.Add(userAsset);
+            dbContext.SaveChanges();
+
+            var mockMapper = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+            });
+            var mapper = mockMapper.CreateMapper();
+
+            var assetService = new AssetService(dbContext, mapper, Mock.Of<IMemoryCache>());
+
+            //Act
+            var result = assetService.GetUserAssetById(assetId);
+
+            //Assert
+            Assert.IsType<AssetCollectServiceModel>(result);
+        }
+
+        [Theory]
+        [InlineData(1, 1, "UserId")]
+        public void CollectShouldChangeTargetStatusAndReturnTrue(int assetId, int statusId, string userId)
+        {
+            //Arrange
+            var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(Guid.NewGuid().ToString());
+
+            var dbContext = new AppDbContext(optionsBuilder.Options);
+
+            var asset = new Asset
+            {
+                Id = assetId
+            };
+
+            var userAsset = new UserAsset
+            {
+                AssetId = assetId,
+                UserId = userId,
+            };
+
+            var status = new Status
+            {
+                Id = statusId,
+                Name = AssetTargetCollectStatus
+            };
+
+            dbContext.Assets.Add(asset);
+            dbContext.UsersAssets.Add(userAsset);
+            dbContext.Statuses.Add(status);
+            dbContext.SaveChanges();
+
+            var assetService = new AssetService(dbContext, Mock.Of<IMapper>(), Mock.Of<IMemoryCache>());
+
+            //Act
+            var result = assetService.Collect(userId, assetId, DateTime.UtcNow);
+
+            //Assert
+            Assert.True(result);
+            Assert.Equal(statusId, asset.StatusId);
+        }
     }
 }
 

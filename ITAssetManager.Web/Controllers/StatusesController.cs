@@ -9,7 +9,6 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
     public class StatusesController : Controller
     {
         private readonly IStatusService statusService;
@@ -21,8 +20,10 @@ namespace ITAssetManager.Web.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View();
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(StatusAddFormServiceModel statusModel)
         {
@@ -43,6 +44,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult All(StatusesQueryModel query)
         {
             var queryResult = this.statusService.All(query.SearchString, query.SortOrder, query.CurrentPage);
@@ -52,6 +54,7 @@ namespace ITAssetManager.Web.Controllers
             return View(statuses);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.statusService.IsExistingStatus(id))
@@ -68,6 +71,7 @@ namespace ITAssetManager.Web.Controllers
             return View(targetStatus);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(StatusEditServiceModel status)
         {
@@ -88,7 +92,7 @@ namespace ITAssetManager.Web.Controllers
                 TempData[SuccessMessageKey] = "Status successfully updated.";
             }
 
-            return RedirectToAction(nameof(All), new 
+            return RedirectToAction(nameof(All), new
             {
                 SortOrder = status.SortOrder,
                 SearchString = status.SearchString,
@@ -96,6 +100,7 @@ namespace ITAssetManager.Web.Controllers
             });
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.statusService.IsExistingStatus(id))

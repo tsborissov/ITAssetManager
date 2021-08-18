@@ -10,7 +10,7 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Test.Pipeline
 {
-    public class BrandsPipelineTests
+    public class BrandsPipelineTest
     {
         [Fact]
         public void GetAddShouldShouldReturnView()
@@ -96,7 +96,5 @@ namespace ITAssetManager.Test.Pipeline
                 .ShouldReturn()
                 .Redirect(redirect => redirect
                     .To<HomeController>(c => c.Error()));
-
-
     }
 }
