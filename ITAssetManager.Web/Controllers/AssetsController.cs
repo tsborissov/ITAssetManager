@@ -136,7 +136,7 @@ namespace ITAssetManager.Web.Controllers
                 TempData[ErrorMessageKey] = "There was an error assignig asset!";
             }
 
-            return RedirectToAction(nameof(All), new
+            return RedirectToAction(nameof(All), new 
             {
                 SortOrder = assetModel.SortOrder,
                 SearchString = assetModel.SearchString,
