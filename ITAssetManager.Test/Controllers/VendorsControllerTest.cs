@@ -1,22 +1,22 @@
 ﻿using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Controllers;
-using ITAssetManager.Web.Services.Brands.Models;
+using ITAssetManager.Web.Services.Vendors.Models;
 using MyTested.AspNetCore.Mvc;
 using Xunit;
 using System.Linq;
 using Shouldly;
-using ITAssetManager.Web.Models.Brands;
+using ITAssetManager.Web.Models.Vendors;
 using System.Collections.Generic;
 
 using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Test.Controllers
 {
-    public class BrandsControllerTest
+    public class VendorsControllerTest
     {
         [Fact]
         public void GetAddShouldReturnViewForAuthorizedUsers()
-            => MyController<BrandsController>
+            => MyController<VendorsController>
                 .Instance()
                 .Calling(c => c.Add())
                 .ShouldHave()
@@ -28,9 +28,9 @@ namespace ITAssetManager.Test.Controllers
 
         [Fact]
         public void PostAddShouldBeAllowedForPostRequestOnlyAndAuthorizedUsers()
-            => MyController<BrandsController>
+            => MyController<VendorsController>
                 .Instance()
-                .Calling(c => c.Add(With.Default<BrandAddFormServiceModel>()))
+                .Calling(c => c.Add(With.Default<VendorAddFormServiceModel>()))
                 .ShouldHave()
                 .ActionAttributes(att => att
                     .RestrictingForAuthorizedRequests(AdministratorRoleName)
@@ -38,36 +38,40 @@ namespace ITAssetManager.Test.Controllers
 
         [Fact]
         public void PostAddShouldReturnViewWithTheSameModelWhenModelStateIsInvalid()
-            => MyController<BrandsController>
+            => MyController<VendorsController>
                 .Instance()
-                .Calling(c => c.Add(With.Default<BrandAddFormServiceModel>()))
+                .Calling(c => c.Add(With.Default<VendorAddFormServiceModel>()))
                 .ShouldHave()
                 .InvalidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .View(result => result
-                    .WithModelOfType<BrandAddFormServiceModel>()
-                    .Passing(brand => brand.Name == null));
+                    .WithModelOfType<VendorAddFormServiceModel>()
+                    .Passing(vendor => vendor.Name == null));
 
         [Theory]
-        [InlineData("Test Brand")]
-        public void PostAddShouldRedirectWithTempDataMessageAndShouldSaveBrandWithValidBrand(string name)
-            => MyController<BrandsController>
+        [InlineData("Test Vendor")]
+        public void PostAddShouldRedirectWithTempDataMessageAndShouldSaveVendorWithValidVendor(string name)
+            => MyController<VendorsController>
                 .Instance()
                 .WithUser(user => user.InRole(AdministratorRoleName))
-                .Calling(c => c.Add(new BrandAddFormServiceModel
+                .Calling(c => c.Add(new VendorAddFormServiceModel
                 {
-                    Name = name
+                    Name = name,
+                    Vat = "BG000111222",
+                    Email = "test@email.com",
+                    Telephone = "0888777666",
+                    Address = "Test Address"
                 }))
                 .ShouldHave()
                 .ValidModelState()
                 .AndAlso()
                 .ShouldHave()
                 .Data(data => data
-                    .WithSet<Brand>(set =>
+                    .WithSet<Vendor>(set =>
                     {
                         set.ShouldNotBeNull();
-                        set.FirstOrDefault(brand => brand.Name == name).ShouldNotBeNull();
+                        set.FirstOrDefault(vendor => vendor.Name == name).ShouldNotBeNull();
                     }))
                 .AndAlso()
                 .ShouldHave()
@@ -76,39 +80,39 @@ namespace ITAssetManager.Test.Controllers
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect(result => result
-                    .To<BrandsController>(c => c.All(With.Empty<BrandsQueryModel>())));
+                    .To<VendorsController>(c => c.All(With.Empty<VendorsQueryModel>())));
 
         [Theory]
-        [InlineData(1, "Test Brand")]
-        public void AllShouldReturnCorrectBrandsForAuthorizedUsers(int id, string name)
-            => MyController<BrandsController>
+        [InlineData(1, "Test Vendor")]
+        public void AllShouldReturnCorrectVendorsForAuthorizedUsers(int id, string name)
+            => MyController<VendorsController>
                 .Instance()
-                .WithData(new Brand
+                .WithData(new Vendor
                 {
                     Id = id,
                     Name = name
                 })
-                .Calling(c => c.All(With.Default<BrandsQueryModel>()))
+                .Calling(c => c.All(With.Default<VendorsQueryModel>()))
                 .ShouldHave()
                 .ActionAttributes(att => att
                     .RestrictingForAuthorizedRequests(AdministratorRoleName))
                 .AndAlso()
                 .ShouldReturn()
                 .View(result => result
-                    .WithModelOfType<BrandsQueryModel>()
+                    .WithModelOfType<VendorsQueryModel>()
                     .Passing(model =>
                     {
                         model.CurrentPage.ShouldBe(1);
-                        model.Brands.Count().ShouldBe(1);
-                        model.Brands.FirstOrDefault(brand => brand.Id == 1);
+                        model.Vendors.Count().ShouldBe(1);
+                        model.Vendors.FirstOrDefault(vendor => vendor.Id == 1);
                     }));
 
         [Theory]
-        [InlineData(1, "Test Brand")]
-        public void GetEditShouldReturnViewWithCorrectBrandIfBrandExistsForAuthorizedUsers(int id, string name)
-            => MyController<BrandsController>
+        [InlineData(1, "Test Vendor")]
+        public void GetEditShouldReturnViewWithCorrectVendorIfVendorExistsForAuthorizedUsers(int id, string name)
+            => MyController<VendorsController>
                 .Instance()
-                .WithData(new Brand
+                .WithData(new Vendor
                 {
                     Id = id,
                     Name = name
@@ -120,7 +124,7 @@ namespace ITAssetManager.Test.Controllers
                 .AndAlso()
                 .ShouldReturn()
                 .View(result => result
-                    .WithModelOfType<BrandEditServiceModel>()
+                    .WithModelOfType<VendorEditServiceModel>()
                     .Passing(model =>
                     {
                         model.Id.ShouldBe(id);
@@ -129,11 +133,11 @@ namespace ITAssetManager.Test.Controllers
                     }));
 
         [Theory]
-        [InlineData(1, 2, "Test Brand")]
-        public void GetEditShouldRedirectToHomeErrorIfBrandDoesNotExist(int id, int wrongId, string name)
-            => MyController<BrandsController>
+        [InlineData(1, 2, "Test Vendor")]
+        public void GetEditShouldRedirectToHomeErrorIfVendorDoesNotExist(int id, int wrongId, string name)
+            => MyController<VendorsController>
                 .Instance()
-                .WithData(new Brand
+                .WithData(new Vendor
                 {
                     Id = id,
                     Name = name
@@ -145,30 +149,38 @@ namespace ITAssetManager.Test.Controllers
 
         [Fact]
         public void PostEditShouldReturnViewWithTheSameModelWhenModelStateIsInvalid()
-            => MyController<BrandsController>
-                .Calling(c => c.Edit(With.Default<BrandEditServiceModel>()))
+            => MyController<VendorsController>
+                .Calling(c => c.Edit(With.Default<VendorEditServiceModel>()))
                 .ShouldHave()
                 .InvalidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .View(result => result
-                    .WithModelOfType<BrandEditServiceModel>()
+                    .WithModelOfType<VendorEditServiceModel>()
                     .Passing(s => s.Name == null));
 
         [Theory]
         [InlineData(1, "Old Name", "New Name")]
-        public void PostEditShouldRedirectWithTempDataMessageAndShouldUpdateBrandWithValidBrandForAuthorizedUsers(int id, string oldName, string newName)
-            => MyController<BrandsController>
+        public void PostEditShouldRedirectWithTempDataMessageAndShouldUpdateVendorWithValidVendorForAuthorizedUsers(int id, string oldName, string newName)
+            => MyController<VendorsController>
                 .Instance()
-                .WithData(new Brand
+                .WithData(new Vendor
                 {
                     Id = id,
-                    Name = oldName
+                    Name = oldName,
+                    Vat = "BG000111222",
+                    Email = "test@email.com",
+                    Telephone = "0888777666",
+                    Address = "Test Address"
                 })
-                .Calling(c => c.Edit(new BrandEditServiceModel
+                .Calling(c => c.Edit(new VendorEditServiceModel
                 {
                     Id = id,
-                    Name = newName
+                    Name = newName,
+                    Email = "other@email.com",
+                    Vat = "BG000111222",
+                    Telephone = "0888777555",
+                    Address = "Other Address"
                 }))
                 .ShouldHave()
                 .ValidModelState()
@@ -179,10 +191,10 @@ namespace ITAssetManager.Test.Controllers
                 .AndAlso()
                 .ShouldHave()
                 .Data(data => data
-                    .WithSet<Brand>(set =>
+                    .WithSet<Vendor>(set =>
                     {
                         set.ShouldNotBeNull();
-                        set.FirstOrDefault(brand => brand.Name == newName).ShouldNotBeNull();
+                        set.FirstOrDefault(vendor => vendor.Name == newName).ShouldNotBeNull();
                     }))
                 .AndAlso()
                 .ShouldHave()
@@ -193,11 +205,11 @@ namespace ITAssetManager.Test.Controllers
                 .Redirect();
 
         [Theory]
-        [InlineData(1, 2, "Test Brand")]
-        public void DeleteShouldRedirectToHomeErrorIfBrandDoesNotExist(int id, int wrongId, string name)
-           => MyController<BrandsController>
+        [InlineData(1, 2, "Test Vendor")]
+        public void DeleteShouldRedirectToHomeErrorIfVendorDoesNotExist(int id, int wrongId, string name)
+           => MyController<VendorsController>
                .Instance()
-               .WithData(new Brand
+               .WithData(new Vendor
                {
                    Id = id,
                    Name = name
@@ -208,17 +220,17 @@ namespace ITAssetManager.Test.Controllers
                    .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, "Test Brand")]
-        public void DeleteShouldRedirectToHomeErrorIfBrandIsInUse(int id, string name)
-           => MyController<BrandsController>
+        [InlineData(1, "Test Vendor")]
+        public void DeleteShouldRedirectToHomeErrorIfVendorIsInUse(int id, string name)
+           => MyController<VendorsController>
                .Instance()
-               .WithData(new Brand
+               .WithData(new Vendor
                {
                    Id = id,
                    Name = name,
-                   AssetModels = new List<AssetModel>
+                   Assets = new List<Asset> 
                    {
-                       new AssetModel
+                       new Asset 
                        {
                            Id = 1
                        }
@@ -230,11 +242,11 @@ namespace ITAssetManager.Test.Controllers
                    .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, "Test Brand")]
-        public void DeleteShouldRedirectWithTempDataMessageAndShouldDeleteBrandForAuthorizedUsers(int id, string name)
-            => MyController<BrandsController>
+        [InlineData(1, "Test Vendor")]
+        public void DeleteShouldRedirectWithTempDataMessageAndShouldDeleteVendorForAuthorizedUsers(int id, string name)
+            => MyController<VendorsController>
                 .Instance()
-                .WithData(new Brand
+                .WithData(new Vendor
                 {
                     Id = id,
                     Name = name
@@ -246,9 +258,9 @@ namespace ITAssetManager.Test.Controllers
                 .AndAlso()
                 .ShouldHave()
                 .Data(data => data
-                    .WithSet<Brand>(set =>
+                    .WithSet<Vendor>(set =>
                     {
-                        set.FirstOrDefault(brand => brand.Id == id).ShouldBeNull();
+                        set.FirstOrDefault(vendor => vendor.Id == id).ShouldBeNull();
                     }))
                 .AndAlso()
                 .ShouldHave()

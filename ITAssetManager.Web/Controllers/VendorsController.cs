@@ -9,7 +9,6 @@ using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Web.Controllers
 {
-    [Authorize(Roles = AdministratorRoleName)]
     public class VendorsController : Controller
     {
         private readonly IVendorService vendorService;
@@ -21,8 +20,10 @@ namespace ITAssetManager.Web.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View();
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Add(VendorAddFormServiceModel vendorModel)
         {
@@ -48,6 +49,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult All(VendorsQueryModel query)
         {
             var queryResult = this.vendorService.All(query.SearchString, query.SortOrder, query.CurrentPage);
@@ -57,6 +59,7 @@ namespace ITAssetManager.Web.Controllers
             return View(vendors);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Details(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendor = this.vendorService.Details(id, sortOrder, searchString, currentPage);
@@ -69,6 +72,7 @@ namespace ITAssetManager.Web.Controllers
             return View(vendor);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Edit(int id, string sortOrder, string searchString, int currentPage)
         {
             var vendorDetails = this.vendorService.Details(id, sortOrder, searchString, currentPage);
@@ -83,6 +87,7 @@ namespace ITAssetManager.Web.Controllers
             return View(vendor);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         [HttpPost]
         public IActionResult Edit(VendorEditServiceModel vendorModel)
         {
@@ -108,6 +113,7 @@ namespace ITAssetManager.Web.Controllers
             return RedirectToAction(nameof(Details), vendor);
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Delete(int id, string sortOrder, string searchString, int currentPage)
         {
             if (!this.vendorService.IsExistingVendor(id))
