@@ -100,7 +100,7 @@ namespace ITAssetManager.Test.Controllers
                     {
                         model.CurrentPage.ShouldBe(1);
                         model.Categories.Count().ShouldBe(1);
-                        model.Categories.FirstOrDefault(category => category.Id == 1);
+                        model.Categories.FirstOrDefault(category => category.Id == 1).ShouldNotBeNull();
                     }));
 
         [Theory]

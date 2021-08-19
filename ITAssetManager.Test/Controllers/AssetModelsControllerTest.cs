@@ -1,22 +1,21 @@
 ﻿using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Controllers;
-using ITAssetManager.Web.Services.Statuses.Models;
+using ITAssetManager.Web.Services.AssetModels.Models;
 using MyTested.AspNetCore.Mvc;
-using Shouldly;
 using Xunit;
 using System.Linq;
-using ITAssetManager.Web.Models.Statuses;
+using Shouldly;
 using System.Collections.Generic;
 
 using static ITAssetManager.Data.DataConstants;
 
 namespace ITAssetManager.Test.Controllers
 {
-    public class StatusesControllerTest
+    public class AssetModelsControllerTest
     {
         [Fact]
         public void GetAddShouldReturnViewForAuthorizedUsers()
-            => MyController<StatusesController>
+            => MyController<AssetModelsController>
                 .Instance()
                 .Calling(c => c.Add())
                 .ShouldHave()
@@ -28,9 +27,9 @@ namespace ITAssetManager.Test.Controllers
 
         [Fact]
         public void PostAddShouldBeAllowedForPostRequestOnlyAndAuthorizedUsers()
-            => MyController<StatusesController>
+            => MyController<AssetModelsController>
                 .Instance()
-                .Calling(c => c.Add(With.Default<StatusAddFormServiceModel>()))
+                .Calling(c => c.Add(With.Default<AssetModelsAddFormServiceModel>()))
                 .ShouldHave()
                 .ActionAttributes(att => att
                     .RestrictingForAuthorizedRequests(AdministratorRoleName)
@@ -38,151 +37,43 @@ namespace ITAssetManager.Test.Controllers
 
         [Fact]
         public void PostAddShouldReturnViewWithTheSameModelWhenModelStateIsInvalid()
-            => MyController<StatusesController>
+            => MyController<AssetModelsController>
                 .Instance()
-                .Calling(c => c.Add(With.Default<StatusAddFormServiceModel>()))
+                .Calling(c => c.Add(With.Default<AssetModelsAddFormServiceModel>()))
                 .ShouldHave()
                 .InvalidModelState()
                 .AndAlso()
                 .ShouldReturn()
                 .View(result => result
-                    .WithModelOfType<StatusAddFormServiceModel>()
-                    .Passing(status => status.Name == null));
+                    .WithModelOfType<AssetModelsAddFormServiceModel>()
+                    .Passing(am => am.Name == null));
 
         [Theory]
-        [InlineData("Test Status")]
-        public void PostAddShouldRedirectWithTempDataMessageAndShouldSaveStatusWithValidStatus(string name)
-            => MyController<StatusesController>
+        [InlineData("Test AssetModel")]
+        public void PostAddShouldRedirectWithTempDataMessageAndShouldSaveAssetModelWithValidAssetModel(string name)
+            => MyController<AssetModelsController>
                 .Instance()
+                .WithData(
+                    new Brand { Id = 1},
+                    new Category { Id = 1})
                 .WithUser(user => user.InRole(AdministratorRoleName))
-                .Calling(c => c.Add(new StatusAddFormServiceModel
+                .Calling(c => c.Add(new AssetModelsAddFormServiceModel
                 {
-                    Name = name
+                    Name = name,
+                    BrandId = 1,
+                    CategoryId = 1,
+                    Details = "Test Details",
+                    ImageUrl = "https://www.lotus-qa.com/wp-content/uploads/2020/02/testing.jpg"
                 }))
                 .ShouldHave()
                 .ValidModelState()
                 .AndAlso()
                 .ShouldHave()
                 .Data(data => data
-                    .WithSet<Status>(set =>
+                    .WithSet<AssetModel>(set =>
                     {
                         set.ShouldNotBeNull();
-                        set.FirstOrDefault(status => status.Name == name).ShouldNotBeNull();
-                    }))
-                .AndAlso()
-                .ShouldHave()
-                .TempData(tmp => tmp
-                    .ContainingEntryWithKey(SuccessMessageKey))
-                .AndAlso()
-                .ShouldReturn()
-                .Redirect(result => result
-                    .To<StatusesController>(c => c.All(With.Empty<StatusesQueryModel>())));
-
-        [Theory]
-        [InlineData(1, "Test Status")]
-        public void AllShouldReturnCorrectStatusesForAuthorizedUsers(int id, string name)
-            => MyController<StatusesController>
-                .Instance()
-                .WithData(new Status
-                {
-                    Id = id,
-                    Name = name
-                })
-                .Calling(c => c.All(With.Default<StatusesQueryModel>()))
-                .ShouldHave()
-                .ActionAttributes(att => att
-                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
-                .AndAlso()
-                .ShouldReturn()
-                .View(result => result
-                    .WithModelOfType<StatusesQueryModel>()
-                    .Passing(model =>
-                    {
-                        model.CurrentPage.ShouldBe(1);
-                        model.Statuses.Count().ShouldBe(1);
-                        model.Statuses.FirstOrDefault(status => status.Id == 1).ShouldNotBeNull();
-                    }));
-
-        [Theory]
-        [InlineData(1, "Test Status")]
-        public void GetEditShouldReturnViewWithCorrectStatusIfStatusExistsForAuthorizedUsers(int id, string name)
-            => MyController<StatusesController>
-                .Instance()
-                .WithData(new Status
-                {
-                    Id = id,
-                    Name = name
-                })
-                .Calling(c => c.Edit(id, null, null, 1))
-                .ShouldHave()
-                .ActionAttributes(att => att
-                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
-                .AndAlso()
-                .ShouldReturn()
-                .View(result => result
-                    .WithModelOfType<StatusEditServiceModel>()
-                    .Passing(model =>
-                    {
-                        model.Id.ShouldBe(id);
-                        model.Name.ShouldBe(name);
-                        model.CurrentPage.ShouldBe(1);
-                    }));
-
-        [Theory]
-        [InlineData(1, 2, "Test Status")]
-        public void GetEditShouldRedirectToHomeErrorIfStatusDoesNotExist(int id, int wrongId, string name)
-            => MyController<StatusesController>
-                .Instance()
-                .WithData(new Status
-                {
-                    Id = id,
-                    Name = name
-                })
-                .Calling(c => c.Edit(wrongId, null, null, 1))
-                .ShouldReturn()
-                .Redirect(result => result
-                    .To<HomeController>(c => c.Error()));
-
-        [Fact]
-        public void PostEditShouldReturnViewWithTheSameModelWhenModelStateIsInvalid()
-            => MyController<StatusesController>
-                .Calling(c => c.Edit(With.Default<StatusEditServiceModel>()))
-                .ShouldHave()
-                .InvalidModelState()
-                .AndAlso()
-                .ShouldReturn()
-                .View(result => result
-                    .WithModelOfType<StatusEditServiceModel>()
-                    .Passing(s => s.Name == null));
-
-        [Theory]
-        [InlineData(1, "Old Name", "New Name")]
-        public void PostEditShouldRedirectWithTempDataMessageAndShouldUpdateStatusWithValidStatusForAuthorizedUsers(int id, string oldName, string newName)
-            => MyController<StatusesController>
-                .Instance()
-                .WithData(new Status
-                {
-                    Id = id,
-                    Name = oldName
-                })
-                .Calling(c => c.Edit(new StatusEditServiceModel
-                {
-                    Id = id,
-                    Name = newName
-                }))
-                .ShouldHave()
-                .ValidModelState()
-                .AndAlso()
-                .ShouldHave()
-                .ActionAttributes(att => att
-                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
-                .AndAlso()
-                .ShouldHave()
-                .Data(data => data
-                    .WithSet<Status>(set =>
-                    {
-                        set.ShouldNotBeNull();
-                        set.FirstOrDefault(status => status.Name == newName).ShouldNotBeNull();
+                        set.FirstOrDefault(am => am.Name == name).ShouldNotBeNull();
                     }))
                 .AndAlso()
                 .ShouldHave()
@@ -193,26 +84,162 @@ namespace ITAssetManager.Test.Controllers
                 .Redirect();
 
         [Theory]
-        [InlineData(1, 2, "Test Status")]
-        public void DeleteShouldRedirectToHomeErrorIfStatusDoesNotExist(int id, int wrongId, string name)
-           => MyController<StatusesController>
+        [InlineData(1, "Test AssetModel")]
+        public void AllShouldReturnCorrectAssetModelsForAuthenticatedUsers(int id, string name)
+            => MyController<AssetModelsController>
+                .Instance()
+                .WithData(new AssetModel
+                {
+                    Id = id,
+                    Name = name,
+                    BrandId = 1,
+                    Brand = new Brand { Id = 1 },
+                    CategoryId = 1,
+                    Category = new Category { Id = 1 },
+                    Details = "Test Details",
+                    ImageUrl = "https://www.lotus-qa.com/wp-content/uploads/2020/02/testing.jpg"
+                })
+                .Calling(c => c.All(null, 1))
+                .ShouldHave()
+                .ActionAttributes(att => att
+                    .RestrictingForAuthorizedRequests())
+                .AndAlso()
+                .ShouldReturn()
+                .View(result => result
+                    .WithModelOfType<AssetModelQueryServiceModel>()
+                    .Passing(model =>
+                    {
+                        model.AssetModels.Count().ShouldBe(1);
+                        model.AssetModels.FirstOrDefault(am => am.Id == 1).ShouldNotBeNull();
+                    }));
+
+        [Theory]
+        [InlineData(1, "Test AssetModel")]
+        public void GetEditShouldReturnViewWithCorrectAssetModelIfAssetModelExistsForAuthorizedUsers(int id, string name)
+            => MyController<AssetModelsController>
+                .Instance()
+                .WithData(new AssetModel
+                {
+                    Id = id,
+                    Name = name,
+                    BrandId = 1,
+                    Brand = new Brand { Id = 1 },
+                    CategoryId = 1,
+                    Category = new Category { Id = 1 },
+                    Details = "Test Details",
+                    ImageUrl = "https://www.lotus-qa.com/wp-content/uploads/2020/02/testing.jpg"
+                })
+                .Calling(c => c.Edit(id, null, 1))
+                .ShouldHave()
+                .ActionAttributes(att => att
+                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
+                .AndAlso()
+                .ShouldReturn()
+                .View(result => result
+                    .WithModelOfType<AssetModelEditFormServiceModel>()
+                    .Passing(model =>
+                    {
+                        model.Id.ShouldBe(id);
+                        model.Name.ShouldBe(name);
+                        model.CurrentPage.ShouldBe(1);
+                    }));
+
+        [Theory]
+        [InlineData(1, 2, "Test AssetModel")]
+        public void GetEditShouldRedirectToHomeErrorIfAssetModelDoesNotExist(int id, int wrongId, string name)
+            => MyController<AssetModelsController>
+                .Instance()
+                .WithData(new AssetModel
+                {
+                    Id = id,
+                    Name = name
+                })
+                .Calling(c => c.Edit(wrongId, null, 1))
+                .ShouldReturn()
+                .Redirect(result => result
+                    .To<HomeController>(c => c.Error()));
+
+        [Fact]
+        public void PostEditShouldReturnViewWithTheSameModelWhenModelStateIsInvalid()
+            => MyController<AssetModelsController>
+                .Calling(c => c.Edit(With.Default<AssetModelEditFormServiceModel>()))
+                .ShouldHave()
+                .InvalidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .View(result => result
+                    .WithModelOfType<AssetModelEditFormServiceModel>()
+                    .Passing(s => s.Name == null));
+
+        [Theory]
+        [InlineData(1, "Old Name", "New Name")]
+        public void PostEditShouldRedirectWithTempDataMessageAndShouldUpdateAssetModelWithValidAssetModelForAuthorizedUsers(int id, string oldName, string newName)
+            => MyController<AssetModelsController>
+                .Instance()
+                .WithData(new AssetModel
+                {
+                    Id = id,
+                    Name = oldName,
+                    BrandId = 1,
+                    Brand = new Brand { Id = 1 },
+                    CategoryId = 1,
+                    Category = new Category { Id = 1 },
+                    Details = "Test Details",
+                    ImageUrl = "https://www.lotus-qa.com/wp-content/uploads/2020/02/testing.jpg"
+                })
+                .Calling(c => c.Edit(new AssetModelEditFormServiceModel
+                {
+                    Id = id,
+                    Name = newName,
+                    BrandId = 1,
+                    CategoryId = 1,
+                    Details = "Other Details",
+                    ImageUrl = "https://www.lotus-qa.com/wp-content/uploads/2020/02/testing.jpg"
+                }))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldHave()
+                .ActionAttributes(att => att
+                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
+                .AndAlso()
+                .ShouldHave()
+                .Data(data => data
+                    .WithSet<AssetModel>(set =>
+                    {
+                        set.ShouldNotBeNull();
+                        set.FirstOrDefault(am => am.Name == oldName).ShouldBeNull();
+                        set.FirstOrDefault(am => am.Name == newName).ShouldNotBeNull();
+                    }))
+                .AndAlso()
+                .ShouldHave()
+                .TempData(tmp => tmp
+                    .ContainingEntryWithKey(SuccessMessageKey))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect();
+
+        [Theory]
+        [InlineData(1, 2, "Test AssetModel")]
+        public void DeleteShouldRedirectToHomeErrorIfAssetModelDoesNotExist(int id, int wrongId, string name)
+           => MyController<AssetModelsController>
                .Instance()
-               .WithData(new Status
+               .WithData(new AssetModel
                {
                    Id = id,
                    Name = name
                })
-               .Calling(c => c.Delete(wrongId, null, null, 1))
+               .Calling(c => c.Delete(wrongId))
                .ShouldReturn()
                .Redirect(result => result
                    .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, "Test Status")]
-        public void DeleteShouldRedirectToHomeErrorIfStatusIsInUse(int id, string name)
-           => MyController<StatusesController>
+        [InlineData(1, "Test AssetModel")]
+        public void DeleteShouldRedirectToHomeErrorIfAssetModelIsInUse(int id, string name)
+           => MyController<AssetModelsController>
                .Instance()
-               .WithData(new Status
+               .WithData(new AssetModel
                {
                    Id = id,
                    Name = name,
@@ -224,31 +251,31 @@ namespace ITAssetManager.Test.Controllers
                        }
                    }
                })
-               .Calling(c => c.Delete(id, null, null, 1))
+               .Calling(c => c.Delete(id))
                .ShouldReturn()
                .Redirect(result => result
                    .To<HomeController>(c => c.Error()));
 
         [Theory]
-        [InlineData(1, "Test Status")]
-        public void DeleteShouldRedirectWithTempDataMessageAndShouldDeleteStatusForAuthorizedUsers(int id, string name)
-            => MyController<StatusesController>
+        [InlineData(1, "Test AssetModel")]
+        public void DeleteShouldRedirectWithTempDataMessageAndShouldDeleteAssetModelForAuthorizedUsers(int id, string name)
+            => MyController<AssetModelsController>
                 .Instance()
-                .WithData(new Status
+                .WithData(new AssetModel
                 {
                     Id = id,
                     Name = name
                 })
-                .Calling(c => c.Delete(id, null, null, 1))
+                .Calling(c => c.Delete(id))
                 .ShouldHave()
                 .ActionAttributes(att => att
                     .RestrictingForAuthorizedRequests(AdministratorRoleName))
                 .AndAlso()
                 .ShouldHave()
                 .Data(data => data
-                    .WithSet<Status>(set =>
+                    .WithSet<AssetModel>(set =>
                     {
-                        set.FirstOrDefault(status => status.Id == id).ShouldBeNull();
+                        set.FirstOrDefault(am => am.Id == id).ShouldBeNull();
                     }))
                 .AndAlso()
                 .ShouldHave()

@@ -104,7 +104,7 @@ namespace ITAssetManager.Test.Controllers
                     {
                         model.CurrentPage.ShouldBe(1);
                         model.Vendors.Count().ShouldBe(1);
-                        model.Vendors.FirstOrDefault(vendor => vendor.Id == 1);
+                        model.Vendors.FirstOrDefault(vendor => vendor.Id == 1).ShouldNotBeNull();
                     }));
 
         [Theory]
@@ -194,6 +194,7 @@ namespace ITAssetManager.Test.Controllers
                     .WithSet<Vendor>(set =>
                     {
                         set.ShouldNotBeNull();
+                        set.FirstOrDefault(vendor => vendor.Name == oldName).ShouldBeNull();
                         set.FirstOrDefault(vendor => vendor.Name == newName).ShouldNotBeNull();
                     }))
                 .AndAlso()

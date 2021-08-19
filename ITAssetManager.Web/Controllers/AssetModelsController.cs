@@ -17,6 +17,7 @@ namespace ITAssetManager.Web.Controllers
             this.assetModelService = assetModelService;
         }
 
+        [Authorize(Roles = AdministratorRoleName)]
         public IActionResult Add() => View(
             new AssetModelsAddFormServiceModel
             {
@@ -168,6 +169,16 @@ namespace ITAssetManager.Web.Controllers
 
         public IActionResult Delete(int id)
         {
+            if (!this.assetModelService.IsExistingModel(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (this.assetModelService.IsInUse(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
             var deletedModelName = this.assetModelService.Delete(id);
 
             TempData[SuccessMessageKey] = $"Model '{deletedModelName}' successfully deleted.";
