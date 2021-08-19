@@ -376,5 +376,107 @@ namespace ITAssetManager.Test.Controllers
                 .AndAlso()
                 .ShouldReturn()
                 .Redirect();
+
+        [Theory]
+        [InlineData(1, "BG654321", "TestUserId", "testuser@email.com")]
+        public void GetCollectShouldReturnViewWithCorrectAssetIfAssetExistsForAuthorizedUsers(int assetId, string inventoryNr, string userId, string username)
+            => MyController<AssetsController>
+                .Instance()
+                .WithData(
+                new Asset
+                {
+                    Id = assetId,
+                    InventoryNr = inventoryNr,
+                    AssetModel = new AssetModel { Brand = new Brand { Name = "Test Brand" } },
+                    Status = new Status { Id = 1, Name = "Test Status" }
+                },
+                new ApplicationUser
+                {
+                    Id = userId,
+                    UserName = username
+                },
+                new UserAsset
+                {
+                    AssetId = assetId,
+                    UserId = userId,
+                    AssignDate = DateTime.UtcNow
+                })
+                .Calling(c => c.Collect(assetId, null, null, 1))
+                .ShouldHave()
+                .ActionAttributes(att => att
+                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
+                .AndAlso()
+                .ShouldReturn()
+                .View(result => result
+                    .WithModelOfType<AssetCollectServiceModel>()
+                    .Passing(model =>
+                    {
+                        model.Id.ShouldBe(assetId);
+                        model.UserId.ShouldBe(userId);
+                    }));
+
+        [Theory]
+        [InlineData(1, 2, "BG123456")]
+        public void GetCollectShouldRedirectToHomeErrorIfAssetDoesNotExist(int id, int wrongId, string inventoryNr)
+           => MyController<AssetsController>
+               .Instance()
+               .WithData(new Asset
+               {
+                   Id = id,
+                   InventoryNr = inventoryNr
+               })
+               .Calling(c => c.Collect(wrongId, null, null, 1))
+               .ShouldReturn()
+               .Redirect(result => result
+                   .To<HomeController>(c => c.Error()));
+
+        [Theory]
+        [InlineData(1, "TestUserId")]
+        public void PostCollectShouldRedirectWithTempDataMessageAndShouldAssignAssetToUserForAuthorizedUsers(int assetId, string userId)
+            => MyController<AssetsController>
+                .Instance()
+                .WithData(
+                new Asset
+                {
+                    Id = assetId,
+                    AssetModel = new AssetModel { Brand = new Brand { Name = "Test Brand" } },
+                    Status = new Status { Id = 1, Name = "Test Status" }
+                },
+                new ApplicationUser
+                {
+                    Id = userId
+                },
+                new UserAsset
+                {
+                    AssetId = assetId,
+                    UserId = userId,
+                    AssignDate = DateTime.UtcNow
+                })
+                .Calling(c => c.Collect(new AssetCollectServiceModel
+                {
+                    Id = assetId,
+                    UserId = userId,
+                    ReturnDate = DateTime.UtcNow
+                }))
+                .ShouldHave()
+                .ActionAttributes(att => att
+                    .RestrictingForAuthorizedRequests(AdministratorRoleName))
+                .AndAlso()
+                .ShouldHave()
+                .Data(data => data
+                    .WithSet<UserAsset>(set =>
+                    {
+                        set.ShouldNotBeNull();
+                        set.FirstOrDefault(ua => ua.AssetId == assetId).ShouldNotBeNull();
+                        set.FirstOrDefault(ua => ua.UserId == userId).ShouldNotBeNull();
+                        set.Where(ua => ua.AssetId == assetId && ua.UserId == userId).Select(ua => ua.ReturnDate).ShouldNotBeNull();
+                    }))
+                .AndAlso()
+                .ShouldHave()
+                .TempData(tmp => tmp
+                    .ContainingEntryWithKey(SuccessMessageKey))
+                .AndAlso()
+                .ShouldReturn()
+                .Redirect();
     }
 }
