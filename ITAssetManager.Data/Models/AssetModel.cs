@@ -30,5 +30,7 @@ namespace ITAssetManager.Data.Models
         public string Details { get; set; }
 
         public ICollection<Asset> Assets { get; set; } = new HashSet<Asset>();
+
+        public ICollection<Request> Requests { get; init; } = new HashSet<Request>();
     }
 }

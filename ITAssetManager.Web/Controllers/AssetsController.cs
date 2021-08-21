@@ -92,9 +92,9 @@ namespace ITAssetManager.Web.Controllers
             var queryResult = this.assetService
                 .All(query.SearchString, query.SortOrder, query.CurrentPage, userId);
 
-            var asset = this.mapper.Map<AssetsQueryModel>(queryResult);
+            var assets = this.mapper.Map<AssetsQueryModel>(queryResult);
 
-            return View(asset);
+            return View(assets);
         }
 
         [Authorize(Roles = AdministratorRoleName)]

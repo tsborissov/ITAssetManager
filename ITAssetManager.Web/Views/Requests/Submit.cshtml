@@ -1,0 +1,44 @@
+﻿@model RequestSubmitFormServiceModel
+
+@{
+    ViewBag.Title = "Submit Request";
+}
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="RequestorId"></label>
+                <input asp-for="RequestorId" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="AssetModelId"></label>
+                <input asp-for="AssetModelId" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Status"></label>
+                <input asp-for="Status" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="SubmissionDate"></label>
+                <input asp-for="SubmissionDate" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Rationale"></label>
+                <textarea asp-for="Rationale" class="form-control" rows="3" placeholder="Provide your rationale here..."></textarea>
+                <span asp-validation-for="Rationale" class="small text-danger"></span>
+            </div>
+            <div class="button-holder">
+                <a asp-controller="AssetModels"
+                   asp-action="All"
+                   class="btn btn-primary float-left">
+                    << Back
+                </a>
+            </div>
+            <div class="button-holder">
+                <button type="submit" class="btn btn-primary float-right">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

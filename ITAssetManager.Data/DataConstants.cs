@@ -50,5 +50,10 @@
 
         public const int StatusNameMinLength = 1;
         public const int StatusNameMaxLength = 20;
+
+        public const int RequestRationaleMinLength = 5;
+        public const int RequestRationaleMaxLength = 200;
+        public const int CloseCommentMinLength = 1;
+        public const int CloseCommentMaxLength = 200;
     }
 }

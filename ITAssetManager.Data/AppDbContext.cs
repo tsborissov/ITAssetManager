@@ -25,6 +25,8 @@ namespace ITAssetManager.Data
 
         public DbSet<UserAsset> UsersAssets { get; init; }
 
+        public DbSet<Request> Requests { get; init; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder
@@ -65,6 +67,27 @@ namespace ITAssetManager.Data
             builder
                 .Entity<UserAsset>()
                 .HasKey(k => new { k.AssetId, k.UserId, k.AssignDate });
+
+            builder
+                .Entity<Request>()
+                .HasOne(r => r.AssetModel)
+                .WithMany(r => r.Requests)
+                .HasForeignKey(r => r.AssetModelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Request>()
+                .HasOne(r => r.Requestor)
+                .WithMany(r => r.SubmittedRequests)
+                .HasForeignKey(r => r.RequestorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .Entity<Request>()
+                .HasOne(r => r.Reviewer)
+                .WithMany(r => r.ReviewedRequests)
+                .HasForeignKey(r => r.ReviewerId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

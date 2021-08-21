@@ -4,14 +4,16 @@ using ITAssetManager.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITAssetManager.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class ItAssetManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210821115947_Request")]
+    partial class Request
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,10 +236,6 @@ namespace ITAssetManager.Data.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<string>("RequestorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ReviewerId")
                         .HasColumnType("nvarchar(450)");
 
@@ -247,13 +245,17 @@ namespace ITAssetManager.Data.Migrations
                     b.Property<DateTime>("SubmissionDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("SubmitterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AssetModelId");
 
-                    b.HasIndex("RequestorId");
-
                     b.HasIndex("ReviewerId");
+
+                    b.HasIndex("SubmitterId");
 
                     b.ToTable("Requests");
                 });
@@ -521,22 +523,22 @@ namespace ITAssetManager.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ITAssetManager.Data.Models.ApplicationUser", "Requestor")
-                        .WithMany("SubmittedRequests")
-                        .HasForeignKey("RequestorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("ITAssetManager.Data.Models.ApplicationUser", "Reviewer")
                         .WithMany("ReviewedRequests")
                         .HasForeignKey("ReviewerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("ITAssetManager.Data.Models.ApplicationUser", "Submitter")
+                        .WithMany("SubmittedRequests")
+                        .HasForeignKey("SubmitterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("AssetModel");
 
-                    b.Navigation("Requestor");
-
                     b.Navigation("Reviewer");
+
+                    b.Navigation("Submitter");
                 });
 
             modelBuilder.Entity("ITAssetManager.Data.Models.UserAsset", b =>

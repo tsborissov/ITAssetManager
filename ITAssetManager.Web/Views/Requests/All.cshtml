@@ -1,0 +1,44 @@
+﻿@model RequestQueryServiceModel
+
+@{
+    ViewBag.Title = "Requests";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <div class="row mt-3 mb-3">
+            <form asp-action="All" method="get" class="col-12">
+                <div class="form-actions">
+                    <input type="text" name="SearchString" class="col-md-7" value="@Model.SearchString" placeholder="Search by Brand, Model, etc..." />
+                    <input type="submit" class="btn btn-primary" value="Search" />
+                    <a asp-action="All" class="btn btn-primary">Full List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+
+        @if (User.IsAdmin())
+        {
+            <partial name="_AllForAdministratorPartial" model="@Model" />
+        }
+        else
+        {
+            <partial name="_AllForUserPartial" model="@Model" />
+        }
+
+        @if (!Model.Requests.Any())
+        {
+            <h4 class="text-center">No requests found!</h4>
+        }
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <partial name="_PaginationPartial" model="@Model" />
+    </div>
+</div>

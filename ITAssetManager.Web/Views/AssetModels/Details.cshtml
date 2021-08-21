@@ -68,6 +68,14 @@
                             <partial name="_DeleteConfirmationPartial" />
                         }
                     }
+                    <div class="button-holder">
+                        <a asp-controller="Requests"
+                           asp-action="Submit"
+                           asp-route-assetModelId="@Model.Id"
+                           class="btn btn-primary float-md-right">
+                            Request
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

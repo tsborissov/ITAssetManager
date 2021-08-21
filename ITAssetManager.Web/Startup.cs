@@ -6,6 +6,7 @@ using ITAssetManager.Web.Services.AssetModels;
 using ITAssetManager.Web.Services.Assets;
 using ITAssetManager.Web.Services.Brands;
 using ITAssetManager.Web.Services.Categories;
+using ITAssetManager.Web.Services.Requests;
 using ITAssetManager.Web.Services.Statistics;
 using ITAssetManager.Web.Services.Statuses;
 using ITAssetManager.Web.Services.Vendors;
@@ -65,7 +66,8 @@ namespace ITAssetManager.Web
                 .AddTransient<IAssetService, AssetService>()
                 .AddTransient<IStatisticsService, StatisticsService>()
                 .AddTransient<IRoleService, RoleService>()
-                .AddTransient<IUserService, UserService>();
+                .AddTransient<IUserService, UserService>()
+                .AddTransient<IRequestService, RequestService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
