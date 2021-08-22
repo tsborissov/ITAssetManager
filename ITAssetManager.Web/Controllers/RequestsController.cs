@@ -122,7 +122,9 @@ namespace ITAssetManager.Web.Controllers
                 return View(request);
             }
 
-            var isApproved = this.requestService.Approve(request.Id, request.CloseComment);
+            var reviewerId = this.User.Id();
+
+            var isApproved = this.requestService.Approve(request.Id, reviewerId, request.CloseComment);
 
             TempData[SuccessMessageKey] = "Request successfully approved.";
 
@@ -139,27 +141,47 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize(Roles = AdministratorRoleName)]
-        [HttpPost]
-        public IActionResult Reject(int id, string closeComment, string searchString, int currentPage)
+        public IActionResult Reject(int id, string searchString, int currentPage)
         {
             if (!this.requestService.IsExisting(id))
             {
                 return RedirectToAction("Error", "Home");
             }
 
-            var isApproved = this.requestService.Reject(id, closeComment);
+            var targetRequest = this.requestService.GetById(id, searchString, currentPage);
+
+            return View(targetRequest);
+        }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        [HttpPost]
+        public IActionResult Reject(RequestProcessServiceModel request)
+        {
+            if (!this.requestService.IsExisting(request.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var reviewerId = this.User.Id();
+
+            var isRejected = this.requestService.Reject(request.Id, reviewerId, request.CloseComment);
 
             TempData[SuccessMessageKey] = "Request was rejected.";
 
-            if (!isApproved)
+            if (!isRejected)
             {
-                TempData[ErrorMessageKey] = $"There was an error rejecting request with ID {id}.";
+                TempData[ErrorMessageKey] = $"There was an error rejecting request with ID {request.Id}.";
             }
 
             return RedirectToAction(nameof(All), new
             {
-                SearchString = searchString,
-                CurrentPage = currentPage
+                SearchString = request.SearchString,
+                CurrentPage = request.CurrentPage
             });
         }
     }

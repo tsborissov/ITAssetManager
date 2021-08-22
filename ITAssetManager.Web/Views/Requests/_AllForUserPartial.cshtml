@@ -9,6 +9,7 @@
             <th>Submit Date</th>
             <th>Complete Date</th>
             <th>Status</th>
+            <th>Reviewer</th>
             <th></th>
         </tr>
     </thead>
@@ -22,6 +23,7 @@
                 <td>@request.SubmissionDate</td>
                 <td>@request.CompletionDate</td>
                 <td>@request.Status</td>
+                <td>@request.Reviewer</td>
                 <td>
                     @if (!request.IsCompleted)
                     {

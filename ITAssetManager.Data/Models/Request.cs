@@ -25,7 +25,7 @@ namespace ITAssetManager.Data.Models
 
         public DateTime? CompletionDate { get; set; }
 
-        public string ReviewerId { get; init; }
+        public string ReviewerId { get; set; }
 
         public ApplicationUser Reviewer { get; set; }
 

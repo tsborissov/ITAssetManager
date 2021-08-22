@@ -5,11 +5,10 @@
         <tr>
             <th scope="col">Id</th>
             <th>User</th>
-            <th>Brand</th>
-            <th>Model</th>
             <th>Submit Date</th>
             <th>Complete Date</th>
             <th>Status</th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -19,14 +18,13 @@
             <tr>
                 <td>@request.Id</td>
                 <td>@request.User</td>
-                <td>@request.Brand</td>
-                <td>@request.Model</td>
                 <td>@request.SubmissionDate</td>
                 <td>@request.CompletionDate</td>
                 <td>@request.Status</td>
-                <td>
-                    @if (!request.IsCompleted)
-                    {
+
+                @if (!request.IsCompleted)
+                {
+                    <td>
                         <div class="button-holder col-md-3">
                             <a asp-action="Approve"
                                asp-route-id="@request.Id"
@@ -36,6 +34,8 @@
                                 Approve
                             </a>
                         </div>
+                    </td>
+                    <td>
                         <div class="button-holder col-md-3">
                             <a asp-action="Reject"
                                asp-route-id="@request.Id"
@@ -45,11 +45,13 @@
                                 Reject
                             </a>
                         </div>
-                    }
-                    else
-                    {
+                    </td>
+                }
+                else
+                {
+                    <td>
                         <div class="button-holder col-md-3">
-                            <a asp-action="Approve"
+                            <a asp-action="Details"
                                asp-route-id="@request.Id"
                                asp-route-searchString="@Model.SearchString"
                                asp-route-currentPage="@Model.CurrentPage"
@@ -57,8 +59,9 @@
                                 Details
                             </a>
                         </div>
-                    }
-                </td>
+                    </td>
+                    <td></td>
+                }
             </tr>
         }
     </tbody>

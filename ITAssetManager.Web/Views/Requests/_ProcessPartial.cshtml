@@ -1,0 +1,44 @@
+﻿@model RequestProcessServiceModel
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <h2 class="heading-margin text-center">@ViewBag.Title</h2>
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Id"></label>
+                <input asp-for="Id" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="User"></label>
+                <input asp-for="User" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Model"></label>
+                <input asp-for="Model" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="SubmissionDate"></label>
+                <input asp-for="SubmissionDate" class="form-control" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="Rationale"></label>
+                <textarea asp-for="Rationale" class="form-control" rows="3" readonly></textarea>
+            </div>
+            <div class="form-group">
+                <label asp-for="CloseComment"></label>
+                <textarea asp-for="CloseComment" class="form-control" rows="3" placeholder="Provide your comment here..."></textarea>
+                <span asp-validation-for="CloseComment" class="small text-danger"></span>
+            </div>
+            <div class="button-holder">
+                <a asp-controller="Requests"
+                   asp-action="All"
+                   class="btn btn-primary float-left">
+                    << Back
+                </a>
+            </div>
+            <div class="button-holder">
+                <button type="submit" class="btn btn-primary float-right">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

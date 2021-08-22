@@ -21,6 +21,8 @@ namespace ITAssetManager.Web.Services.Requests.Models
 
         public bool IsCompleted { get; set; }
 
+        public string Reviewer { get; set; }
+
         public string CloseComment { get; set; }
     }
 }

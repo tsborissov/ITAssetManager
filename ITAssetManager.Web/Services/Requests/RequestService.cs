@@ -37,7 +37,10 @@ namespace ITAssetManager.Web.Services.Requests
 
         public RequestQueryServiceModel All(string searchString, int currentPage, string userId)
         {
-            var requestsQuery = this.data.Requests.AsQueryable();
+            var requestsQuery = this.data
+                .Requests
+                .OrderByDescending(r => r.Id)
+                .AsQueryable();
 
             if (userId != null)
             {
@@ -75,6 +78,7 @@ namespace ITAssetManager.Web.Services.Requests
                     CompletionDate = r.CompletionDate != null ? r.CompletionDate.Value.ToLocalTime().ToString("d") : "",
                     Status = r.Status.ToString(),
                     CloseComment = r.CloseComment,
+                    Reviewer = r.Reviewer.UserName,
                     IsCompleted = r.Status != RequestStatus.Submitted
                 })
                 .ToList();
@@ -105,7 +109,7 @@ namespace ITAssetManager.Web.Services.Requests
             return result > 0;
         }
 
-        public bool Approve(int id, string closeComment)
+        public bool Approve(int id, string reviewerId, string closeComment)
         {
             var targetRequest = this.data
                 .Requests
@@ -115,13 +119,14 @@ namespace ITAssetManager.Web.Services.Requests
             targetRequest.Status = RequestStatus.Approved;
             targetRequest.CompletionDate = DateTime.UtcNow;
             targetRequest.CloseComment = closeComment;
+            targetRequest.ReviewerId = reviewerId;
 
             var result = this.data.SaveChanges();
 
             return result > 0;
         }
 
-        public bool Reject(int id, string closeComment)
+        public bool Reject(int id, string reviewerId, string closeComment)
         {
             var targetRequest = this.data
                 .Requests
@@ -131,6 +136,7 @@ namespace ITAssetManager.Web.Services.Requests
             targetRequest.Status = RequestStatus.Rejected;
             targetRequest.CompletionDate = DateTime.UtcNow;
             targetRequest.CloseComment = closeComment;
+            targetRequest.ReviewerId = reviewerId;
 
             var result = this.data.SaveChanges();
 

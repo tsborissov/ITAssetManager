@@ -10,9 +10,9 @@ namespace ITAssetManager.Web.Services.Requests
 
         bool Cancel(int id);
 
-        bool Approve(int id, string closeComment);
+        bool Approve(int id, string reviewerId, string closeComment);
 
-        bool Reject(int id, string closeComment);
+        bool Reject(int id, string reviewerId, string closeComment);
 
         bool IsExisting(int id);
 
