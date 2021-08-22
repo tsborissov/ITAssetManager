@@ -143,8 +143,29 @@ namespace ITAssetManager.Web.Services.Requests
             return result > 0;
         }
 
-        public bool IsExisting(int id)
-            => this.data.Requests.Any(r => r.Id == id);
+        public RequestDetailsServiceModel Details(int id, string searchString, int currentPage)
+        {
+            var targetRequest = this.data
+                .Requests
+                .Where(r => r.Id == id)
+                .Select(r => new RequestDetailsServiceModel
+                {
+                    Id = r.Id,
+                    User = r.Requestor.UserName,
+                    Model = r.AssetModel.Brand.Name + " " + r.AssetModel.Name,
+                    SubmissionDate = r.SubmissionDate.ToLocalTime().ToString(),
+                    Rationale = r.Rationale,
+                    CompletionDate = r.CompletionDate != null ? r.CompletionDate.Value.ToLocalTime().ToString() : "",
+                    Status = r.Status.ToString(),
+                    Reviewer = r.Reviewer.UserName,
+                    CloseComment = r.CloseComment,
+                    SearchString = searchString,
+                    CurrentPage = currentPage
+                })
+                .FirstOrDefault();
+
+            return targetRequest;
+        }
 
         public RequestProcessServiceModel GetById(int id, string searchString, int currentPage)
         {
@@ -165,5 +186,8 @@ namespace ITAssetManager.Web.Services.Requests
 
             return targetRequest;
         }
+
+        public bool IsExisting(int id)
+            => this.data.Requests.Any(r => r.Id == id);
     }
 }

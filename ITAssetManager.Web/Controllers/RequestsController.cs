@@ -29,7 +29,7 @@ namespace ITAssetManager.Web.Controllers
                 RequestorId = this.User.Id(),
                 AssetModelId = assetModelId,
                 Status = RequestStatus.Submitted,
-                SubmissionDate = DateTime.Now.Date
+                SubmissionDate = DateTime.Now
             });
 
         [Authorize]
@@ -183,6 +183,19 @@ namespace ITAssetManager.Web.Controllers
                 SearchString = request.SearchString,
                 CurrentPage = request.CurrentPage
             });
+        }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        public IActionResult Details(int id, string searchString, int currentPage)
+        {
+            if (!this.requestService.IsExisting(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var targetRequest = this.requestService.Details(id, searchString, currentPage);
+
+            return View(targetRequest);
         }
     }
 }

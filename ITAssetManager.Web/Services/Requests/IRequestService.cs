@@ -14,8 +14,10 @@ namespace ITAssetManager.Web.Services.Requests
 
         bool Reject(int id, string reviewerId, string closeComment);
 
-        bool IsExisting(int id);
-
         RequestProcessServiceModel GetById(int id, string searchString, int currentPage);
+
+        RequestDetailsServiceModel Details(int id, string searchString, int currentPage);
+
+        bool IsExisting(int id);
     }
 }
