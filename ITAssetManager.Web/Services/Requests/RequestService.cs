@@ -68,6 +68,7 @@ namespace ITAssetManager.Web.Services.Requests
                 .Select(r => new RequestListingServiceModel
                 {
                     Id = r.Id,
+                    User = r.Requestor.UserName,
                     Brand = r.AssetModel.Brand.Name,
                     Model = r.AssetModel.Name,
                     SubmissionDate = r.SubmissionDate.ToLocalTime().ToString("d"),
@@ -104,7 +105,59 @@ namespace ITAssetManager.Web.Services.Requests
             return result > 0;
         }
 
+        public bool Approve(int id, string closeComment)
+        {
+            var targetRequest = this.data
+                .Requests
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
+
+            targetRequest.Status = RequestStatus.Approved;
+            targetRequest.CompletionDate = DateTime.UtcNow;
+            targetRequest.CloseComment = closeComment;
+
+            var result = this.data.SaveChanges();
+
+            return result > 0;
+        }
+
+        public bool Reject(int id, string closeComment)
+        {
+            var targetRequest = this.data
+                .Requests
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
+
+            targetRequest.Status = RequestStatus.Rejected;
+            targetRequest.CompletionDate = DateTime.UtcNow;
+            targetRequest.CloseComment = closeComment;
+
+            var result = this.data.SaveChanges();
+
+            return result > 0;
+        }
+
         public bool IsExisting(int id)
             => this.data.Requests.Any(r => r.Id == id);
+
+        public RequestProcessServiceModel GetById(int id, string searchString, int currentPage)
+        {
+            var targetRequest = this.data
+                .Requests
+                .Where(r => r.Id == id)
+                .Select(r => new RequestProcessServiceModel
+                {
+                    Id = r.Id,
+                    User = r.Requestor.UserName,
+                    Model = r.AssetModel.Brand.Name + " " + r.AssetModel.Name,
+                    SubmissionDate = r.SubmissionDate.ToLocalTime(),
+                    Rationale = r.Rationale,
+                    SearchString = searchString,
+                    CurrentPage = currentPage
+                })
+                .FirstOrDefault();
+
+            return targetRequest;
+        }
     }
 }

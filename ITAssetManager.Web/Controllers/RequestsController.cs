@@ -94,5 +94,73 @@ namespace ITAssetManager.Web.Controllers
                 CurrentPage = currentPage
             });
         }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        public IActionResult Approve(int id, string searchString, int currentPage)
+        {
+            if (!this.requestService.IsExisting(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var targetRequest = this.requestService.GetById(id, searchString, currentPage);
+
+            return View(targetRequest);
+        }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        [HttpPost]
+        public IActionResult Approve(RequestProcessServiceModel request)
+        {
+            if (!this.requestService.IsExisting(request.Id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return View(request);
+            }
+
+            var isApproved = this.requestService.Approve(request.Id, request.CloseComment);
+
+            TempData[SuccessMessageKey] = "Request successfully approved.";
+
+            if (!isApproved)
+            {
+                TempData[ErrorMessageKey] = $"There was an error approving request with ID {request.Id}.";
+            }
+
+            return RedirectToAction(nameof(All), new
+            {
+                SearchString = request.SearchString,
+                CurrentPage = request.CurrentPage
+            });
+        }
+
+        [Authorize(Roles = AdministratorRoleName)]
+        [HttpPost]
+        public IActionResult Reject(int id, string closeComment, string searchString, int currentPage)
+        {
+            if (!this.requestService.IsExisting(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var isApproved = this.requestService.Reject(id, closeComment);
+
+            TempData[SuccessMessageKey] = "Request was rejected.";
+
+            if (!isApproved)
+            {
+                TempData[ErrorMessageKey] = $"There was an error rejecting request with ID {id}.";
+            }
+
+            return RedirectToAction(nameof(All), new
+            {
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
+        }
     }
 }

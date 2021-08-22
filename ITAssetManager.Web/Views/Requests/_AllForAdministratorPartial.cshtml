@@ -1,108 +1,62 @@
-﻿<table class="table table-hover">
+﻿@model RequestQueryServiceModel
+
+<table class="table table-hover">
     <thead>
         <tr>
-            <th scope="col">
-                <a asp-action="All"
-                   asp-route-sortOrder="@(String.IsNullOrEmpty(Model.SortOrder) ? "brand_desc" : "")"
-                   asp-route-searchString="@Model.SearchString">
-                    Brand
-                </a>
-            </th>
-            <th>
-                <a asp-action="All"
-                   asp-route-sortOrder="@(Model.SortOrder == "model" ? "model_desc" : "model")"
-                   asp-route-searchString="@Model.SearchString">
-                    Model
-                </a>
-            </th>
-            @if (User.IsAdmin())
-            {
-                <th>
-                    <a asp-action="All"
-                       asp-route-sortOrder="@(Model.SortOrder == "status" ? "status_desc" : "status")"
-                       asp-route-searchString="@Model.SearchString">
-                        Status
-                    </a>
-                </th>
-            }
-            <th>SerialNr</th>
-            <th>InventoryNr</th>
-            @if (User.IsAdmin())
-            {
-                <th>User</th>
-                <th>Edit</th>
-                <th>Assign/Collect/Delete</th>
-            }
+            <th scope="col">Id</th>
+            <th>User</th>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Submit Date</th>
+            <th>Complete Date</th>
+            <th>Status</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var asset in Model.Assets)
+        @foreach (var request in Model.Requests)
         {
             <tr>
-                <td>@asset.Brand</td>
-                <td>@asset.Model</td>
-                <td>@asset.Status</td>
-                <td>@asset.SerialNr</td>
-                <td>@asset.InventoryNr</td>
-                <td>@asset.User</td>
+                <td>@request.Id</td>
+                <td>@request.User</td>
+                <td>@request.Brand</td>
+                <td>@request.Model</td>
+                <td>@request.SubmissionDate</td>
+                <td>@request.CompletionDate</td>
+                <td>@request.Status</td>
                 <td>
-                    @if (asset.Status != "In Use")
+                    @if (!request.IsCompleted)
                     {
                         <div class="button-holder col-md-3">
-                            <a asp-action="Edit"
-                               asp-route-id="@asset.Id"
+                            <a asp-action="Approve"
+                               asp-route-id="@request.Id"
                                asp-route-searchString="@Model.SearchString"
-                               asp-route-sortOrder="@Model.SortOrder"
-                               asp-route-currentPage="@Model.CurrentPage"
-                               class="btn btn-warning">
-                                Edit
-                            </a>
-                        </div>
-                    }
-                </td>
-                <td>
-                    @if (asset.User == null && asset.Status == "In Stock")
-                    {
-                        <div class="button-holder col-md-3">
-                            <a asp-action="Assign"
-                               asp-route-id="@asset.Id"
-                               asp-route-searchString="@Model.SearchString"
-                               asp-route-sortOrder="@Model.SortOrder"
-                               asp-route-currentPage="@Model.CurrentPage"
-                               class="btn btn-primary">
-                                Assign
-                            </a>
-                        </div>
-                    }
-
-                    @if (asset.User != null)
-                    {
-                        <div class="button-holder col-md-3">
-                            <a asp-action="Collect"
-                               asp-route-id="@asset.Id"
-                               asp-route-searchString="@Model.SearchString"
-                               asp-route-sortOrder="@Model.SortOrder"
                                asp-route-currentPage="@Model.CurrentPage"
                                class="btn btn-success">
-                                Collect
+                                Approve
+                            </a>
+                        </div>
+                        <div class="button-holder col-md-3">
+                            <a asp-action="Reject"
+                               asp-route-id="@request.Id"
+                               asp-route-searchString="@Model.SearchString"
+                               asp-route-currentPage="@Model.CurrentPage"
+                               class="btn btn-danger">
+                                Reject
                             </a>
                         </div>
                     }
-
-                    @if ((!asset.IsInUse) && asset.Status == "Disposed")
+                    else
                     {
-                        ViewData["DataTarget"] = @ViewBag.Title;
-                        ViewData["TargetId"] = asset.Id;
-                        ViewData["SearchString"] = Model.SearchString;
-                        ViewData["SortOrder"] = Model.SortOrder;
-                        ViewData["CurrentPage"] = Model.CurrentPage;
-
                         <div class="button-holder col-md-3">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#@ViewData["DataTarget"]_Delete_@ViewData["TargetId"]" data-id="@ViewData["TargetId"]">
-                                Delete
-                            </button>
+                            <a asp-action="Approve"
+                               asp-route-id="@request.Id"
+                               asp-route-searchString="@Model.SearchString"
+                               asp-route-currentPage="@Model.CurrentPage"
+                               class="btn btn-primary">
+                                Details
+                            </a>
                         </div>
-                        <partial name="_DeleteConfirmationPartial" />
                     }
                 </td>
             </tr>
