@@ -55,5 +55,6 @@
         public const int RequestRationaleMaxLength = 200;
         public const int CloseCommentMinLength = 1;
         public const int CloseCommentMaxLength = 200;
+        public const string RequestCancelCloseComment = "Cancelled by user.";
     }
 }

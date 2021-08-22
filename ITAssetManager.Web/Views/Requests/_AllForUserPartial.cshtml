@@ -6,8 +6,10 @@
             <th scope="col">Id</th>
             <th>Brand</th>
             <th>Model</th>
+            <th>Submit Date</th>
+            <th>Complete Date</th>
             <th>Status</th>
-            <th>Cancel</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -17,6 +19,8 @@
                 <td>@request.Id</td>
                 <td>@request.Brand</td>
                 <td>@request.Model</td>
+                <td>@request.SubmissionDate</td>
+                <td>@request.CompletionDate</td>
                 <td>@request.Status</td>
                 <td>
                     @if (!request.IsCompleted)
@@ -46,6 +50,33 @@
                                            asp-route-searchString="@Model.SearchString"
                                            asp-route-currentPage="@Model.CurrentPage"
                                            class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="button-holder">
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#Comment_@request.Id" data-id="@request.Id">
+                                Reason
+                            </button>
+                        </div>
+
+                        <div class="modal fade" id="Comment_@request.Id" tabindex="-1" role="dialog" aria-labelledby="Comment_@request.Id" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Request closure comment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @request.CloseComment
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>

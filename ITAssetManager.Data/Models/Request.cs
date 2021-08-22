@@ -19,11 +19,11 @@ namespace ITAssetManager.Data.Models
 
         public AssetModel AssetModel { get; init; }
 
-        public RequestStatus Status { get; init; }
+        public RequestStatus Status { get; set; }
 
         public DateTime SubmissionDate { get; init; }
 
-        public DateTime? CompletionDate { get; init; }
+        public DateTime? CompletionDate { get; set; }
 
         public string ReviewerId { get; init; }
 
@@ -34,6 +34,6 @@ namespace ITAssetManager.Data.Models
         public string Rationale { get; init; }
 
         [MaxLength(CloseCommentMaxLength)]
-        public string CloseComment { get; init; }
+        public string CloseComment { get; set; }
     }
 }

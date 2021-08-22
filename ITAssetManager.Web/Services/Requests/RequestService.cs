@@ -46,7 +46,7 @@ namespace ITAssetManager.Web.Services.Requests
 
             if (!String.IsNullOrEmpty(searchString))
             {
-
+                // TODO: Implement request search
             }
 
             var itemsCount = requestsQuery.Count();
@@ -70,7 +70,10 @@ namespace ITAssetManager.Web.Services.Requests
                     Id = r.Id,
                     Brand = r.AssetModel.Brand.Name,
                     Model = r.AssetModel.Name,
+                    SubmissionDate = r.SubmissionDate.ToLocalTime().ToString("d"),
+                    CompletionDate = r.CompletionDate != null ? r.CompletionDate.Value.ToLocalTime().ToString("d") : "",
                     Status = r.Status.ToString(),
+                    CloseComment = r.CloseComment,
                     IsCompleted = r.Status != RequestStatus.Submitted
                 })
                 .ToList();
@@ -84,5 +87,24 @@ namespace ITAssetManager.Web.Services.Requests
                 HasNextPage = currentPage < lastPage
             };
         }
+
+        public bool Cancel(int id)
+        {
+            var targetRequest = this.data
+                .Requests
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
+
+            targetRequest.Status = RequestStatus.Cancelled;
+            targetRequest.CompletionDate = DateTime.UtcNow;
+            targetRequest.CloseComment = RequestCancelCloseComment;
+
+            var result = this.data.SaveChanges();
+
+            return result > 0;
+        }
+
+        public bool IsExisting(int id)
+            => this.data.Requests.Any(r => r.Id == id);
     }
 }

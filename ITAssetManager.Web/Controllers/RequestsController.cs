@@ -70,5 +70,29 @@ namespace ITAssetManager.Web.Controllers
 
             return View(requests);
         }
+
+        [Authorize]
+        public IActionResult Cancel(int id, string searchString, int currentPage)
+        {
+            if (!this.requestService.IsExisting(id))
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            var isCancelled = this.requestService.Cancel(id);
+
+            TempData[SuccessMessageKey] = "Request successfully cancelled.";
+
+            if (!isCancelled)
+            {
+                TempData[ErrorMessageKey] = $"There was an error cancelling request with ID {id}.";
+            }
+
+            return RedirectToAction(nameof(All), new
+            {
+                SearchString = searchString,
+                CurrentPage = currentPage
+            });
+        }
     }
 }

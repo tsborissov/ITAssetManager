@@ -7,5 +7,13 @@ namespace ITAssetManager.Web.Services.Requests
         bool Submit(RequestSubmitFormServiceModel request);
 
         RequestQueryServiceModel All(string searchString, int currentPage, string userId);
+
+        bool Cancel(int id);
+
+        bool Approve(int id);
+
+        bool Reject(int id);
+
+        bool IsExisting(int id);
     }
 }
