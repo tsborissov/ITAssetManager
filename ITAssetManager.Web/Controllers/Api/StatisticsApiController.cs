@@ -24,6 +24,7 @@ namespace ITAssetManager.Web.Controllers.Api
             {
                 TotalUsers = this.statisticsService.TotalUsers(),
                 TotalAssets = this.statisticsService.TotalAssets(),
+                TotalRequests = this.statisticsService.TotalRequests(),
                 TotalBrands = this.statisticsService.TotalBrands(),
                 TotalCategories = this.statisticsService.TotalCategories(),
                 TotalModels = this.statisticsService.TotalModels(),

@@ -49,7 +49,19 @@ namespace ITAssetManager.Web.Services.Requests
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                // TODO: Implement request search
+                if (Enum.TryParse(typeof(RequestStatus), searchString, true, out var searchStatus))
+                {
+                    requestsQuery = requestsQuery.Where(r => r.Status.Equals((RequestStatus)searchStatus));
+                }
+                else
+                {
+                    requestsQuery = requestsQuery
+                    .Where(r =>
+                        r.Requestor.UserName.ToLower().Contains(searchString.ToLower()) ||
+                        r.Reviewer.UserName.ToLower().Contains(searchString.ToLower()) ||
+                        r.AssetModel.Brand.Name.ToLower().Contains(searchString.ToLower()) ||
+                        r.AssetModel.Name.ToLower().Contains(searchString.ToLower()));
+                }
             }
 
             var itemsCount = requestsQuery.Count();

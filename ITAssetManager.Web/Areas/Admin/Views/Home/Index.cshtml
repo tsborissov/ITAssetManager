@@ -21,6 +21,7 @@
         <tr>
             <th class="text-center">Users</th>
             <th class="text-center">Assets</th>
+            <th class="text-center">Requests</th>
             <th class="text-center">Models</th>
             <th class="text-center">Brands</th>
             <th class="text-center">Categories</th>
@@ -32,6 +33,7 @@
         <tr>
             <td class="text-center" id="total-users"></td>
             <td class="text-center" id="total-assets"></td>
+            <td class="text-center" id="total-requests"></td>
             <td class="text-center" id="total-models"></td>
             <td class="text-center" id="total-brands"></td>
             <td class="text-center" id="total-categories"></td>
@@ -47,6 +49,7 @@
             $.get('/api/statistics', (data) => {
                 $('#total-users').text(data.totalUsers);
                 $('#total-assets').text(data.totalAssets);
+                $('#total-requests').text(data.totalRequests);
                 $('#total-models').text(data.totalModels);
                 $('#total-brands').text(data.totalBrands);
                 $('#total-categories').text(data.totalCategories);

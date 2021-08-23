@@ -6,6 +6,8 @@
 
         public int TotalAssets { get; init; }
 
+        public int TotalRequests { get; init; }
+
         public int TotalModels { get; init; }
 
         public int TotalBrands { get; init; }

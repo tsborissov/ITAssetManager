@@ -72,6 +72,7 @@
                         <a asp-controller="Requests"
                            asp-action="Submit"
                            asp-route-assetModelId="@Model.Id"
+                           asp-route-model="@(Model.Brand + " " + Model.Name)"
                            class="btn btn-primary float-md-right">
                             Request
                         </a>

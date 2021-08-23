@@ -23,11 +23,12 @@ namespace ITAssetManager.Web.Controllers
         }
 
         [Authorize]
-        public IActionResult Submit(int assetModelId)
+        public IActionResult Submit(int assetModelId, string model)
             => View(new RequestSubmitFormServiceModel
             {
                 RequestorId = this.User.Id(),
                 AssetModelId = assetModelId,
+                Model = model,
                 Status = RequestStatus.Submitted,
                 SubmissionDate = DateTime.Now
             });

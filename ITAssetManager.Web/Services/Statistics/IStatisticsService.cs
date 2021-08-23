@@ -6,6 +6,8 @@
 
         int TotalAssets();
 
+        int TotalRequests();
+
         int TotalBrands();
 
         int TotalCategories();

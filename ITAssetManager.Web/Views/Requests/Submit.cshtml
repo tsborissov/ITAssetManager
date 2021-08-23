@@ -9,20 +9,20 @@
         <h2 class="heading-margin text-center">@ViewBag.Title</h2>
         <form method="post">
             <div class="form-group">
-                <label asp-for="RequestorId"></label>
-                <input asp-for="RequestorId" class="form-control" readonly />
+                <input asp-for="RequestorId" class="form-control" readonly hidden />
             </div>
             <div class="form-group">
-                <label asp-for="AssetModelId"></label>
-                <input asp-for="AssetModelId" class="form-control" readonly />
+                <input asp-for="AssetModelId" class="form-control" readonly hidden />
             </div>
             <div class="form-group">
-                <label asp-for="Status"></label>
-                <input asp-for="Status" class="form-control" readonly />
+                <label asp-for="Model"></label>
+                <input asp-for="Model" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <label asp-for="SubmissionDate"></label>
-                <input asp-for="SubmissionDate" class="form-control" readonly />
+                <input asp-for="Status" class="form-control" readonly hidden />
+            </div>
+            <div class="form-group">
+                <input asp-for="SubmissionDate" class="form-control" readonly hidden />
             </div>
             <div class="form-group">
                 <label asp-for="Rationale"></label>

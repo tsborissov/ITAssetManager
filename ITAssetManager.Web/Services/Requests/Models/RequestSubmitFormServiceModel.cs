@@ -14,6 +14,8 @@ namespace ITAssetManager.Web.Services.Requests.Models
         [Display(Name = "Model Id")]
         public int AssetModelId { get; init; }
 
+        public string Model { get; init; }
+
         public RequestStatus Status { get; init; }
 
         [Display(Name = "Submission Date")]
