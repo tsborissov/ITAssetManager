@@ -2,6 +2,7 @@
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Brands.Models;
+using ITAssetManager.Web.Services.Common;
 using System;
 using System.Linq;
 
@@ -50,18 +51,10 @@ namespace ITAssetManager.Web.Services.Brands
                 _ => brandsQuery.OrderBy(b => b.Name)
             };
 
-            var itemsCount = brandsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
+            var pages = Pagination.GetPages(brandsQuery, currentPage, ItemsPerPage);
 
-            if (currentPage > lastPage)
-            {
-                currentPage = lastPage;
-            }
-
-            if (currentPage < 1)
-            {
-                currentPage = 1;
-            }
+            currentPage = pages.currentPage;
+            var lastPage = pages.lastPage;
 
             var brands = brandsQuery
                 .Skip((currentPage - 1) * ItemsPerPage)
@@ -74,17 +67,14 @@ namespace ITAssetManager.Web.Services.Brands
                 })
                 .ToList();
 
-            var hasPreviousPage = currentPage > 1;
-            var hasNextPage = currentPage < lastPage;
-
             return new BrandQueryServiceModel
             {
                 Brands = brands,
                 SearchString = searchString,
                 SortOrder = sortOrder,
                 CurrentPage = currentPage,
-                HasPreviousPage = hasPreviousPage,
-                HasNextPage = hasNextPage
+                HasPreviousPage = pages.hasPreviousPage,
+                HasNextPage = pages.hasNextPage
             };
         }
 

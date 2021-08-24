@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.Assets.Models;
+using ITAssetManager.Web.Services.Common;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -73,18 +74,10 @@ namespace ITAssetManager.Web.Services.Assets
                 _ => assetsQuery.OrderBy(a => a.AssetModel.Brand.Name),
             };
 
-            var itemsCount = assetsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
+            var pages = Pagination.GetPages(assetsQuery, currentPage, ItemsPerPage);
 
-            if (currentPage > lastPage)
-            {
-                currentPage = lastPage;
-            }
-
-            if (currentPage < 1)
-            {
-                currentPage = 1;
-            }
+            currentPage = pages.currentPage;
+            var lastPage = pages.lastPage;
 
             var assets = assetsQuery
                 .Skip((currentPage - 1) * ItemsPerPage)
@@ -112,8 +105,8 @@ namespace ITAssetManager.Web.Services.Assets
                 SearchString = searchString,
                 SortOrder = sortOrder,
                 CurrentPage = currentPage,
-                HasPreviousPage = currentPage > 1,
-                HasNextPage = currentPage < lastPage
+                HasPreviousPage = pages.hasPreviousPage,
+                HasNextPage = pages.hasNextPage
             };
         }
 

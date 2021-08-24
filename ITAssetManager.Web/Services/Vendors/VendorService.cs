@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
+using ITAssetManager.Web.Services.Common;
 using ITAssetManager.Web.Services.Vendors.Models;
 using System;
 using System.Linq;
@@ -50,18 +51,10 @@ namespace ITAssetManager.Web.Services.Vendors
                 _ => vendorsQuery.OrderBy(s => s.Name),
             };
 
-            var itemsCount = vendorsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ItemsPerPage);
+            var pages = Pagination.GetPages(vendorsQuery, currentPage, ItemsPerPage);
 
-            if (currentPage > lastPage)
-            {
-                currentPage = lastPage;
-            }
-
-            if (currentPage < 1)
-            {
-                currentPage = 1;
-            }
+            currentPage = pages.currentPage;
+            var lastPage = pages.lastPage;
 
             var vendors = vendorsQuery
                 .Skip((currentPage - 1) * ItemsPerPage)
@@ -81,8 +74,8 @@ namespace ITAssetManager.Web.Services.Vendors
                 SearchString = searchString,
                 SortOrder = sortOrder,
                 CurrentPage = currentPage,
-                HasPreviousPage = currentPage > 1,
-                HasNextPage = currentPage < lastPage
+                HasPreviousPage = pages.hasPreviousPage,
+                HasNextPage = pages.hasNextPage
             };
         }
 

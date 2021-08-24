@@ -2,6 +2,7 @@
 using ITAssetManager.Data;
 using ITAssetManager.Data.Models;
 using ITAssetManager.Web.Services.AssetModels.Models;
+using ITAssetManager.Web.Services.Common;
 using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
@@ -52,18 +53,10 @@ namespace ITAssetManager.Web.Services.AssetModels
                     m.Category.Name.ToLower().Contains(searchString.ToLower()));
             }
 
-            var itemsCount = assetModelsQuery.Count();
-            var lastPage = (int)Math.Ceiling(itemsCount / (double)ModelsPerPage);
+            var pages = Pagination.GetPages(assetModelsQuery, currentPage, ModelsPerPage);
 
-            if (currentPage > lastPage)
-            {
-                currentPage = lastPage;
-            }
-
-            if (currentPage < 1)
-            {
-                currentPage = 1;
-            }
+            currentPage = pages.currentPage;
+            var lastPage = pages.lastPage;
 
             var assetModels = assetModelsQuery
                 .Skip((currentPage - 1) * ModelsPerPage)
@@ -84,8 +77,8 @@ namespace ITAssetManager.Web.Services.AssetModels
                 AssetModels = assetModels,
                 SearchString = searchString,
                 CurrentPage = currentPage,
-                HasPreviousPage = currentPage > 1,
-                HasNextPage = currentPage < lastPage
+                HasPreviousPage = pages.hasPreviousPage,
+                HasNextPage = pages.hasNextPage
             };
         }
 
