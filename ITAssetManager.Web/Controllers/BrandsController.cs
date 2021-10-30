@@ -67,7 +67,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.brandService.IsExistingBrand(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetBrand = this.brandService.Details(id);
@@ -90,7 +90,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (!this.brandService.IsExistingBrand(brand.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var result = this.brandService.Update(brand);
@@ -113,12 +113,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.brandService.IsExistingBrand(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (this.brandService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var deletedBrandName = this.brandService.Delete(id);

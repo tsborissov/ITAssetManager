@@ -39,7 +39,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidModel(requestModel.AssetModelId))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (!this.ModelState.IsValid)
@@ -77,7 +77,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var isCancelled = this.requestService.Cancel(id);
@@ -101,7 +101,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetRequest = this.requestService.GetById(id, searchString, currentPage);
@@ -115,7 +115,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(request.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (!this.ModelState.IsValid)
@@ -146,7 +146,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetRequest = this.requestService.GetById(id, searchString, currentPage);
@@ -160,7 +160,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(request.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (!this.ModelState.IsValid)
@@ -191,7 +191,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.requestService.IsExisting(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetRequest = this.requestService.Details(id, searchString, currentPage);

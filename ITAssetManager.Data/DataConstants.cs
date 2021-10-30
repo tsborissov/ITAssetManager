@@ -2,6 +2,8 @@
 {
     public class DataConstants
     {
+        public const string ErrorPageUrl = "/Home/Error";
+
         public const string AdministratorRoleName = "Administrator";
         public const string UserRoleName = "User";
 
@@ -56,5 +58,24 @@
         public const int CloseCommentMinLength = 1;
         public const int CloseCommentMaxLength = 200;
         public const string RequestCancelCloseComment = "Cancelled by user.";
+
+        public const string InvalidModelMessage = "Invalid model selected!";
+        public const string InvalidStatusMessage = "Invalid status selected!";
+        public const string InvalidVendorMessage = "Invalid vendor selected!";
+        public const string InvalidSerialNumberMessage = "Serial number alredy exists!";
+        public const string InvalidInventoryNumberMessage = "Inventory number already exists!";
+
+        public const string ReturnDateBeforeAssignDateError = "'Return date' cannot be before 'Assign date'!";
+        public const string FutureReturnDateError = "'Return date' cannot be in the future!";
+        public const string AssetSuccessfullyCreatedMessage = "New Asset created.";
+        public const string ErrorCreatingAssetMessage = "There was an error creating new asset!";
+        public const string AssetSuccessfullyAssignedMessage = "Asset successfully assigned.";
+        public const string ErrorAssigningAssetMessage = "There was an error assignig asset!";
+        public const string AssetSuccessfullyCollectedMessage = "Asset successfully collected.";
+        public const string ErrorCollectingAssetMessage = "There was an error collecting asset!";
+        public const string AssetSuccessfullyUpdatedMessage = "Asset successfully updated.";
+        public const string ErrorUpdatingAssetMessage = "There was an error updating asset!";
+        public const string AssetSuccessfullyDeletedMessage = "Asset successfully deleted.";
+        public const string ErrorDeletingAssetMessage = "There was an error deleting asset!";
     }
 }

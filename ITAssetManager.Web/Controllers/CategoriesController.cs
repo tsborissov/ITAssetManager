@@ -67,7 +67,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.categoryService.IsExistingCategory(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetCategory = this.categoryService.Details(id);
@@ -90,7 +90,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (!this.categoryService.IsExistingCategory(category.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var result = this.categoryService.Update(category);
@@ -113,12 +113,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.categoryService.IsExistingCategory(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (this.categoryService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var deletedCategoryName = this.categoryService.Delete(id);

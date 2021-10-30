@@ -38,27 +38,27 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidModel(assetModel.AssetModelId))
             {
-                this.ModelState.AddModelError(nameof(assetModel.AssetModelId), "Invalid model selected!");
+                this.ModelState.AddModelError(nameof(assetModel.AssetModelId), InvalidModelMessage);
             }
 
             if (!this.assetService.IsValidStatus(assetModel.StatusId))
             {
-                this.ModelState.AddModelError(nameof(assetModel.StatusId), "Invalid status selected!");
+                this.ModelState.AddModelError(nameof(assetModel.StatusId), InvalidStatusMessage);
             }
 
             if (!this.assetService.IsValidVendor(assetModel.VendorId))
             {
-                this.ModelState.AddModelError(nameof(assetModel.VendorId), "Invalid vendor selected!");
+                this.ModelState.AddModelError(nameof(assetModel.VendorId), InvalidVendorMessage);
             }
 
             if (this.assetService.IsExistingSerialNr(assetModel.SerialNr))
             {
-                this.ModelState.AddModelError(nameof(assetModel.SerialNr), "Serial number alredy exists!");
+                this.ModelState.AddModelError(nameof(assetModel.SerialNr), InvalidSerialNumberMessage);
             }
 
             if (this.assetService.IsExistingInventoryNr(assetModel.InventoryNr))
             {
-                this.ModelState.AddModelError(nameof(assetModel.InventoryNr), "Inventory number already exists!");
+                this.ModelState.AddModelError(nameof(assetModel.InventoryNr), InvalidInventoryNumberMessage);
             }
 
             if (!this.ModelState.IsValid)
@@ -74,11 +74,11 @@ namespace ITAssetManager.Web.Controllers
 
             if (isAssetAdded)
             {
-                TempData[SuccessMessageKey] = "New Asset created.";
+                TempData[SuccessMessageKey] = AssetSuccessfullyCreatedMessage;
             }
             else
             {
-                TempData[ErrorMessageKey] = "There was an error creating new asset!";
+                TempData[ErrorMessageKey] = ErrorCreatingAssetMessage;
             }
 
             return RedirectToAction(nameof(All));
@@ -102,7 +102,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidAsset(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetAsset = this.assetService.GetById(id, searchString, sortOrder, currentPage);
@@ -117,23 +117,23 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidAsset(assetModel.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (!this.assetService.IsValidUser(assetModel.UserId))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var isAssetAssigned = this.assetService.Assign(assetModel.UserId, assetModel.Id);
 
             if (isAssetAssigned)
             {
-                TempData[SuccessMessageKey] = "Asset successfully assigned.";
+                TempData[SuccessMessageKey] = AssetSuccessfullyAssignedMessage;
             }
             else
             {
-                TempData[ErrorMessageKey] = "There was an error assignig asset!";
+                TempData[ErrorMessageKey] = ErrorAssigningAssetMessage;
             }
 
             return RedirectToAction(nameof(All), new 
@@ -149,7 +149,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidAsset(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var assetQuery = this.assetService.GetUserAssetById(id);
@@ -168,22 +168,22 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidAsset(assetModel.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (!this.assetService.IsValidUser(assetModel.UserId))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (assetModel.ReturnDate < assetModel.AssignDate)
             {
-                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), "'Return date' cannot be before 'Assign date'!");
+                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), ReturnDateBeforeAssignDateError);
             }
 
             if (assetModel.ReturnDate > DateTime.Now)
             {
-                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), "'Return date' cannot be in the future!");
+                this.ModelState.AddModelError(nameof(assetModel.ReturnDate), FutureReturnDateError);
             }
 
             if (!this.ModelState.IsValid)
@@ -195,11 +195,11 @@ namespace ITAssetManager.Web.Controllers
 
             if (isAssetCollected)
             {
-                TempData[SuccessMessageKey] = "Asset successfully collected.";
+                TempData[SuccessMessageKey] = AssetSuccessfullyCollectedMessage;
             }
             else
             {
-                TempData[ErrorMessageKey] = "There was an error collecting asset!";
+                TempData[ErrorMessageKey] = ErrorCollectingAssetMessage;
             }
 
             return RedirectToAction(nameof(All), new
@@ -215,7 +215,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetService.IsValidAsset(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetAsset = this.assetService.EditById(id, searchString, sortOrder, currentPage);
@@ -240,11 +240,11 @@ namespace ITAssetManager.Web.Controllers
 
             if (isAssetUpdated)
             {
-                TempData[SuccessMessageKey] = "Asset successfully updated.";
+                TempData[SuccessMessageKey] = AssetSuccessfullyUpdatedMessage;
             }
             else
             {
-                TempData[ErrorMessageKey] = "There was an error updating asset!";
+                TempData[ErrorMessageKey] = ErrorUpdatingAssetMessage;
             }
 
             return RedirectToAction(nameof(All), new
@@ -261,18 +261,18 @@ namespace ITAssetManager.Web.Controllers
             if (!this.assetService.IsValidAsset(id) || 
                 this.assetService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var isDeleted = this.assetService.Delete(id);
 
             if (isDeleted)
             {
-                TempData[SuccessMessageKey] = "Asset successfully deleted.";
+                TempData[SuccessMessageKey] = AssetSuccessfullyDeletedMessage;
             }
             else
             {
-                TempData[ErrorMessageKey] = "There was an error deleting asset!";
+                TempData[ErrorMessageKey] = ErrorDeletingAssetMessage;
             }
 
             return RedirectToAction(nameof(All), new

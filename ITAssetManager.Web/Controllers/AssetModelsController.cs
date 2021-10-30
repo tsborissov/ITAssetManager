@@ -72,7 +72,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!assetModelService.IsExistingModel(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var assetModel = this.assetModelService.Details(id);
@@ -102,7 +102,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!assetModelService.IsExistingModel(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var assetModel = this.assetModelService.Details(id);
@@ -152,7 +152,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (!this.assetModelService.IsExistingModel(assetModel.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var result = this.assetModelService.Update(assetModel);
@@ -171,12 +171,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.assetModelService.IsExistingModel(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (this.assetModelService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var deletedModelName = this.assetModelService.Delete(id);

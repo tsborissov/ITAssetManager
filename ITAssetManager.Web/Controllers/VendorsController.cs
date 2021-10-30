@@ -66,7 +66,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (vendor == null)
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             return View(vendor);
@@ -79,7 +79,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (vendorDetails == null)
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var vendor = this.mapper.Map<VendorEditServiceModel>(vendorDetails);
@@ -98,7 +98,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (!this.vendorService.IsExistingVendor(vendorModel.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var result = this.vendorService.Update(vendorModel);
@@ -118,12 +118,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.vendorService.IsExistingVendor(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (this.vendorService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var deletedVendorName = this.vendorService.Delete(id);

@@ -59,7 +59,7 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.statusService.IsExistingStatus(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var targetStatus = this.statusService.Details(id);
@@ -82,7 +82,7 @@ namespace ITAssetManager.Web.Controllers
 
             if (!this.statusService.IsExistingStatus(status.Id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var result = this.statusService.Update(status);
@@ -105,12 +105,12 @@ namespace ITAssetManager.Web.Controllers
         {
             if (!this.statusService.IsExistingStatus(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             if (this.statusService.IsInUse(id))
             {
-                return RedirectToAction("Error", "Home");
+                return Redirect(ErrorPageUrl);
             }
 
             var deletedStatusName = this.statusService.Delete(id);

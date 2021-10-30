@@ -19,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using static ITAssetManager.Data.DataConstants;
+
 namespace ITAssetManager.Web
 {
     public class Startup
@@ -81,9 +83,19 @@ namespace ITAssetManager.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler(ErrorPageUrl);
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = ErrorPageUrl;
+                    await next();
+                }
+            });
 
             app
                 .UseHttpsRedirection()
